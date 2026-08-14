@@ -1,0 +1,4 @@
+# Working state produced by scripts/ingest.sh. The published archive lives on
+# the `archive` branch, never on master.
+/public/
+/build/

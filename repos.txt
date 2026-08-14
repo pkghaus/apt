@@ -1,0 +1,9 @@
+# One packaging repository per line. The ingest builds each repository's newest
+# tag for every suite and architecture the archive serves. Comments and blank
+# lines are ignored.
+#
+# A repository is listed only once its newest tag carries package.conf and
+# debian/ (the migrated shape) -- pre-migration tags fail the build with
+# "package.conf not found". Uncomment each line as part of its migration.
+#pkghaus/zola-debian
+#pkghaus/scaphandre-debian

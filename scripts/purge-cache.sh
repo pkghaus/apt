@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Purge the archive's listing pages from the Cloudflare edge cache. Runs
+# after the Pages deployment, so the edge refills with the fresh render.
+# The listing cache rule holds pages for a day (pkghaus/infrastructure,
+# waf/pkg.haus.yaml); this purge is what keeps them current the moment a
+# publish lands.
+#
+# Free-plan purging is by exact URL, 30 per call. Every directory page is
+# purged in both request forms (trailing slash and explicit index.html).
+# dists/ pages are never edge-cached, so they are not purged.
+
+set -euo pipefail
+
+ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
+BASE_URL="${BASE_URL:-https://apt.pkg.haus}"
+
+: "${CLOUDFLARE_PURGE_TOKEN:?token with Zone - Cache Purge - Edit on pkg.haus}"
+: "${CLOUDFLARE_ZONE_ID:?the pkg.haus zone id}"
+
+mapfile -t urls < <(
+    find "$ARCHIVE_DIR" -name index.html \
+        -not -path "$ARCHIVE_DIR/dists/*" -not -path '*/.git/*' \
+        | LC_ALL=C sort | while read -r page; do
+            rel="${page#"$ARCHIVE_DIR"}"
+            printf '%s%s\n' "$BASE_URL" "$rel"
+            printf '%s%s\n' "$BASE_URL" "${rel%index.html}"
+        done
+)
+
+for ((i = 0; i < ${#urls[@]}; i += 30)); do
+    printf '%s\n' "${urls[@]:i:30}" \
+        | jq -R . | jq -s '{files: .}' \
+        | curl -sS --fail-with-body -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+            -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            --data @- >/dev/null
+done
+
+echo "purged ${#urls[@]} listing URLs" >&2

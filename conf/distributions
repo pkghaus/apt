@@ -1,0 +1,23 @@
+Codename: trixie
+Suite: trixie
+Components: main
+Architectures: amd64 arm64
+Contents: percomponent .gz nocompatsymlink
+Description: pkg.haus packages built for Debian stable
+SignWith: yes
+
+Codename: testing
+Suite: testing
+Components: main
+Architectures: amd64 arm64
+Contents: percomponent .gz nocompatsymlink
+Description: pkg.haus packages built for Debian testing
+SignWith: yes
+
+Codename: unstable
+Suite: unstable
+Components: main
+Architectures: amd64 arm64
+Contents: percomponent .gz nocompatsymlink
+Description: pkg.haus packages built for Debian unstable
+SignWith: yes
