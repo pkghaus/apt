@@ -116,12 +116,25 @@ EOF
 }
 
 page_close() {
+    # The stamp ships as UTC (the no-JS fallback) inside a <time> element;
+    # the script below reformats it into the visitor's own timezone at view
+    # time, so it stays correct even on edge-cached copies.
     cat <<EOF
   <footer>
     <a href="https://pkg.haus">pkg.haus</a> &middot;
-    rendered by the ingest, $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+    rendered by the ingest,
+    <time datetime="$(date -u +%Y-%m-%dT%H:%M:%SZ)">$(date -u '+%Y-%m-%d %H:%M:%S UTC')</time>
   </footer>
 </main>
+<script>
+  document.querySelectorAll("time[datetime]").forEach(function (t) {
+    t.textContent = new Date(t.getAttribute("datetime")).toLocaleString([], {
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: false, timeZoneName: "short"
+    });
+  });
+</script>
 </body>
 </html>
 EOF
