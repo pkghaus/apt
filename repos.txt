@@ -7,3 +7,4 @@
 # "package.conf not found". Uncomment each line as part of its migration.
 pkghaus/zola-debian
 pkghaus/scaphandre-debian
+pkghaus/mandown-debian
