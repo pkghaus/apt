@@ -9,3 +9,4 @@ pkghaus/zola-debian
 pkghaus/scaphandre-debian
 pkghaus/mandown-debian
 pkghaus/berry-debian
+pkghaus/gotypist-debian
