@@ -1,39 +1,39 @@
 Suite: trixie
 Codename: trixie
-Date: Sat, 15 Aug 2026 17:14:58 UTC
+Date: Sat, 15 Aug 2026 17:23:01 UTC
 Architectures: amd64 arm64
 Components: main
 Description: pkg.haus packages built for Debian stable
 MD5Sum:
- 796ce0b3e08f6c0e6a0e33b5e2a6bbbe 4877 main/binary-amd64/Packages
- bcd5c2b0da3b9632c6a353fbd0f1fc6b 2138 main/binary-amd64/Packages.gz
+ 87e6001bf4032a9327a06e3b62e7e79f 7279 main/binary-amd64/Packages
+ df57a5d2e66106d19719c631ee5a8358 3066 main/binary-amd64/Packages.gz
  6855068901a7e94b06c35ef2308fb390 107 main/binary-amd64/Release
- 931c4bca4d623bec4584f4183a0f376b 4878 main/binary-arm64/Packages
- d06c889dc57f6eeee616781621ed5d2a 2142 main/binary-arm64/Packages.gz
+ 820711317705eaa02a49220fed0de95a 7279 main/binary-arm64/Packages
+ 57b5114ca4ac1c7d53d413b1184ada9b 3073 main/binary-arm64/Packages.gz
  8ceed51ceafa672ec46fe3764f592c81 107 main/binary-arm64/Release
- 6c24cb051f903cc990ec8b389a15a242 1549 main/Contents-amd64
- d2feadb168fa76479dd971e7a45dea81 345 main/Contents-amd64.gz
- 6c24cb051f903cc990ec8b389a15a242 1549 main/Contents-arm64
- d2feadb168fa76479dd971e7a45dea81 345 main/Contents-arm64.gz
+ b40ce014f381dc3bde0d0d4665e0bc64 2334 main/Contents-amd64
+ 67922acfba18056a0e2af7a9163875d4 462 main/Contents-amd64.gz
+ b40ce014f381dc3bde0d0d4665e0bc64 2334 main/Contents-arm64
+ 67922acfba18056a0e2af7a9163875d4 462 main/Contents-arm64.gz
 SHA1:
- c5f8dcaf782cc6715c4350b684afcbda1c599495 4877 main/binary-amd64/Packages
- 0c16d1fcf366f4f525067566d49a82883624ab9a 2138 main/binary-amd64/Packages.gz
+ 4b0148805869cd8f0b2fbf98d2cca8484f0a1969 7279 main/binary-amd64/Packages
+ d6ddfe861f9beacaf933042dd61a626ddc6e7c9c 3066 main/binary-amd64/Packages.gz
  dcbf8f365d8b27b96d57284a0b590fb3eef142c1 107 main/binary-amd64/Release
- f8102b99681fff8ecb24de73bc03feba142d9f34 4878 main/binary-arm64/Packages
- c1a44bd7623a13e30c2f06c00246fbc94bbcc7ac 2142 main/binary-arm64/Packages.gz
+ 129d5a567801574961887950f3282642e0022f69 7279 main/binary-arm64/Packages
+ 296bf20a00984793cb6d34886ced078f2ad977f0 3073 main/binary-arm64/Packages.gz
  84e349129f60c5fe88b4e46f991aa5a8af769714 107 main/binary-arm64/Release
- d2e7f03ed57cd2cca2a3dc240a8d0ad296ba080b 1549 main/Contents-amd64
- 82843fd48b92c350127df31d909d8c2731de600d 345 main/Contents-amd64.gz
- d2e7f03ed57cd2cca2a3dc240a8d0ad296ba080b 1549 main/Contents-arm64
- 82843fd48b92c350127df31d909d8c2731de600d 345 main/Contents-arm64.gz
+ 15c4be521b2fed357cca7890e39552f3ac1289cc 2334 main/Contents-amd64
+ 08f0b4106b28f92cf89ed8aefe4b067d08cf063b 462 main/Contents-amd64.gz
+ 15c4be521b2fed357cca7890e39552f3ac1289cc 2334 main/Contents-arm64
+ 08f0b4106b28f92cf89ed8aefe4b067d08cf063b 462 main/Contents-arm64.gz
 SHA256:
- ad911dc3c82bb310ab571edaa2d059b5b5820df2494d2304f60d0517861f32a3 4877 main/binary-amd64/Packages
- badc9d5646940cea3be0dde2a98211d4b1b67ba0cd281ec5a19378b7921b96c9 2138 main/binary-amd64/Packages.gz
+ 97944046a08aa09a645016f84999daa7891ab80b59367b570377a886c55b9784 7279 main/binary-amd64/Packages
+ e147ccca022af426991093c539eb37e7323d650fe8f6982e6267aa674e0d9158 3066 main/binary-amd64/Packages.gz
  e4ac03e752a15ccd6e6826c2b9a3ca5628cb9dc5ba154737bc3d7d0b16a474ad 107 main/binary-amd64/Release
- 5e4f01dea6c5e28731397e6dd1b1955df2b20d8efcf53aa12fe9e25895f5bdb0 4878 main/binary-arm64/Packages
- 23032d7fa2724f444bcf13b55e5d41d675b9f0650905d153b888c3279dd746e4 2142 main/binary-arm64/Packages.gz
+ 864cfa0fb5bf800491e2c653d6b33ca6c6b3d4962d3a1e2e36db5c996335294a 7279 main/binary-arm64/Packages
+ 4408cf51f5636991bce912f390419acfc7bd6861061011b68e753cffaf6d97d1 3073 main/binary-arm64/Packages.gz
  aebbe4dc54114199954a5058fe738d13d2ebbcfae998a805ca6028d859805c29 107 main/binary-arm64/Release
- 6362c9996040910ac4a1b84ad2d119e774e2f45e787ac082dfd83ea7af8030ae 1549 main/Contents-amd64
- 5a9c9c655cdc9fafd95016bd914220b4f93282bf8d68cfc951508087c42d7de6 345 main/Contents-amd64.gz
- 6362c9996040910ac4a1b84ad2d119e774e2f45e787ac082dfd83ea7af8030ae 1549 main/Contents-arm64
- 5a9c9c655cdc9fafd95016bd914220b4f93282bf8d68cfc951508087c42d7de6 345 main/Contents-arm64.gz
+ c9eec144ff93816943d53d3cb4db74f2ca3018c6825dd73677a6054bc8b327b8 2334 main/Contents-amd64
+ 6569fea0cf259a9109285b6b06239f56558379e5b842738fe83b981e2dbe483e 462 main/Contents-amd64.gz
+ c9eec144ff93816943d53d3cb4db74f2ca3018c6825dd73677a6054bc8b327b8 2334 main/Contents-arm64
+ 6569fea0cf259a9109285b6b06239f56558379e5b842738fe83b981e2dbe483e 462 main/Contents-arm64.gz

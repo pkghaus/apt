@@ -1,3 +1,24 @@
+Package: act
+Version: 0.2.89-1~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 23309
+Depends: libc6 (>= 2.34)
+Recommends: docker.io
+Homepage: https://github.com/nektos/act
+Priority: optional
+Section: devel
+Filename: pool/main/a/act/act_0.2.89-1~testing1_amd64.deb
+Size: 6402040
+SHA256: 48a98e6175aa424b061e35e7ca99ec3528d748665a43f9688d810d0e8a98eedd
+SHA1: f87360350b66b375bab3f4b6167910880d87233f
+MD5sum: dd639d91531a33fad7175949e2204fb3
+Description: run GitHub Actions workflows locally
+ act reads the workflows under .github/workflows/ and runs their jobs in
+ containers on the local machine, so a workflow can be iterated on
+ without pushing commits. It needs a container engine at runtime; Docker
+ is the default, hence the recommendation.
+
 Package: berry
 Version: 0.1.13-2~testing1
 Architecture: amd64
@@ -18,6 +39,47 @@ Description: healthy, bite-sized window manager
  berry is a small window manager for X11, written in C. Windows are
  managed at runtime through its berryc client; the package ships example
  sxhkd bindings and an autostart script.
+
+Package: d2
+Version: 0.7.1-1~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 39093
+Depends: libc6 (>= 2.34)
+Homepage: https://d2lang.com
+Priority: optional
+Section: graphics
+Filename: pool/main/d/d2/d2_0.7.1-1~testing1_amd64.deb
+Size: 9975320
+SHA256: 974c8d136b8abbef82bfa56b9ab470c5890324d322fe586a750ee52d516b4703
+SHA1: 194f83987056ca8fdbe4bb758b9df0f9dd744067
+MD5sum: 4e6036882c06dc01e91987c8ff8fb79a
+Description: declarative diagramming language and compiler
+ D2 turns text into diagrams: a scripting language whose compiler renders
+ the description to SVG and other formats, with layout engines, themes
+ and a watch mode for live editing.
+
+Package: frp
+Version: 0.71.0-1~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 40057
+Depends: libc6 (>= 2.34)
+Homepage: https://github.com/fatedier/frp
+Priority: optional
+Section: net
+Filename: pool/main/f/frp/frp_0.71.0-1~testing1_amd64.deb
+Size: 11020540
+SHA256: 54439bca92aa7b3829610dc0f4e7b0976bdaad55a876f6a9cd3b1deb5c852db2
+SHA1: 1d000a607144c4fbfd9c2e91a9101e35569532fc
+MD5sum: b63070d12dbf108dd50ab98b84e4634a
+Description: fast reverse proxy (frpc client and frps server)
+ frp exposes a local server that sits behind NAT or a firewall to the
+ internet through a machine with a public address. This package ships
+ both ends: the frps server and the frpc client, each driven by a single
+ TOML file; example configurations are installed as documentation. Built
+ from source without the optional browser dashboards, whose prebuilt
+ assets are not part of the source tag.
 
 Package: gotypist
 Version: 0.8.2-1~testing1

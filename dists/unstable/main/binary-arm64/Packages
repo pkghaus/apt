@@ -1,3 +1,24 @@
+Package: act
+Version: 0.2.89-1
+Architecture: arm64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 21713
+Depends: libc6 (>= 2.34)
+Recommends: docker.io
+Homepage: https://github.com/nektos/act
+Priority: optional
+Section: devel
+Filename: pool/main/a/act/act_0.2.89-1_arm64.deb
+Size: 5484556
+SHA256: cf55becadf23f8a8e3e17ad2eb88643578b2865c830db8a659c9749830c2c553
+SHA1: 9aaa32a1756186aabc13bc12c2d60533c400f77c
+MD5sum: 4d5e08d325ebf69dcb1c81424911f7b5
+Description: run GitHub Actions workflows locally
+ act reads the workflows under .github/workflows/ and runs their jobs in
+ containers on the local machine, so a workflow can be iterated on
+ without pushing commits. It needs a container engine at runtime; Docker
+ is the default, hence the recommendation.
+
 Package: berry
 Version: 0.1.13-2
 Architecture: arm64
@@ -18,6 +39,47 @@ Description: healthy, bite-sized window manager
  berry is a small window manager for X11, written in C. Windows are
  managed at runtime through its berryc client; the package ships example
  sxhkd bindings and an autostart script.
+
+Package: d2
+Version: 0.7.1-1
+Architecture: arm64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 37361
+Depends: libc6 (>= 2.34)
+Homepage: https://d2lang.com
+Priority: optional
+Section: graphics
+Filename: pool/main/d/d2/d2_0.7.1-1_arm64.deb
+Size: 8890520
+SHA256: bbf2bac4845621d34b3884889402cca50efb984ab07eb5fbaaa2aad5e51754bd
+SHA1: c542c7f90ccf4d19a05bb7453877cb5f382d8abb
+MD5sum: 22fa4408f350456abe969dd3013a7c00
+Description: declarative diagramming language and compiler
+ D2 turns text into diagrams: a scripting language whose compiler renders
+ the description to SVG and other formats, with layout engines, themes
+ and a watch mode for live editing.
+
+Package: frp
+Version: 0.71.0-1
+Architecture: arm64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 35929
+Depends: libc6 (>= 2.34)
+Homepage: https://github.com/fatedier/frp
+Priority: optional
+Section: net
+Filename: pool/main/f/frp/frp_0.71.0-1_arm64.deb
+Size: 9282776
+SHA256: 5f7e46b2a9aa05cd865cde215e662ac553534de0966b3c006919c5995e6c3adf
+SHA1: c5e7da8073320c68fde8a92b6e9aeaa7d9abb1d6
+MD5sum: f0de8a3261f0ef3aa7e14b5e265e819a
+Description: fast reverse proxy (frpc client and frps server)
+ frp exposes a local server that sits behind NAT or a firewall to the
+ internet through a machine with a public address. This package ships
+ both ends: the frps server and the frpc client, each driven by a single
+ TOML file; example configurations are installed as documentation. Built
+ from source without the optional browser dashboards, whose prebuilt
+ assets are not part of the source tag.
 
 Package: gotypist
 Version: 0.8.2-1
