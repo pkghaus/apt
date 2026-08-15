@@ -19,13 +19,23 @@ BASE_URL="${BASE_URL:-https://apt.pkg.haus}"
 : "${CLOUDFLARE_ZONE_ID:?the pkg.haus zone id}"
 
 mapfile -t urls < <(
-    find "$ARCHIVE_DIR" -name index.html \
-        -not -path "$ARCHIVE_DIR/dists/*" -not -path '*/.git/*' \
-        | LC_ALL=C sort | while read -r page; do
-            rel="${page#"$ARCHIVE_DIR"}"
-            printf '%s%s\n' "$BASE_URL" "$rel"
-            printf '%s%s\n' "$BASE_URL" "${rel%index.html}"
-        done
+    {
+        find "$ARCHIVE_DIR" -name index.html \
+            -not -path "$ARCHIVE_DIR/dists/*" -not -path '*/.git/*' \
+            | while read -r page; do
+                rel="${page#"$ARCHIVE_DIR"}"
+                printf '%s%s\n' "$BASE_URL" "$rel"
+                printf '%s%s\n' "$BASE_URL" "${rel%index.html}"
+            done
+        # Pool files too: normally immutable, but rebuild flows (archive
+        # wipe, retirement) replace bytes under existing URLs, and a POP
+        # still holding the old bytes breaks apt with hash mismatches
+        # against the fresh, never-cached dists metadata.
+        find "$ARCHIVE_DIR/pool" -name '*.deb' -not -path '*/.git/*' 2>/dev/null \
+            | while read -r deb; do
+                printf '%s%s\n' "$BASE_URL" "${deb#"$ARCHIVE_DIR"}"
+            done
+    } | LC_ALL=C sort
 )
 
 for ((i = 0; i < ${#urls[@]}; i += 30)); do
