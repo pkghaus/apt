@@ -17,3 +17,4 @@ pkghaus/d2-debian
 pkghaus/archive-keyring
 pkghaus/typst-debian
 pkghaus/croc-debian
+pkghaus/difftastic-debian
