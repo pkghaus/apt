@@ -71,8 +71,18 @@ changelog_header() {
     sed -n '1s/^\([a-z0-9.+-]\+\) (\([^)]*\)).*/\1 \2/p' "$1/debian/changelog"
 }
 
+# Whether every binary stanza in debian/control is Architecture: all. Such a
+# package builds once -- reprepro lands the single .deb in every
+# architecture's index -- so the plan emits one leg with arch "all" instead
+# of one per architecture.
+arch_all_only() {
+    awk '/^Architecture:/ {n++; if ($2 != "all") dep=1} END {exit !(n && !dep)}' \
+        "$1/debian/control"
+}
+
 # What the archive already carries: "reprepro list <suite> <pkg>" prints one
 # line per architecture, e.g. "trixie|main|amd64: zola 0.23.3-1~haus13+1".
+# An Architecture: all package shows the same version on every line.
 archived_version() {
     local suite="$1" pkg="$2" arch="$3"
 
@@ -84,7 +94,7 @@ archived_version() {
 
 plan() {
     local arches="${1:-amd64 arm64}"
-    local repo tag clone header pkg version suite arch expected have
+    local repo tag clone header pkg version suite arch expected have all_only missing
 
     while read -r repo; do
         case "$repo" in ''|\#*) continue ;; esac
@@ -96,6 +106,10 @@ plan() {
         git clone -q --depth 1 --branch "$tag" -- "${GIT_BASE}${repo}" "$clone"
 
         header="$(changelog_header "$clone")"
+        all_only=0
+        if arch_all_only "$clone"; then
+            all_only=1
+        fi
         rm -rf "$clone"
         [ -n "$header" ] || { log "SKIP $repo@$tag: unparsable debian/changelog"; continue; }
         pkg="${header% *}"
@@ -103,6 +117,24 @@ plan() {
 
         for suite in $SUITES; do
             expected="${version}$(qualifier "$suite")"
+
+            if [ "$all_only" = 1 ]; then
+                # One leg; a single includedeb serves every architecture, so
+                # the version must already sit in all of their indices to be
+                # considered present.
+                missing=0
+                for arch in $arches; do
+                    have="$(archived_version "$suite" "$pkg" "$arch")"
+                    if [ "$have" != "$expected" ]; then
+                        missing=1
+                    fi
+                done
+                if [ "$missing" = 1 ]; then
+                    printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+                        "$repo" "$tag" "$pkg" "$suite" "all" "$expected"
+                fi
+                continue
+            fi
 
             for arch in $arches; do
                 have="$(archived_version "$suite" "$pkg" "$arch")"
@@ -128,12 +160,13 @@ build() {
     mkdir -p "$BUILD_DIR"
 
     # One build covers one (repo, tag, suite) on this host's architecture; the
-    # plan's arch column just decides whether this host owes it. Optional
-    # suite and repo arguments narrow the share further, so CI can fan the
-    # plan out across a package x suite x arch matrix; without them, all
-    # suites build serially.
+    # plan's arch column just decides whether this host owes it. Rows planned
+    # as "all" build on whichever host picks them up (in CI that is the row's
+    # single leg). Optional suite and repo arguments narrow the share further,
+    # so CI can fan the plan out across a package x suite x arch matrix;
+    # without them, all suites build serially.
     awk -F'\t' -v arch="$host_arch" -v only="$only_suite" -v ronly="$only_repo" \
-        '$5 == arch && (only == "" || $4 == only) && (ronly == "" || $1 == ronly) {print $1 "\t" $2 "\t" $4}' \
+        '($5 == arch || $5 == "all") && (only == "" || $4 == only) && (ronly == "" || $1 == ronly) {print $1 "\t" $2 "\t" $4}' \
         "$plan_file" | sort -u \
         | while IFS="$(printf '\t')" read -r repo tag suite; do
             log "BUILD $repo@$tag for $suite/$host_arch"
