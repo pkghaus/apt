@@ -14,3 +14,4 @@ pkghaus/i3lock-color-debian
 pkghaus/frp-debian
 pkghaus/act-debian
 pkghaus/d2-debian
+pkghaus/archive-keyring
