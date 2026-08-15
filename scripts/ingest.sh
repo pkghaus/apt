@@ -119,19 +119,21 @@ plan() {
 }
 
 build() {
-    local plan_file="${1:?usage: ingest.sh build <plan.tsv> [suite]}"
+    local plan_file="${1:?usage: ingest.sh build <plan.tsv> [suite] [repo]}"
     local only_suite="${2:-}"
+    local only_repo="${3:-}"
     local host_arch repo tag suite clone built
     host_arch="$(dpkg --print-architecture)"
 
     mkdir -p "$BUILD_DIR"
 
     # One build covers one (repo, tag, suite) on this host's architecture; the
-    # plan's arch column just decides whether this host owes it. An optional
-    # suite argument narrows the share further, so CI can fan the plan out
-    # across a suite x arch matrix; without it, all suites build serially.
-    awk -F'\t' -v arch="$host_arch" -v only="$only_suite" \
-        '$5 == arch && (only == "" || $4 == only) {print $1 "\t" $2 "\t" $4}' \
+    # plan's arch column just decides whether this host owes it. Optional
+    # suite and repo arguments narrow the share further, so CI can fan the
+    # plan out across a package x suite x arch matrix; without them, all
+    # suites build serially.
+    awk -F'\t' -v arch="$host_arch" -v only="$only_suite" -v ronly="$only_repo" \
+        '$5 == arch && (only == "" || $4 == only) && (ronly == "" || $1 == ronly) {print $1 "\t" $2 "\t" $4}' \
         "$plan_file" | sort -u \
         | while IFS="$(printf '\t')" read -r repo tag suite; do
             log "BUILD $repo@$tag for $suite/$host_arch"
@@ -196,7 +198,7 @@ case "${1:-}" in
     build)   shift; build "$@" ;;
     include) shift; include "$@" ;;
     *)
-        log "usage: $0 plan [arches] | build <plan.tsv> [suite] | include <dir>"
+        log "usage: $0 plan [arches] | build <plan.tsv> [suite] [repo] | include <dir>"
         exit 2
         ;;
 esac
