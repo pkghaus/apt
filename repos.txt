@@ -12,3 +12,4 @@ pkghaus/gotypist-debian
 pkghaus/i3-autodisplay-debian
 pkghaus/i3lock-color-debian
 pkghaus/frp-debian
+pkghaus/act-debian
