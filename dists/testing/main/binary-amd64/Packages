@@ -1,0 +1,117 @@
+Package: berry
+Version: 0.1.13-2~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 84
+Depends: libc6 (>= 2.34), libx11-6, libxft2 (>> 2.1.1), libxinerama1 (>= 2:1.1.4)
+Recommends: sxhkd
+Provides: x-window-manager
+Homepage: https://github.com/JLErvin/berry
+Priority: optional
+Section: x11
+Filename: pool/main/b/berry/berry_0.1.13-2~testing1_amd64.deb
+Size: 24284
+SHA256: 99a0bc3f271a302ecab05aa2efa8c9af0c7abf8f7e716f3657430dfc7c805697
+SHA1: 9ae0f0f96a60b6ffdbb1c689441f290ec5c83058
+MD5sum: 6271cafd06c4baf11894170f80acaa7a
+Description: healthy, bite-sized window manager
+ berry is a small window manager for X11, written in C. Windows are
+ managed at runtime through its berryc client; the package ships example
+ sxhkd bindings and an autostart script.
+
+Package: gotypist
+Version: 0.8.2-1~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 2662
+Depends: wamerican
+Homepage: https://github.com/pb-/gotypist
+Priority: optional
+Section: text
+Filename: pool/main/g/gotypist/gotypist_0.8.2-1~testing1_amd64.deb
+Size: 960076
+SHA256: abc8d2f5b5355f9669fd26fe1e6462a6b60fc1b4f6d2b9e8fb2b121970787bd6
+SHA1: 7fd924ccb5064c2d8e1862c81f65ebe0adca1fe4
+MD5sum: 465883adf43f03e47316b0684048db16
+Description: touch-typing tutor
+ A simple touch-typing tutor that follows Steve Yegge's methodology of going
+ in fast, slow, and medium cycles.
+
+Package: i3-autodisplay
+Version: 0.6-3~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 4271
+Depends: libc6 (>= 2.34), x11-xserver-utils
+Homepage: https://github.com/lpicanco/i3-autodisplay
+Priority: optional
+Section: x11
+Filename: pool/main/i/i3-autodisplay/i3-autodisplay_0.6-3~testing1_amd64.deb
+Size: 1335464
+SHA256: 7658525b75dfac551d697190f7f5724b3c4ca17bb7e211de4236b9ec230efacc
+SHA1: 39a803c48b5bab2d039a792e4d6e41f85a71426e
+MD5sum: 6303056713781484bd934cec539c8655
+Description: display auto-configuration for i3wm
+ i3-autodisplay watches for monitor connect and disconnect events and
+ applies the configured xrandr layout, keeping i3 workspaces on their
+ assigned outputs.
+
+Package: i3lock-color
+Version: 2.13.c.5-3~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 155
+Depends: libc6 (>= 2.38), libcairo2 (>= 1.7.2), libev4t64 (>= 1:4.04), libfontconfig1 (>= 2.12.6), libjpeg62-turbo (>= 1.3.1), libpam0g (>= 0.99.7.1), libxcb-composite0, libxcb-image0 (>= 0.2.1), libxcb-randr0 (>= 1.12), libxcb-util1 (>= 0.4.0), libxcb-xinerama0, libxcb-xkb1, libxcb-xrm0 (>= 0.0.0), libxcb1, libxkbcommon-x11-0 (>= 0.5.0), libxkbcommon0 (>= 0.5.0)
+Homepage: https://github.com/Raymo111/i3lock-color
+Priority: optional
+Section: x11
+Filename: pool/main/i/i3lock-color/i3lock-color_2.13.c.5-3~testing1_amd64.deb
+Size: 54272
+SHA256: 36173b6f2bcd5d1c732f33608e104051230588aefd815b02f2aae40945689715
+SHA1: eda4bd91cb1915214e3c9b5225abe26f46b660c8
+MD5sum: 3a2e47b3a7ecd7db9416c70048973a94
+Description: Improved i3lock with color customization
+ A modern version of i3lock with color functionality by eBrnd, maintained
+ for a few years by PandorasFox and now maintained and being developed by
+ Raymo111.
+
+Package: mandown
+Version: 1.0.5.2-1~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 89
+Depends: libc6 (>= 2.34), libconfig11 (>= 1.7.3), libncursesw6 (>= 6), libtinfo6 (>= 6), libxml2-16 (>= 2.14.1)
+Homepage: https://github.com/Titor8115/mandown
+Priority: optional
+Section: text
+Filename: pool/main/m/mandown/mandown_1.0.5.2-1~testing1_amd64.deb
+Size: 31684
+SHA256: 9a81ab5a05f0f718fab409ca60673b2b04099e7b23b3a5bb368b9f46b9864815
+SHA1: ce944dc6fa8cc75e358701f4d68412abb99bad0a
+MD5sum: 91d4d3e821dfb79257d679967f1ab048
+Description: man-page inspired Markdown viewer
+ A man-page inspired Markdown pager written in C.
+ Need to lookup things from README? Or from manual page? Or perhaps just
+ want to install something cool...
+
+Package: zola
+Version: 0.23.3-3~testing1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 42889
+Depends: ca-certificates, libc6 (>= 2.39), libgcc-s1 (>= 4.2)
+Homepage: https://github.com/getzola/zola
+Priority: optional
+Section: web
+Filename: pool/main/z/zola/zola_0.23.3-3~testing1_amd64.deb
+Size: 10494428
+SHA256: bd237ec8d0d7aa5746dc12adf9181f8b0ab4128c2d670d23da77ca0c7137feb6
+SHA1: da863dd072ba9833fb3c598db5a9b3ec438b315d
+MD5sum: 5dadc30fd53a624f4d2838e8f1412832
+Description: fast static site generator in a single binary
+ Zola is a static site generator (SSG), similar to Hugo, Pelican, and Jekyll
+ (for a comprehensive list of SSGs, please see Jamstack). It is written in
+ Rust and uses the Tera template engine, which is similar to Jinja2, Django
+ templates, Liquid, and Twig. Content is written in CommonMark, a strongly
+ defined, highly compatible specification of Markdown.
+

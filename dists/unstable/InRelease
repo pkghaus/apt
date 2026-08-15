@@ -1,0 +1,49 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Suite: unstable
+Codename: unstable
+Date: Sat, 15 Aug 2026 17:14:57 UTC
+Architectures: amd64 arm64
+Components: main
+Description: pkg.haus packages built for Debian unstable
+MD5Sum:
+ 9e9aaaa0e4fc0f87a03ca2e6203af19b 4773 main/binary-amd64/Packages
+ cac835c87c9a5d3d8e055197b9b78762 2123 main/binary-amd64/Packages.gz
+ 1d4035bf754a01f70e0d54fb66d5844b 111 main/binary-amd64/Release
+ 3d315d3e254defe941fcd87674a4c3a4 4774 main/binary-arm64/Packages
+ c978e70a3848b04ac75bc69f147ac23b 2132 main/binary-arm64/Packages.gz
+ a9d825474074d0c26f2301aadf8cb3ca 111 main/binary-arm64/Release
+ 6c24cb051f903cc990ec8b389a15a242 1549 main/Contents-amd64
+ d2feadb168fa76479dd971e7a45dea81 345 main/Contents-amd64.gz
+ 6c24cb051f903cc990ec8b389a15a242 1549 main/Contents-arm64
+ d2feadb168fa76479dd971e7a45dea81 345 main/Contents-arm64.gz
+SHA1:
+ f04cd12a4f48ec2b7dae048730545996510bdd63 4773 main/binary-amd64/Packages
+ d3e91ad92cdd01a77f1f4f157ee4cdd0f8cf7ec4 2123 main/binary-amd64/Packages.gz
+ 134ec24dec5676f74e9f956372a3592da55355a5 111 main/binary-amd64/Release
+ 0950034d6534b75db9a65b894d8f52ce4fdcc39f 4774 main/binary-arm64/Packages
+ c3be3067373070e3311854f3fcdceba815582e5d 2132 main/binary-arm64/Packages.gz
+ ceb7e3b532a6bd8818236ffb83a7f46341709688 111 main/binary-arm64/Release
+ d2e7f03ed57cd2cca2a3dc240a8d0ad296ba080b 1549 main/Contents-amd64
+ 82843fd48b92c350127df31d909d8c2731de600d 345 main/Contents-amd64.gz
+ d2e7f03ed57cd2cca2a3dc240a8d0ad296ba080b 1549 main/Contents-arm64
+ 82843fd48b92c350127df31d909d8c2731de600d 345 main/Contents-arm64.gz
+SHA256:
+ 1523523993c0cde9a23b709591ff18bc22b16008ff077e12271fd0ce676d5cc4 4773 main/binary-amd64/Packages
+ 63b93e9aaa63edc20e1b43bbde7c144de8027cd44681fe7f8f04bcb5d8c94ed0 2123 main/binary-amd64/Packages.gz
+ d2522fc2ea4758f1011f4f14998312900bca0f2e28a1046f094c5b036649b179 111 main/binary-amd64/Release
+ a940a1874172fddca33e9af478be39bf77e062d9a485edfd2482d0cdc18b18ec 4774 main/binary-arm64/Packages
+ 18641ab833381af954204783376ed20c9a586b994de07b5f444d0bd8a0392ff9 2132 main/binary-arm64/Packages.gz
+ 92bd15087a03eb6db2c784e177b21c166923fcf9b22f6fa9bcf354918be10930 111 main/binary-arm64/Release
+ 6362c9996040910ac4a1b84ad2d119e774e2f45e787ac082dfd83ea7af8030ae 1549 main/Contents-amd64
+ 5a9c9c655cdc9fafd95016bd914220b4f93282bf8d68cfc951508087c42d7de6 345 main/Contents-amd64.gz
+ 6362c9996040910ac4a1b84ad2d119e774e2f45e787ac082dfd83ea7af8030ae 1549 main/Contents-arm64
+ 5a9c9c655cdc9fafd95016bd914220b4f93282bf8d68cfc951508087c42d7de6 345 main/Contents-arm64.gz
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQTdNMQud2tZH7/rcqFitn8+ofpt7AUCaoCekQAKCRBitn8+ofpt
+7HhGAP9hdavS2mKQDOUU2pQ7TvfElh714aFQls/r1j8XYvAkgQEA9L0uzpdyKXB1
+Ea2d4osUvYvb8IplepSXNpOqav+DOws=
+=FWWX
+-----END PGP SIGNATURE-----

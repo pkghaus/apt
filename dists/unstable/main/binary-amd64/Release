@@ -1,0 +1,4 @@
+Archive: unstable
+Component: main
+Architecture: amd64
+Description: pkg.haus packages built for Debian unstable
