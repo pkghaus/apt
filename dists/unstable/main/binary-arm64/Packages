@@ -156,6 +156,25 @@ Description: man-page inspired Markdown viewer
  Need to lookup things from README? Or from manual page? Or perhaps just
  want to install something cool...
 
+Package: pkghaus-archive-keyring
+Version: 2026.08.15
+Architecture: all
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 13
+Homepage: https://pkg.haus
+Priority: optional
+Section: misc
+Filename: pool/main/p/pkghaus-archive-keyring/pkghaus-archive-keyring_2026.08.15_all.deb
+Size: 2588
+SHA256: 955aa4fc639af871e5faf7807a66deef1218f330192d6ca78895e2bf5cac240e
+SHA1: 27dadb1390a7a0f568002a57128e36c2b22211a2
+MD5sum: 69b1e3bd9e3ce109f5fd3cc933a140be
+Description: OpenPGP archive keyring for apt.pkg.haus
+ The keys apt uses to verify the pkg.haus APT archive. Installing this
+ package keeps the trust anchor current: key rotations ship as ordinary
+ package updates, signed by a key the system already trusts, so apt
+ keeps working across a rotation with no manual step.
+
 Package: zola
 Version: 0.23.3-3
 Architecture: arm64
