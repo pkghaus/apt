@@ -6,4 +6,4 @@
 # debian/ (the migrated shape) -- pre-migration tags fail the build with
 # "package.conf not found". Uncomment each line as part of its migration.
 pkghaus/zola-debian
-#pkghaus/scaphandre-debian
+pkghaus/scaphandre-debian
