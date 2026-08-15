@@ -40,6 +40,27 @@ Description: healthy, bite-sized window manager
  managed at runtime through its berryc client; the package ships example
  sxhkd bindings and an autostart script.
 
+Package: croc
+Version: 11.1.0-1~haus13+1
+Architecture: arm64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 8394
+Depends: libc6 (>= 2.34)
+Homepage: https://github.com/schollz/croc
+Priority: optional
+Section: net
+Filename: pool/main/c/croc/croc_11.1.0-1~haus13+1_arm64.deb
+Size: 2370400
+SHA256: b8d8394942f2c03c337a3f8ee9610067feece96cb0030cd706c4e9c9ad0e92c7
+SHA1: bf0f4208780671f9ecea115d17361b36a2deccff
+MD5sum: 26d3bbf6687dce2654832df6a3fb50b0
+Description: securely send files and folders between computers
+ croc transfers files and folders between any two machines through a
+ relay, end-to-end encrypted via a password-authenticated key exchange:
+ both ends only need the generated code phrase. Interrupted transfers
+ resume. A public relay brokers connections by default; croc relay runs
+ a self-hosted one (an example systemd unit ships with the package).
+
 Package: d2
 Version: 0.7.1-1~haus13+1
 Architecture: arm64
@@ -58,6 +79,27 @@ Description: declarative diagramming language and compiler
  D2 turns text into diagrams: a scripting language whose compiler renders
  the description to SVG and other formats, with layout engines, themes
  and a watch mode for live editing.
+
+Package: difftastic
+Version: 0.70.0-1~haus13+1
+Architecture: arm64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 115430
+Depends: libc6 (>= 2.39), libgcc-s1 (>= 4.2)
+Homepage: https://difftastic.wilfred.me.uk
+Priority: optional
+Section: utils
+Filename: pool/main/d/difftastic/difftastic_0.70.0-1~haus13+1_arm64.deb
+Size: 6351016
+SHA256: ffeb6f4396409dc72dc0284a4830f555567cfe9e642fe9bc6a11b2b3bdd1e576
+SHA1: 5bbfaea13fa7032a6ef8f6da5c66d28aa7b22e1b
+MD5sum: ddb196be4781f97b1ea5101f29030ff2
+Description: structural diff that understands syntax
+ difftastic (the difft binary) parses files with tree-sitter and diffs
+ the syntax trees, so changes are reported the way a reader sees them:
+ formatting-only edits show as unchanged, and real changes are
+ highlighted within lines. Over 30 programming languages are supported,
+ with a line-oriented fallback for everything else.
 
 Package: frp
 Version: 0.71.0-1~haus13+1
@@ -174,6 +216,26 @@ Description: OpenPGP archive keyring for apt.pkg.haus
  package keeps the trust anchor current: key rotations ship as ordinary
  package updates, signed by a key the system already trusts, so apt
  keeps working across a rotation with no manual step.
+
+Package: typst
+Version: 0.15.1-1~haus13+1
+Architecture: arm64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 45249
+Depends: libc6 (>= 2.39), libgcc-s1 (>= 4.2), libssl3t64 (>= 3.0.0)
+Homepage: https://typst.app
+Priority: optional
+Section: text
+Filename: pool/main/t/typst/typst_0.15.1-1~haus13+1_arm64.deb
+Size: 14463544
+SHA256: 42940d835a218221d170bd802c7f964b598b86ee2f9a363e9e86d5014b54646c
+SHA1: 0f63c3f50e1a31d6baf87aff4ba0348e2e05c57e
+MD5sum: 11e0bd4262a9923e9901b7bcbd57e3d2
+Description: markup-based typesetting system
+ Typst compiles marked-up text documents to PDF, SVG or PNG. Common
+ formatting is concise markup; everything beyond it is scriptable in
+ the same language, and errors are reported against source locations.
+ A watch mode recompiles incrementally on save.
 
 Package: zola
 Version: 0.23.3-3~haus13+1
