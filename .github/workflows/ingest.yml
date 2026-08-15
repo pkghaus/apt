@@ -1,5 +1,12 @@
 name: Ingest and publish
 
+# Dispatch runs are named after the package that cued them; every other
+# event keeps GitHub's default title (the empty fallback string does that).
+run-name: >-
+  ${{ github.event_name == 'repository_dispatch'
+      && format('Ingest {0} {1}', github.event.client_payload.repository, github.event.client_payload.tag)
+      || '' }}
+
 # Builds whatever the fleet's newest tags provide that the archive does not yet
 # carry, includes it into the reprepro pool, and publishes the result to GitHub
 # Pages at https://apt.pkg.haus.
