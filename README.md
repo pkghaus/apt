@@ -22,8 +22,12 @@ Signed-By: /usr/share/keyrings/pkghaus-archive-keyring.gpg
 EOF
 
 sudo apt update
-sudo apt install <package>
+sudo apt install pkghaus-archive-keyring <package>
 ```
+
+`pkghaus-archive-keyring` takes over the manually fetched trust anchor:
+key rotations then arrive as ordinary signed package updates, with no
+further manual step.
 
 ## Versioning
 
