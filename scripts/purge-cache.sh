@@ -30,12 +30,19 @@ mapfile -t urls < <(
         # Pool files too: normally immutable, but rebuild flows (archive
         # wipe, retirement) replace bytes under existing URLs, and a POP
         # still holding the old bytes breaks apt with hash mismatches
-        # against the fresh, never-cached dists metadata.
+        # against the fresh, never-cached dists metadata. apt requests
+        # these URLs with '~' and '+' percent-encoded (observed live:
+        # %7e / %2b, lowercase), so the cached key can exist under an
+        # encoded spelling the literal URL would not match. Purge every
+        # spelling; the duplicates collapse in sort -u.
         find "$ARCHIVE_DIR/pool" -name '*.deb' -not -path '*/.git/*' 2>/dev/null \
             | while read -r deb; do
-                printf '%s%s\n' "$BASE_URL" "${deb#"$ARCHIVE_DIR"}"
+                rel="${deb#"$ARCHIVE_DIR"}"
+                printf '%s%s\n' "$BASE_URL" "$rel"
+                printf '%s%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7e/g; s/+/%2b/g')"
+                printf '%s%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7E/g; s/+/%2B/g')"
             done
-    } | LC_ALL=C sort
+    } | LC_ALL=C sort -u
 )
 
 for ((i = 0; i < ${#urls[@]}; i += 30)); do
