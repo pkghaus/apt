@@ -56,7 +56,13 @@ STYLE='<style>
   td code { font-variant-numeric: tabular-nums; font-size: .85rem; }
   td.size { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   th.size { text-align: right; }
-  footer { border-top: 1px solid var(--line); padding-top: 1rem; font-size: .85rem; color: var(--muted); }
+  footer {
+    border-top: 3px solid var(--ink); padding-top: 1.5rem;
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    font-size: .85rem; color: var(--muted);
+  }
+  footer a { color: inherit; }
+  footer a:hover { color: var(--accent); }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
 </style>'
@@ -121,9 +127,11 @@ page_close() {
     # time, so it stays correct even on edge-cached copies.
     cat <<EOF
   <footer>
-    <a href="https://pkg.haus">pkg.haus</a> &middot;
-    rendered by the ingest,
-    <time datetime="$(date -u +%Y-%m-%dT%H:%M:%SZ)">$(date -u '+%Y-%m-%d %H:%M:%S UTC')</time>
+    <a href="https://pkg.haus">pkg.haus</a>
+    <a href="https://github.com/pkghaus">github.com/pkghaus</a>
+    <span>rendered by the ingest,
+    <time datetime="$(date -u +%Y-%m-%dT%H:%M:%SZ)">$(date -u '+%Y-%m-%d %H:%M:%S UTC')</time></span>
+    <span>Apache-2.0</span>
   </footer>
 </main>
 <script>
