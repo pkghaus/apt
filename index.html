@@ -15,11 +15,13 @@
   :root {
     --paper: #FFFFFF; --ink: #141414; --muted: #6B6B66;
     --line: #E4E4DF; --accent: #E0421B;
+    --ok: #4A7C3A; --info: #33688C; --chg: #A87616;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --paper: #0E0E0E; --ink: #F0F0EC; --muted: #8F8F88;
       --line: #2A2A27; --accent: #F0603C;
+      --ok: #7FB56F; --info: #7FA8C9; --chg: #D9A853;
     }
   }
   * { box-sizing: border-box; }
@@ -47,7 +49,7 @@
   h1 a:hover { color: var(--accent); }
   .tablewrap { overflow-x: auto; padding: 1.5rem 0; }
   table { border-collapse: collapse; width: 100%; font-size: .92rem; }
-  th, td { text-align: left; padding: .5rem .75rem .5rem 0; border-bottom: 1px dashed var(--line); }
+  th, td { text-align: left; padding: .5rem .75rem .5rem 0; border-bottom: 1px dashed var(--line); vertical-align: top; }
   th {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
@@ -56,6 +58,24 @@
   td code { font-variant-numeric: tabular-nums; font-size: .85rem; }
   td.size { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   th.size { text-align: right; }
+  td.date {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .85rem; color: var(--muted); white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip {
+    display: inline-block; font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .72rem; border: 1px solid var(--line); padding: .1rem .5rem;
+    color: var(--muted); white-space: nowrap;
+  }
+  .chip.added { color: var(--ok); border-color: var(--ok); }
+  .chip.updated { color: var(--chg); border-color: var(--chg); }
+  .chip.security { color: var(--accent); border-color: var(--accent); }
+  .chip.notice { color: var(--info); border-color: var(--info); }
+  .pkgs { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .35rem; }
+  .pkgs code { font-size: .85rem; white-space: nowrap; }
+  .pkgs .ver { color: var(--muted); }
+  p.rss { color: var(--muted); font-size: .85rem; margin: 0 0 1.5rem; }
   footer {
     border-top: 3px solid var(--ink); padding-top: 1.5rem;
     display: flex; gap: 1.5rem; flex-wrap: wrap;
@@ -91,6 +111,7 @@
       <tbody>
       <tr><td><a href="db/"><code>db/</code></a></td><td class="size">-</td></tr>
       <tr><td><a href="dists/"><code>dists/</code></a></td><td class="size">-</td></tr>
+      <tr><td><a href="news/"><code>news/</code></a></td><td class="size">-</td></tr>
       <tr><td><a href="pool/"><code>pool/</code></a></td><td class="size">-</td></tr>
       <tr><td><a href="/stats"><code>stats/</code></a></td><td class="size">-</td></tr>
       <tr><td><a href="pkghaus-archive-keyring.gpg"><code>pkghaus-archive-keyring.gpg</code></a></td><td class="size">554</td></tr>
@@ -101,7 +122,7 @@
     <a href="https://pkg.haus">pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
     <span>rendered by the ingest,
-    <time datetime="2026-08-16T11:41:29Z">2026-08-16 11:41:29 UTC</time></span>
+    <time datetime="2026-08-16T12:38:03Z">2026-08-16 12:38:03 UTC</time></span>
     <span>Apache-2.0</span>
   </footer>
 </main>
