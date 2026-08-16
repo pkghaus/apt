@@ -18,3 +18,4 @@ pkghaus/archive-keyring
 pkghaus/typst-debian
 pkghaus/croc-debian
 pkghaus/difftastic-debian
+pkghaus/superfile-debian
