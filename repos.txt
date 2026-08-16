@@ -25,3 +25,4 @@ pkghaus/vegeta-debian
 pkghaus/fx-debian
 pkghaus/actionlint-debian
 pkghaus/viddy-debian
+pkghaus/ouch-debian
