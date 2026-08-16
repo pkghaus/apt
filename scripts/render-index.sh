@@ -234,7 +234,7 @@ render_listings() {
                 path_html='<span class="sep">/</span>'"$(
                     printf '%s' "$rel" | sed 's|/|<wbr><span class="sep">/</span>|g')"
             else
-                path_html='<span class="sep">/</span><span class="gap">\&hellip;</span><wbr><span class="sep">/</span>'"${rel##*/}"
+                path_html='<span class="sep">/</span><span class="gap">&hellip;</span><wbr><span class="sep">/</span>'"${rel##*/}"
             fi
             crumbs='<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path">'"$path_html"'</span>'
             {
