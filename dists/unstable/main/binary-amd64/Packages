@@ -19,6 +19,24 @@ Description: run GitHub Actions workflows locally
  without pushing commits. It needs a container engine at runtime; Docker
  is the default, hence the recommendation.
 
+Package: actionlint
+Version: 1.7.12-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 6503
+Homepage: https://rhysd.github.io/actionlint/
+Priority: optional
+Section: devel
+Filename: pool/main/a/actionlint/actionlint_1.7.12-1_amd64.deb
+Size: 1842640
+SHA256: 197d2f31b2b2d3224520ac7dffd6ce256b7165cc607cf3e4f94f894db0fa4436
+SHA1: e10480123f6e94d3c132d689bb7181ee607ac17d
+MD5sum: d9355efae556ffae8387c6bb09d42bc0
+Description: static checker for GitHub Actions workflow files
+ actionlint lints .github/workflows/ files: expression type checks,
+ action input validation, shellcheck integration for run: blocks,
+ runner label checks and many workflow-specific pitfalls.
+
 Package: berry
 Version: 0.1.13-2
 Architecture: amd64
@@ -123,6 +141,25 @@ Description: fast reverse proxy (frpc client and frps server)
  from source without the optional browser dashboards, whose prebuilt
  assets are not part of the source tag.
 
+Package: fx
+Version: 39.2.0-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 13906
+Depends: libc6 (>= 2.34)
+Homepage: https://fx.wtf
+Priority: optional
+Section: utils
+Filename: pool/main/f/fx/fx_39.2.0-1_amd64.deb
+Size: 3652860
+SHA256: bba52a616bf585e289048197150ca836e01310b0ba88b9a34b32842f45d2d2fb
+SHA1: 95384d5169179bac7dc1c272f0987b8a3108a617
+MD5sum: 98d59e35591559ffb02a1de838710390
+Description: terminal JSON viewer and processor
+ fx renders JSON as an interactive, collapsible tree in the terminal
+ and doubles as a non-interactive processor: expressions passed as
+ arguments transform the input stream, JavaScript-flavored.
+
 Package: gotypist
 Version: 0.8.2-1
 Architecture: amd64
@@ -179,6 +216,26 @@ Description: Improved i3lock with color customization
  for a few years by PandorasFox and now maintained and being developed by
  Raymo111.
 
+Package: lychee
+Version: 0.15.1-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 18018
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), libssl3t64 (>= 3.0.0)
+Homepage: https://lychee.cli.rs
+Priority: optional
+Section: web
+Filename: pool/main/l/lychee/lychee_0.15.1-1_amd64.deb
+Size: 4491016
+SHA256: 31898bcba3d9e37f5e3e2728f9e949b4c5209f81dc3e4e6653e778aa01d10b6f
+SHA1: 063ce92dea1ad2aecf994545d1d9626e08508d8f
+MD5sum: 52c0d87426095e94d36efe929df5e246
+Description: fast link checker for Markdown, HTML and websites
+ lychee checks links in Markdown, HTML, reStructuredText and plain
+ text, concurrently and with caching, and reports broken ones with
+ status codes. Built for CI use: globs, excludes, retries and a
+ configurable failure threshold.
+
 Package: mandown
 Version: 1.0.5.2-1
 Architecture: amd64
@@ -197,6 +254,45 @@ Description: man-page inspired Markdown viewer
  A man-page inspired Markdown pager written in C.
  Need to lookup things from README? Or from manual page? Or perhaps just
  want to install something cool...
+
+Package: monolith
+Version: 2.10.1-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 10443
+Depends: libc6 (>= 2.38), libgcc-s1 (>= 4.2)
+Homepage: https://github.com/Y2Z/monolith
+Priority: optional
+Section: web
+Filename: pool/main/m/monolith/monolith_2.10.1-1_amd64.deb
+Size: 3239160
+SHA256: 22dcfc7b9f4164688961396c2d2969d4682c78f6a6bfab1f0e45e8927f5c51ab
+SHA1: f5e2395cf453c831f3dbc7bc4412712037023397
+MD5sum: 469886c59f84670331def352216031cf
+Description: save any web page as a single self-contained HTML file
+ monolith downloads a web page and embeds every asset it references
+ (CSS, images, fonts, scripts) into one HTML file that renders
+ offline, using data: URIs. Options control scripting, media and
+ metadata inclusion.
+
+Package: ouch
+Version: 0.8.1-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 6237
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), libstdc++6 (>= 5.2)
+Homepage: https://github.com/ouch-org/ouch
+Priority: optional
+Section: utils
+Filename: pool/main/o/ouch/ouch_0.8.1-1_amd64.deb
+Size: 2124804
+SHA256: 6b085b3e8ff882a339c3365a5ce6a5bd6c254f90d51f1ca480cb42fb72c9b711
+SHA1: b17b804ddc93d353e50e51de30d265db7c1cfbaa
+MD5sum: 20ac4bc3fd269facbc56d2f738a7aa7f
+Description: painless compression and decompression
+ ouch compresses and decompresses archives with a single consistent
+ interface, inferring formats from file extensions: tar, zip, gzip,
+ bzip2, xz, zstd, lz4 and combinations thereof.
 
 Package: pkghaus-archive-keyring
 Version: 2026.08.15
@@ -217,6 +313,65 @@ Description: OpenPGP archive keyring for apt.pkg.haus
  package updates, signed by a key the system already trusts, so apt
  keeps working across a rotation with no manual step.
 
+Package: rathole
+Version: 0.5.0-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 4384
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), libssl3t64 (>= 3.0.0)
+Homepage: https://github.com/rapiz1/rathole
+Priority: optional
+Section: net
+Filename: pool/main/r/rathole/rathole_0.5.0-1_amd64.deb
+Size: 1296220
+SHA256: 5c2c6c53922cf99bc1de46388599efe4cd53497efa6cf721b7ac376b33802a6f
+SHA1: 6f3940f51bb392602464ebd6695971543c9acf89
+MD5sum: bedd4c052b5139c11d5fdbbbb2e84f39
+Description: lightweight and stable reverse tunnel for NAT traversal
+ rathole exposes services running behind NAT or firewalls through a
+ server with a public IP, with one binary acting as client or server.
+ Transports include TCP, TLS, Noise and WebSocket; configuration is
+ a small TOML file (examples included).
+
+Package: rustic
+Version: 0.11.3-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 28194
+Depends: libc6 (>= 2.39), libgcc-s1 (>= 4.2)
+Homepage: https://rustic.cli.rs
+Priority: optional
+Section: admin
+Filename: pool/main/r/rustic/rustic_0.11.3-1_amd64.deb
+Size: 7570624
+SHA256: 7c52575526c1613fa8834287a60334389c2c789cae693e1d3d8ec9697a3aa545
+SHA1: 7c4c6b52fd1c07eebc2b05736fabedb6974d05ae
+MD5sum: 665a20aeddb09bcad61ec99fdfc74d20
+Description: fast, encrypted, deduplicated backups
+ rustic backs up to restic-compatible repositories: content-defined
+ chunking, encryption, deduplication and snapshots, with cold-storage
+ support and lock-free operation. Local and remote (opendal) backends
+ are built in.
+
+Package: superfile
+Version: 1.6.0-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 21825
+Depends: libc6 (>= 2.34)
+Homepage: https://superfile.dev
+Priority: optional
+Section: utils
+Filename: pool/main/s/superfile/superfile_1.6.0-1_amd64.deb
+Size: 6046412
+SHA256: 86bc5da9e6003cc05cf4f69d1f62f6c9d1d46d8551422e5d7b58ea11bdb2c4d3
+SHA1: 2e8d46e992eb8ca09e2148dec67aaf39c5a899c5
+MD5sum: 524842ffe1bb17856f7996064099467a
+Description: modern terminal file manager
+ superfile (the spf binary) is a full-screen terminal file manager
+ with panels, tabs, file previews and built-in operations (copy,
+ compress, rename, delete with trash support), themed out of the box.
+
 Package: typst
 Version: 0.15.1-1
 Architecture: amd64
@@ -236,6 +391,65 @@ Description: markup-based typesetting system
  formatting is concise markup; everything beyond it is scriptable in
  the same language, and errors are reported against source locations.
  A watch mode recompiles incrementally on save.
+
+Package: vale
+Version: 3.17.1-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 41925
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 5)
+Homepage: https://vale.sh
+Priority: optional
+Section: text
+Filename: pool/main/v/vale/vale_3.17.1-1_amd64.deb
+Size: 7874892
+SHA256: 74298f998fd4fd78e6b47bdc282f3b8e59eea09bc5c1738ec8c03620f4545d6c
+SHA1: 0de7a752f64cb37f0e704639b876dd028d9e9a42
+MD5sum: 7b631d8001c517d66b07f70ac2b37283
+Description: syntax-aware linter for prose
+ vale lints prose in Markdown, reStructuredText, AsciiDoc, HTML and
+ source-code comments against configurable style rules. Editorial
+ styles (write-good, Microsoft, Google, ...) load from a styles
+ directory; everything is driven by a .vale.ini.
+
+Package: vegeta
+Version: 12.13.0-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 13669
+Depends: libc6 (>= 2.34)
+Homepage: https://github.com/tsenart/vegeta
+Priority: optional
+Section: net
+Filename: pool/main/v/vegeta/vegeta_12.13.0-1_amd64.deb
+Size: 3880040
+SHA256: 4d73583ba31a30537d581954a59c3c2752f901ac9ffd2da5ac2893c1f9cf6ecb
+SHA1: eea936a1ed89ed80b17b9e4753c771ea1d5d3dce
+MD5sum: 151c56f62bea42f6a3e2d6a36059ca93
+Description: HTTP load testing tool with constant request rate
+ vegeta drives HTTP services at a constant request rate and reports
+ latency distributions, throughput and status codes, as text, JSON
+ or plots. It works as a composable CLI (attack, report, plot,
+ encode) and as a library.
+
+Package: viddy
+Version: 1.3.1-1
+Architecture: amd64
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 8108
+Depends: libc6 (>= 2.39), libgcc-s1 (>= 4.2)
+Homepage: https://github.com/sachaos/viddy
+Priority: optional
+Section: utils
+Filename: pool/main/v/viddy/viddy_1.3.1-1_amd64.deb
+Size: 2486672
+SHA256: f6a56ad3e5f504df1f2ec8398acf4ebf3402347d817c2871a8a07bf7ffc0e653
+SHA1: b99852fd96e84b37219eb17f9ec84dd07049d93b
+MD5sum: 38e1054e599c0af9ac33c8f94d9ff65b
+Description: modern watch command with history and diffs
+ viddy re-runs a command on an interval like watch(1), adding
+ scrollable time-machine history, diff highlighting between runs
+ and search.
 
 Package: zola
 Version: 0.23.3-3
