@@ -20,3 +20,4 @@ pkghaus/croc-debian
 pkghaus/difftastic-debian
 pkghaus/superfile-debian
 pkghaus/monolith-debian
+pkghaus/rustic-debian
