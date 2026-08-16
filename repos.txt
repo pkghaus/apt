@@ -26,3 +26,4 @@ pkghaus/fx-debian
 pkghaus/actionlint-debian
 pkghaus/viddy-debian
 pkghaus/ouch-debian
+pkghaus/lychee-debian
