@@ -39,7 +39,7 @@ STYLE='<style>
   }
   h1 {
     font-family: ui-monospace, Menlo, Consolas, monospace;
-    font-size: clamp(1.2rem, 4.5vw, 1.7rem); letter-spacing: -.03em;
+    font-size: clamp(1.9rem, 6vw, 2.6rem); letter-spacing: -.03em;
     margin: 0; line-height: 1; word-break: break-all;
   }
   h1 .dot, h1 .sep { color: var(--accent); }
@@ -168,6 +168,12 @@ listing_rows() {
         printf '      <tr><td><a href="%s/"><code>%s/</code></a></td><td class="size">-</td></tr>\n' \
             "$name" "$name"
     done
+    # Root only (the sole noparent caller): the stats page is served by
+    # the edge worker (pkghaus/stats), not by a directory in this tree;
+    # listed so the archive reads as one service.
+    if [ "$with_parent" = "noparent" ]; then
+        echo '      <tr><td><a href="/stats"><code>stats/</code></a></td><td class="size">-</td></tr>'
+    fi
     for entry in "$dir"/*; do
         [ -f "$entry" ] || continue
         name="$(basename "$entry")"
