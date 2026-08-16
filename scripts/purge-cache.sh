@@ -18,6 +18,32 @@ BASE_URL="${BASE_URL:-https://apt.pkg.haus}"
 : "${CLOUDFLARE_PURGE_TOKEN:?token with Zone - Cache Purge - Edit on pkg.haus}"
 : "${CLOUDFLARE_ZONE_ID:?the pkg.haus zone id}"
 
+# The Pages deployment reports success before every origin node serves
+# it. Purging inside that window lets the edge re-cache the PREVIOUS
+# render for the listings' full TTL (observed live 2026-08-16: a green
+# publish left a stale root listing until the next purge). Every render
+# stamps the footer with a fresh <time datetime>; wait until the origin
+# serves this render's stamp before purging. Cache-busting query strings
+# read through our edge straight to the origin.
+verify_origin_fresh() {
+    local stamp attempt
+    stamp="$(grep -o 'datetime="[^"]*"' "$ARCHIVE_DIR/index.html" 2>/dev/null | head -n1 || true)"
+    if [ -z "$stamp" ]; then
+        echo "no render stamp found; skipping origin verification" >&2
+        return 0
+    fi
+    for attempt in $(seq 1 24); do
+        if curl -fsS "$BASE_URL/?verify=${attempt}-$$" 2>/dev/null | grep -q "$stamp"; then
+            echo "origin serves this render (attempt $attempt)" >&2
+            return 0
+        fi
+        sleep 5
+    done
+    echo "WARNING: origin still serving a previous render after 120s; purging anyway" >&2
+}
+
+verify_origin_fresh
+
 mapfile -t urls < <(
     {
         find "$ARCHIVE_DIR" -name index.html \
