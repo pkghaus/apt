@@ -40,9 +40,11 @@ STYLE='<style>
   h1 {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: clamp(1.9rem, 6vw, 2.6rem); letter-spacing: -.03em;
-    margin: 0; line-height: 1; word-break: break-all;
+    margin: 0; line-height: 1.15; min-width: 0;
   }
   h1 .dot, h1 .sep { color: var(--accent); }
+  h1 .path { font-size: .65em; }
+  h1 .gap { color: var(--muted); }
   h1 a { color: inherit; text-decoration: none; }
   h1 a:hover { color: var(--accent); }
   .tablewrap { overflow-x: auto; padding: 1.5rem 0; }
@@ -222,9 +224,19 @@ render_listings() {
     find "$ARCHIVE_DIR" -mindepth 1 -type d -not -path '*/.git*' -print \
         | LC_ALL=C sort | while read -r dir; do
             rel="${dir#"$ARCHIVE_DIR"/}"
-            # Breadcrumb: the root name links home, each segment is text.
-            crumbs='<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="sep">/</span>'"$(
-                printf '%s' "$rel" | sed 's|/|<span class="sep">/</span>|g')"
+            # Breadcrumb: the root name links home at full size; the path
+            # rides a smaller tier. Beyond two segments the middle
+            # collapses to an ellipsis (../ in the listing still walks
+            # up), and <wbr> before each separator lets a pathological
+            # segment wrap at a slash instead of clipping.
+            depth="$(printf '%s' "$rel" | awk -F/ '{print NF}')"
+            if [ "$depth" -le 2 ]; then
+                path_html='<span class="sep">/</span>'"$(
+                    printf '%s' "$rel" | sed 's|/|<wbr><span class="sep">/</span>|g')"
+            else
+                path_html='<span class="sep">/</span><span class="gap">\&hellip;</span><wbr><span class="sep">/</span>'"${rel##*/}"
+            fi
+            crumbs='<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path">'"$path_html"'</span>'
             {
                 page_open "apt.pkg.haus/$rel/" "$crumbs" 80
                 listing_table "$dir" parent
