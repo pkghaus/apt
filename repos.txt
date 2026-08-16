@@ -23,3 +23,4 @@ pkghaus/monolith-debian
 pkghaus/rustic-debian
 pkghaus/vegeta-debian
 pkghaus/fx-debian
+pkghaus/actionlint-debian
