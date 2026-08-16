@@ -34,9 +34,10 @@ STYLE='<style>
   code { font-family: ui-monospace, Menlo, Consolas, monospace; }
   main { max-width: 46rem; margin: 0 auto; }
   header {
-    display: flex; align-items: center; gap: 1rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
     padding: 2.25rem 0 1.25rem; border-bottom: 3px solid var(--ink);
   }
+  .tagline { flex-basis: 100%; color: var(--muted); margin: .75rem 0 0; max-width: 38rem; }
   h1 {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: clamp(1.9rem, 6vw, 2.6rem); letter-spacing: -.03em;
@@ -98,7 +99,11 @@ EOF
 }
 
 page_open() {
-    local title="$1" heading="$2" logosize="$3"
+    local title="$1" heading="$2" logosize="$3" tagline="${4:-}"
+
+    if [ -n "$tagline" ]; then
+        tagline='<p class="tagline">'"$tagline"'</p>'
+    fi
     cat <<EOF
 <!doctype html>
 <html lang="en">
@@ -106,6 +111,7 @@ page_open() {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>$title</title>
+<meta name="description" content="Browsable listing of the pkg.haus APT archive.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <script defer src="/zk/js/script.js"></script>
 <script>
@@ -119,6 +125,7 @@ $STYLE
   <header>
 $(logo "$logosize")
     <h1>$heading</h1>
+    $tagline
   </header>
 EOF
 }
@@ -187,7 +194,7 @@ listing_rows() {
     for entry in "$dir"/*; do
         [ -f "$entry" ] || continue
         name="$(basename "$entry")"
-        case "$name" in index.html|favicon.svg) continue ;; esac
+        case "$name" in index.html|favicon.svg|404.html) continue ;; esac
         size="$(stat -c %s "$entry" | numfmt --to=iec)"
         printf '      <tr><td><a href="%s"><code>%s</code></a></td><td class="size">%s</td></tr>\n' \
             "$name" "$name" "$size"
@@ -213,7 +220,8 @@ EOF
 render_root() {
     {
         page_open "apt.pkg.haus" \
-            'apt<span class="dot">.</span>pkg<span class="dot">.</span>haus' 80
+            'apt<span class="dot">.</span>pkg<span class="dot">.</span>haus' 80 \
+            "The signed APT archive behind pkg.haus."
         listing_table "$ARCHIVE_DIR" noparent
         page_close
     } > "$ARCHIVE_DIR/index.html"
@@ -221,7 +229,7 @@ render_root() {
 
 render_listings() {
     local dir rel crumbs
-    find "$ARCHIVE_DIR" -mindepth 1 -type d -not -path '*/.git*' -print \
+    find "$ARCHIVE_DIR" -mindepth 1 -type d -not -path '*/.git*' -not -path '*/.well-known*' -print \
         | LC_ALL=C sort | while read -r dir; do
             rel="${dir#"$ARCHIVE_DIR"/}"
             # Breadcrumb: the root name links home at full size; the path
@@ -245,7 +253,39 @@ render_listings() {
         done
 }
 
+render_404() {
+    # GitHub Pages serves /404.html for any missing path.
+    {
+        page_open "apt.pkg.haus" \
+            '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a>' 80 \
+            "The signed APT archive behind pkg.haus."
+        cat <<'EOF'
+  <div class="tablewrap">
+    <p>404. This path is not in the archive.</p>
+    <p>Start from the <a href="/">pool listing</a>, the
+    <a href="https://pkg.haus">setup instructions</a>, or the
+    <a href="/stats">download stats</a>.</p>
+  </div>
+EOF
+        page_close
+    } > "$ARCHIVE_DIR/404.html"
+}
+
+render_security_txt() {
+    # RFC 9116. Expires is computed at render time, so it renews itself
+    # with every publish and can never go stale while the archive lives.
+    mkdir -p "$ARCHIVE_DIR/.well-known"
+    cat > "$ARCHIVE_DIR/.well-known/security.txt" <<EOF
+Contact: mailto:security@pkg.haus
+Expires: $(date -u -d '+1 year' +%Y-%m-%dT%H:%M:%S.000Z)
+Preferred-Languages: en
+Canonical: https://apt.pkg.haus/.well-known/security.txt
+EOF
+}
+
 render_favicon
 render_root
 render_listings
+render_404
+render_security_txt
 echo "rendered root + $(find "$ARCHIVE_DIR" -mindepth 2 -name index.html | wc -l) listings" >&2
