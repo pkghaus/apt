@@ -1,0 +1,10 @@
+{"ts":"2026-08-13T00:00:00Z","type":"notice","title":"the archive goes live","detail":"apt.pkg.haus opens: three suites (trixie, testing, unstable), amd64 and arm64, signed with the pkg.haus archive key."}
+{"ts":"2026-08-14T00:00:00Z","type":"added","title":"added: zola 0.23.3-2","detail":"The archive's first package.","pkgs":"zola=0.23.3-2"}
+{"ts":"2026-08-15T00:00:00Z","type":"added","title":"added: the fleet migrations","detail":"The packaging fleet migrates in.","pkgs":"mandown=1.0.5.2-1 berry=0.1.13-2 gotypist=0.8.2-1 i3-autodisplay=0.6-3 i3lock-color=2.13.c.5-3"}
+{"ts":"2026-08-15T16:04:38Z","type":"retired","title":"retired: scaphandre, i3blocks","detail":"Debian now ships both officially; the suite qualifiers yield to the official versions on upgrade.","pkgs":"scaphandre= i3blocks="}
+{"ts":"2026-08-15T17:01:30Z","type":"security","title":"security: zola 0.23.3-3","detail":"Fixes a setuid-root binary and a misplaced zsh completion shipped in 0.23.3-2 (urgency=high).","pkgs":"zola=0.23.3-3"}
+{"ts":"2026-08-15T17:19:36Z","type":"added","title":"added: frp, act, d2","detail":"The first packages born under pkg.haus.","pkgs":"frp=0.71.0-1 act=0.2.89-1 d2=0.7.1-1"}
+{"ts":"2026-08-15T18:12:16Z","type":"added","title":"added: pkghaus-archive-keyring","detail":"Key rotations now ship as signed package updates.","pkgs":"pkghaus-archive-keyring=2026.08.15"}
+{"ts":"2026-08-15T18:59:44Z","type":"added","title":"added: typst, croc, difftastic","detail":"","pkgs":"typst=0.15.1-1 croc=11.1.0-1 difftastic=0.70.0-1"}
+{"ts":"2026-08-16T05:27:01Z","type":"added","title":"added: eleven packages","detail":"Eleven packages join the archive.","pkgs":"superfile=1.6.0-1 monolith=2.10.1-1 rustic=0.11.3-1 vegeta=12.13.0-1 fx=39.2.0-1 actionlint=1.7.12-1 viddy=1.3.1-1 ouch=0.8.1-1 lychee=0.15.1-1 vale=3.17.1-1 rathole=0.5.0-1"}
+{"ts":"2026-08-16T08:06:33Z","type":"notice","title":"download statistics","detail":"Download statistics go live at <a href='/stats'>/stats</a>, counted at the edge, aggregate only."}

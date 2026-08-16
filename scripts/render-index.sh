@@ -18,11 +18,13 @@ STYLE='<style>
   :root {
     --paper: #FFFFFF; --ink: #141414; --muted: #6B6B66;
     --line: #E4E4DF; --accent: #E0421B;
+    --ok: #4A7C3A; --info: #33688C; --chg: #A87616;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --paper: #0E0E0E; --ink: #F0F0EC; --muted: #8F8F88;
       --line: #2A2A27; --accent: #F0603C;
+      --ok: #7FB56F; --info: #7FA8C9; --chg: #D9A853;
     }
   }
   * { box-sizing: border-box; }
@@ -50,7 +52,7 @@ STYLE='<style>
   h1 a:hover { color: var(--accent); }
   .tablewrap { overflow-x: auto; padding: 1.5rem 0; }
   table { border-collapse: collapse; width: 100%; font-size: .92rem; }
-  th, td { text-align: left; padding: .5rem .75rem .5rem 0; border-bottom: 1px dashed var(--line); }
+  th, td { text-align: left; padding: .5rem .75rem .5rem 0; border-bottom: 1px dashed var(--line); vertical-align: top; }
   th {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
@@ -59,6 +61,24 @@ STYLE='<style>
   td code { font-variant-numeric: tabular-nums; font-size: .85rem; }
   td.size { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   th.size { text-align: right; }
+  td.date {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .85rem; color: var(--muted); white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip {
+    display: inline-block; font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .72rem; border: 1px solid var(--line); padding: .1rem .5rem;
+    color: var(--muted); white-space: nowrap;
+  }
+  .chip.added { color: var(--ok); border-color: var(--ok); }
+  .chip.updated { color: var(--chg); border-color: var(--chg); }
+  .chip.security { color: var(--accent); border-color: var(--accent); }
+  .chip.notice { color: var(--info); border-color: var(--info); }
+  .pkgs { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .35rem; }
+  .pkgs code { font-size: .85rem; white-space: nowrap; }
+  .pkgs .ver { color: var(--muted); }
+  p.rss { color: var(--muted); font-size: .85rem; margin: 0 0 1.5rem; }
   footer {
     border-top: 3px solid var(--ink); padding-top: 1.5rem;
     display: flex; gap: 1.5rem; flex-wrap: wrap;
@@ -100,6 +120,8 @@ EOF
 
 page_open() {
     local title="$1" heading="$2" logosize="$3" tagline="${4:-}"
+    local desc="${5:-Browsable listing of the pkg.haus APT archive.}"
+    local extra_head="${6:-}"
 
     if [ -n "$tagline" ]; then
         tagline='<p class="tagline">'"$tagline"'</p>'
@@ -111,8 +133,9 @@ page_open() {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>$title</title>
-<meta name="description" content="Browsable listing of the pkg.haus APT archive.">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="$desc">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">${extra_head:+
+$extra_head}
 <script defer src="/zk/js/script.js"></script>
 <script>
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
@@ -228,8 +251,12 @@ render_root() {
 }
 
 render_listings() {
+    # news/ is excluded: its index.html is the news page (render_news),
+    # not a listing. The anchored path keeps a hypothetical pool package
+    # named news* listable.
     local dir rel crumbs
-    find "$ARCHIVE_DIR" -mindepth 1 -type d -not -path '*/.git*' -not -path '*/.well-known*' -print \
+    find "$ARCHIVE_DIR" -mindepth 1 -type d -not -path '*/.git*' -not -path '*/.well-known*' \
+        -not -path "$ARCHIVE_DIR/news" -not -path "$ARCHIVE_DIR/news/*" -print \
         | LC_ALL=C sort | while read -r dir; do
             rel="${dir#"$ARCHIVE_DIR"/}"
             # Breadcrumb: the root name links home at full size; the path
@@ -283,9 +310,132 @@ Canonical: https://apt.pkg.haus/.well-known/security.txt
 EOF
 }
 
+# One event field out of a news.jsonl line. Fields are written in fixed
+# order with no embedded double quotes (scripts/news.sh documents the
+# contract), so a plain extraction is exact.
+news_field() {
+    printf '%s' "$1" | sed -n 's/.*"'"$2"'":"\([^"]*\)".*/\1/p'
+}
+
+# name=version pairs -> linked package tokens. The name links into its
+# pool directory; retired packages (empty version) render unlinked, since
+# the pool directory is gone.
+pkg_tokens() {
+    local pairs="$1" pair name ver out=""
+    [ -n "$pairs" ] || return 0
+    for pair in $pairs; do
+        name="${pair%%=*}"
+        ver="${pair#*=}"
+        if [ -n "$ver" ]; then
+            out="$out"'<span><a href="/pool/main/'"${name:0:1}"'/'"$name"'/"><code>'"$name"'</code></a> <code class="ver">'"$ver"'</code></span>'
+        else
+            out="$out"'<span><code>'"$name"'</code></span>'
+        fi
+    done
+    printf '<span class="pkgs">%s</span>' "$out"
+}
+
+news_rows() {
+    local line ts type title detail pkgs cls
+    LC_ALL=C sort -r "$1" | while IFS= read -r line; do
+        [ -n "$line" ] || continue
+        ts="$(news_field "$line" ts)"
+        type="$(news_field "$line" type)"
+        detail="$(news_field "$line" detail)"
+        pkgs="$(news_field "$line" pkgs)"
+        case "$type" in
+            added|updated|security|notice) cls="chip $type" ;;
+            *) cls="chip" ;;
+        esac
+        printf '        <tr><td class="date">%s</td><td><span class="%s">%s</span></td><td>%s%s</td></tr>\n' \
+            "${ts%%T*}" "$cls" "$type" "$detail" "$(pkg_tokens "$pkgs")"
+    done
+}
+
+xml_escape() {
+    sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'
+}
+
+news_feed() {
+    local line ts type title detail pkgs pair pkglist guid
+    cat <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>pkg.haus archive news</title>
+<link>https://apt.pkg.haus/news/</link>
+<atom:link href="https://apt.pkg.haus/news/feed.xml" rel="self" type="application/rss+xml"/>
+<description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
+<language>en</language>
+EOF
+    LC_ALL=C sort -r "$1" | while IFS= read -r line; do
+        [ -n "$line" ] || continue
+        ts="$(news_field "$line" ts)"
+        type="$(news_field "$line" type)"
+        title="$(news_field "$line" title)"
+        detail="$(news_field "$line" detail | sed 's/<[^>]*>//g')"
+        pkgs="$(news_field "$line" pkgs)"
+        [ -n "$detail" ] || detail="$title"
+        if [ -n "$pkgs" ]; then
+            pkglist=""
+            for pair in $pkgs; do
+                pkglist="$pkglist, $(printf '%s' "$pair" | sed 's/=/ /; s/ $//')"
+            done
+            detail="$detail (${pkglist#, })"
+        fi
+        # Stable across renders: the date plus the title, slugged.
+        guid="$(printf '%s-%s' "${ts%%T*}" "$title" | tr -c 'A-Za-z0-9.\n' '-' | tr -s '-')"
+        cat <<EOF
+<item>
+<title>$(printf '%s' "$title" | xml_escape)</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">$guid</guid>
+<pubDate>$(date -u -R -d "$ts")</pubDate>
+<description>$(printf '%s' "$detail" | xml_escape)</description>
+</item>
+EOF
+    done
+    printf '</channel>\n</rss>\n'
+}
+
+render_news() {
+    # The news log lives on the archive branch (news/news.jsonl,
+    # maintained by scripts/news.sh before this renderer runs). No log,
+    # no page.
+    local news="$ARCHIVE_DIR/news/news.jsonl"
+    [ -s "$news" ] || return 0
+
+    local crumbs='<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path"><span class="sep">/</span>news</span>'
+    {
+        page_open "apt.pkg.haus/news/" "$crumbs" 80 \
+            "Everything the archive has shipped, changed and retired, newest first." \
+            "What the pkg.haus APT archive has shipped, changed and retired." \
+            '<link rel="alternate" type="application/rss+xml" title="pkg.haus archive news" href="/news/feed.xml">'
+        cat <<'EOF'
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>date</th><th>event</th><th>detail</th></tr>
+      </thead>
+      <tbody>
+EOF
+        news_rows "$news"
+        cat <<'EOF'
+      </tbody>
+    </table>
+  </div>
+  <p class="rss">Subscribe: <a href="/news/feed.xml">feed.xml</a> (RSS)</p>
+EOF
+        page_close
+    } > "$ARCHIVE_DIR/news/index.html"
+
+    news_feed "$news" > "$ARCHIVE_DIR/news/feed.xml"
+}
+
 render_favicon
 render_root
 render_listings
 render_404
 render_security_txt
+render_news
 echo "rendered root + $(find "$ARCHIVE_DIR" -mindepth 2 -name index.html | wc -l) listings" >&2

@@ -68,6 +68,10 @@ mapfile -t urls < <(
                 printf '%s%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7e/g; s/+/%2b/g')"
                 printf '%s%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7E/g; s/+/%2B/g')"
             done
+        # The news feed rides the same publish cadence as the listings.
+        if [ -f "$ARCHIVE_DIR/news/feed.xml" ]; then
+            printf '%s/news/feed.xml\n' "$BASE_URL"
+        fi
     } | LC_ALL=C sort -u
 )
 

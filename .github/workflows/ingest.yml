@@ -206,6 +206,12 @@ jobs:
       - name: Export the public keyring alongside the archive
         run: gpg --export > public/pkghaus-archive-keyring.gpg
 
+      # After include (so the diff sees the new state), before render
+      # (so the news page reflects this publish). Runs on empty plans
+      # too: notices still merge, and an unchanged set emits nothing.
+      - name: Update the news log
+        run: scripts/news.sh
+
       - name: Render the pool index
         run: scripts/render-index.sh
 
