@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>apt.pkg.haus/dists/trixie/main/</title>
+<meta name="description" content="Browsable listing of the pkg.haus APT archive.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <script defer src="/zk/js/script.js"></script>
 <script>
@@ -30,9 +31,10 @@
   code { font-family: ui-monospace, Menlo, Consolas, monospace; }
   main { max-width: 46rem; margin: 0 auto; }
   header {
-    display: flex; align-items: center; gap: 1rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
     padding: 2.25rem 0 1.25rem; border-bottom: 3px solid var(--ink);
   }
+  .tagline { flex-basis: 100%; color: var(--muted); margin: .75rem 0 0; max-width: 38rem; }
   h1 {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: clamp(1.9rem, 6vw, 2.6rem); letter-spacing: -.03em;
@@ -79,6 +81,7 @@
       <path d="M21 20 L27 26 V33 H15 V26 Z" fill="currentColor" transform="matrix(1,0.5,0,1,0,0)"/>
     </svg>
     <h1><a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path"><span class="sep">/</span><span class="gap">&hellip;</span><wbr><span class="sep">/</span>main</span></h1>
+    
   </header>
   <div class="tablewrap">
     <table>
@@ -98,7 +101,7 @@
     <a href="https://pkg.haus">pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
     <span>rendered by the ingest,
-    <time datetime="2026-08-16T09:38:40Z">2026-08-16 09:38:40 UTC</time></span>
+    <time datetime="2026-08-16T11:41:29Z">2026-08-16 11:41:29 UTC</time></span>
     <span>Apache-2.0</span>
   </footer>
 </main>
