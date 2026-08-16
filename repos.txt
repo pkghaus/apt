@@ -21,3 +21,4 @@ pkghaus/difftastic-debian
 pkghaus/superfile-debian
 pkghaus/monolith-debian
 pkghaus/rustic-debian
+pkghaus/vegeta-debian
