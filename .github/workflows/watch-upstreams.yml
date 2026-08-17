@@ -1,0 +1,97 @@
+name: Watch upstream releases
+
+# Turns scripts/watch-upstreams.sh into a single issue, rewritten in
+# place. Detection only: it never edits a packaging repo, because a bump
+# often needs packaging changes (a new build dependency, a lockfile that
+# no longer compiles, a runtime dependency only a functional test finds)
+# and the ingest fires on a signed tag CI cannot produce.
+#
+# Scheduled rather than event-driven: the release happens in a repo we do
+# not control. It lives here rather than in each packaging repo because
+# GitHub disables scheduled workflows after 60 days of repository
+# inactivity, which would switch the watcher off in exactly the quiet
+# repos that need it.
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: watch-upstreams
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check upstreams
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # Exit 1 is drift and exit 2 is a failed lookup; both are
+        # reportable outcomes rather than workflow failures. Anything
+        # else is a real error and stops the run.
+        run: |
+          set +e
+          report="$(scripts/watch-upstreams.sh)"
+          status=$?
+          set -e
+          if [ "$status" -gt 2 ]; then
+              echo "$report"
+              echo "watch-upstreams.sh failed with status $status" >&2
+              exit "$status"
+          fi
+          echo "$report"
+          {
+              echo "status=$status"
+              echo 'report<<REPORT_EOF'
+              echo "$report"
+              echo 'REPORT_EOF'
+          } >> "$GITHUB_OUTPUT"
+          echo "$report" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open, update or close the drift issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          STATUS: ${{ steps.check.outputs.status }}
+          REPORT: ${{ steps.check.outputs.report }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title='Upstream release drift'
+          # Exact title match, not a search query: search is fuzzy and
+          # would eventually latch onto the wrong issue.
+          number="$(gh issue list --repo "$REPO" --state open \
+              --json number,title \
+              --jq ".[] | select(.title == \"$title\") | .number" | head -n1)"
+
+          if [ "$STATUS" = "0" ]; then
+              if [ -n "$number" ]; then
+                  gh issue close "$number" --repo "$REPO" \
+                      --comment "Every enrolled package now matches its newest upstream release. Checked by $RUN_URL"
+                  echo "closed #$number"
+              else
+                  echo "nothing to report"
+              fi
+              exit 0
+          fi
+
+          body="$(printf '%s\n\nChecked by %s. Reproduce by running scripts/watch-upstreams.sh\n\nBumps are deliberately manual: the ingest fires on a signed tag, and a version bump often needs packaging changes that only a build and a functional smoke test reveal.\n' "$REPORT" "$RUN_URL")"
+
+          if [ -n "$number" ]; then
+              gh issue edit "$number" --repo "$REPO" --body "$body"
+              echo "updated #$number"
+          else
+              gh issue create --repo "$REPO" --title "$title" --body "$body"
+          fi

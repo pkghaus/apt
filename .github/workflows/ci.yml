@@ -28,7 +28,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends shellcheck
 
       - name: shellcheck
-        run: shellcheck -x scripts/ingest.sh
+        run: shellcheck -x scripts/*.sh
 
       - name: actionlint
         # Pinned by digest; go-yaml inside it also rejects duplicate mapping
