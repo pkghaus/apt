@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: lychee 0.24.2-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-17-updated-lychee-0.24.2-1</guid>
+<pubDate>Mon, 17 Aug 2026 08:35:22 +0000</pubDate>
+<description>Updated from 0.15.1-1. (lychee 0.24.2-1)</description>
+</item>
+<item>
 <title>updated: croc 11.1.1-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-17-updated-croc-11.1.1-1</guid>

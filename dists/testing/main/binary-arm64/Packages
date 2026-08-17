@@ -217,19 +217,19 @@ Description: Improved i3lock with color customization
  Raymo111.
 
 Package: lychee
-Version: 0.15.1-1~testing1
+Version: 0.24.2-1~testing1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
-Installed-Size: 16675
-Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), libssl3t64 (>= 3.0.0)
+Installed-Size: 16737
+Depends: ca-certificates, libc6 (>= 2.39), libgcc-s1 (>= 4.2)
 Homepage: https://lychee.cli.rs
 Priority: optional
 Section: web
-Filename: pool/main/l/lychee/lychee_0.15.1-1~testing1_arm64.deb
-Size: 4115248
-SHA256: 1edf4717d1ad55138099fbb6aeec054815b889d208a1af06fd5fb6b11124d5b6
-SHA1: 615698dadc1aa4072283ada45738c70b65e1bb4f
-MD5sum: 3860496c1b92fb5e8416a0aeae5d3646
+Filename: pool/main/l/lychee/lychee_0.24.2-1~testing1_arm64.deb
+Size: 4477556
+SHA256: 028433b3305b7d3bc24bccba811cc75a17328267030068229141efd72d1a66f0
+SHA1: 909f4b8c59e892489cf5af9c729ea0276d741089
+MD5sum: e0e20c5b747d8bfed0bd8035ccb1b65d
 Description: fast link checker for Markdown, HTML and websites
  lychee checks links in Markdown, HTML, reStructuredText and plain
  text, concurrently and with caching, and reports broken ones with
