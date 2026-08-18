@@ -91,7 +91,44 @@ STYLE='<style>
   .pkgs { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .35rem; }
   .pkgs code { font-size: .85rem; white-space: nowrap; }
   .pkgs .ver { color: var(--muted); }
-  p.rss { color: var(--muted); font-size: .85rem; margin: 0 0 1.5rem; }
+  p.rss { color: var(--muted); font-size: .85rem; margin: 1.25rem 0 0; }
+  /* Search and the type toggles are injected by the script below, so a
+     reader without JavaScript gets the whole log and no dead widgets. */
+  .controls { display: none; gap: .6rem; flex-wrap: wrap; align-items: center; margin: 1.5rem 0 .25rem; }
+  .controls.on { display: flex; }
+  .controls input {
+    font: inherit; font-size: .9rem; padding: .35rem .6rem; flex: 1 1 14rem;
+    min-width: 0; color: var(--ink); background: var(--paper); border: 1px solid var(--line);
+  }
+  .controls input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .types { display: flex; gap: .35rem; flex-wrap: wrap; }
+  .types button {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .72rem;
+    font-weight: 600; padding: .18rem .5rem; border: 1px solid var(--line);
+    background: var(--paper); color: var(--muted); cursor: pointer;
+  }
+  .types button[aria-pressed="true"] {
+    color: var(--accent-text); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, var(--paper));
+  }
+  .count { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem;
+    color: var(--muted); margin: .5rem 0 0; }
+  .count b { color: var(--ink); }
+  .more { display: none; gap: .6rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 0; }
+  .more.on { display: flex; }
+  .more button {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem;
+    color: var(--accent-text); background: none; border: 1px solid var(--line);
+    padding: .3rem .8rem; cursor: pointer;
+  }
+  .more button:hover { border-color: var(--accent); }
+  /* Secondary: an escape hatch, not the main action. */
+  .more button.all { color: var(--muted); border-color: transparent;
+    text-decoration: underline; padding-left: .2rem; }
+  .more button.all:hover { color: var(--accent-text); border-color: transparent; }
+  .more button.all[hidden] { display: none; }
+  .empty { display: none; color: var(--muted); font-size: .9rem; padding: 1.5rem 0; }
+  .empty.on { display: block; }
   footer {
     border-top: 3px solid var(--ink); padding-top: 1.5rem;
     display: flex; gap: 1.5rem; flex-wrap: wrap;
@@ -349,7 +386,7 @@ pkg_tokens() {
 }
 
 news_rows() {
-    local line ts type title detail pkgs cls
+    local line ts type title detail pkgs cls names
     LC_ALL=C sort -r "$1" | while IFS= read -r line; do
         [ -n "$line" ] || continue
         ts="$(news_field "$line" ts)"
@@ -360,8 +397,11 @@ news_rows() {
             added|updated|security|notice) cls="chip $type" ;;
             *) cls="chip" ;;
         esac
-        printf '        <tr><td class="date">%s</td><td><span class="%s">%s</span></td><td>%s%s</td></tr>\n' \
-            "${ts%%T*}" "$cls" "$type" "$detail" "$(pkg_tokens "$pkgs")"
+        # data-pkg carries the names only; the filter matches on those
+        # plus the row text.
+        names="$(printf '%s' "$pkgs" | tr ' ' '\n' | sed 's/=.*//' | tr '\n' ' ')"
+        printf '        <tr data-type="%s" data-pkg="%s"><td class="date">%s</td><td><span class="%s">%s</span></td><td>%s%s</td></tr>\n' \
+            "$type" "${names% }" "${ts%%T*}" "$cls" "$type" "$detail" "$(pkg_tokens "$pkgs")"
     done
 }
 
@@ -425,19 +465,111 @@ render_news() {
             "What the pkg.haus APT archive has shipped, changed and retired." \
             '<link rel="alternate" type="application/rss+xml" title="pkg.haus archive news" href="/news/feed.xml">'
         cat <<'EOF'
+  <div class="controls" id="ctl">
+    <input id="q" type="search" placeholder="filter by package, for example croc"
+           aria-label="Filter by package">
+    <span class="types" id="types">
+      <button type="button" data-t="added" aria-pressed="false">added</button>
+      <button type="button" data-t="updated" aria-pressed="false">updated</button>
+      <button type="button" data-t="security" aria-pressed="false">security</button>
+      <button type="button" data-t="retired" aria-pressed="false">retired</button>
+      <button type="button" data-t="notice" aria-pressed="false">notice</button>
+    </span>
+  </div>
+  <p class="count" id="count"></p>
   <div class="tablewrap">
     <table>
       <thead>
         <tr><th>date</th><th>event</th><th>detail</th></tr>
       </thead>
-      <tbody>
+      <tbody id="log">
 EOF
         news_rows "$news"
         cat <<'EOF'
       </tbody>
     </table>
   </div>
+  <p class="empty" id="empty">No events match. Clearing the filter shows the whole log.</p>
+  <p class="more" id="more"><button type="button" id="olderBtn"></button><button type="button" class="all" id="allBtn" hidden></button></p>
   <p class="rss">Subscribe: <a href="/news/feed.xml">feed.xml</a> (RSS)</p>
+<script>
+(function () {
+  var PAGE = 25;
+  var rows = Array.prototype.slice.call(document.querySelectorAll("#log tr"));
+  var q = document.getElementById("q");
+  var types = document.getElementById("types");
+  var count = document.getElementById("count");
+  var more = document.getElementById("more");
+  var btn = document.getElementById("olderBtn");
+  var allBtn = document.getElementById("allBtn");
+  var empty = document.getElementById("empty");
+  var shown = PAGE;
+  var expansions = 0;
+  var active = {};
+
+  document.getElementById("ctl").className = "controls on";
+
+  function matches(tr) {
+    var t = q.value.trim().toLowerCase();
+    var picked = Object.keys(active).filter(function (k) { return active[k]; });
+    if (picked.length && picked.indexOf(tr.getAttribute("data-type")) === -1) return false;
+    if (!t) return true;
+    // Every row, never only the visible ones: a filter that silently
+    // skips hidden history is worse than no filter.
+    return (tr.getAttribute("data-pkg") + " " + tr.textContent)
+      .toLowerCase().indexOf(t) !== -1;
+  }
+
+  function draw() {
+    var filtering = q.value.trim() !== "" ||
+      Object.keys(active).some(function (k) { return active[k]; });
+    var hits = 0, drawn = 0;
+    rows.forEach(function (tr) {
+      var m = matches(tr);
+      if (m) hits++;
+      // While filtering every match shows: the cap governs browsing,
+      // not finding.
+      var vis = m && (filtering || drawn < shown);
+      if (vis && !filtering) drawn++;
+      tr.style.display = vis ? "" : "none";
+    });
+
+    empty.className = hits === 0 ? "empty on" : "empty";
+    if (filtering) {
+      count.innerHTML = "<b>" + hits + "</b> of " + rows.length + " events match";
+      more.className = "more";
+      return;
+    }
+    var vis = Math.min(shown, rows.length);
+    count.innerHTML = "showing <b>" + vis + "</b> of " + rows.length + " events";
+    if (vis < rows.length) {
+      var left = rows.length - vis;
+      btn.textContent = "show " + Math.min(PAGE, left) + " older";
+      // After real intent to dig, and only while a jump saves clicks.
+      allBtn.hidden = !(expansions >= 2 && left > PAGE);
+      allBtn.textContent = "show all " + rows.length;
+      more.className = "more on";
+    } else {
+      more.className = "more";
+    }
+  }
+
+  q.addEventListener("input", draw);
+  types.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-t]");
+    if (!b) return;
+    var t = b.getAttribute("data-t");
+    active[t] = !active[t];
+    b.setAttribute("aria-pressed", active[t] ? "true" : "false");
+    draw();
+  });
+  // Appending only grows the page downward, so nothing above moves.
+  btn.addEventListener("click", function () { shown += PAGE; expansions++; draw(); });
+  allBtn.addEventListener("click", function () { shown = rows.length; draw(); });
+
+  draw();
+})();
+</script>
 EOF
         page_close
     } > "$ARCHIVE_DIR/news/index.html"
