@@ -17,12 +17,19 @@
     --paper: #FFFFFF; --ink: #141414; --muted: #6B6B66;
     --line: #E4E4DF; --accent: #E0421B;
     --ok: #4A7C3A; --info: #33688C; --chg: #8A6012;
+    /* The brand red measures 4.23:1 on white: fine for the mark, the
+       dots and headings, which are large text needing 3:1, and short of
+       the 4.5:1 small text needs. Small text gets a darker step;
+       everything seen at size keeps the brand value. Dark mode passes
+       at 5.92:1, so there the two are the same. */
+    --accent-text: #CC3B18;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --paper: #0E0E0E; --ink: #F0F0EC; --muted: #8F8F88;
       --line: #2A2A27; --accent: #F0603C;
       --ok: #7FB56F; --info: #7FA8C9; --chg: #D9A853;
+      --accent-text: #F0603C;
     }
   }
   * { box-sizing: border-box; }
@@ -77,7 +84,7 @@
   }
   .chip.added { color: var(--ok); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); }
   .chip.updated { color: var(--chg); border-color: var(--chg); background: color-mix(in srgb, var(--chg) 12%, var(--paper)); }
-  .chip.security { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
+  .chip.security { color: var(--accent-text); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
   .chip.notice { color: var(--info); border-color: var(--info); background: color-mix(in srgb, var(--info) 12%, var(--paper)); }
   .pkgs { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .35rem; }
   .pkgs code { font-size: .85rem; white-space: nowrap; }
@@ -89,8 +96,8 @@
     font-size: .85rem; color: var(--muted);
   }
   footer a { color: inherit; }
-  footer a:hover { color: var(--accent); }
-  a { color: var(--accent); text-decoration: none; }
+  footer a:hover { color: var(--accent-text); }
+  a { color: var(--accent-text); text-decoration: none; }
   a:hover { text-decoration: underline; }
 </style>
 </head>
@@ -137,7 +144,7 @@
     <a href="https://pkg.haus">pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
     <span>rendered by the ingest
-    <time datetime="2026-08-18T08:38:12Z">2026-08-18 08:38:12 UTC</time></span>
+    <time datetime="2026-08-18T08:58:33Z">2026-08-18 08:58:33 UTC</time></span>
     <span>Apache-2.0</span>
   </footer>
 </main>
