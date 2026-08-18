@@ -15,7 +15,7 @@
   :root {
     --paper: #FFFFFF; --ink: #141414; --muted: #6B6B66;
     --line: #E4E4DF; --accent: #E0421B;
-    --ok: #4A7C3A; --info: #33688C; --chg: #A87616;
+    --ok: #4A7C3A; --info: #33688C; --chg: #8A6012;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -63,15 +63,21 @@
     font-size: .85rem; color: var(--muted); white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
+  /* Thin 11px mono in a mid-tone on white reads washed out next to a
+     column of accent-coloured package tokens, even at a passing contrast
+     ratio; dark mode escapes it because its tokens are light-on-black.
+     Weight 600 plus a tint mixed from the state colour itself makes the
+     chip a filled label rather than outlined text, in both themes. */
   .chip {
     display: inline-block; font-family: ui-monospace, Menlo, Consolas, monospace;
-    font-size: .72rem; border: 1px solid var(--line); padding: .1rem .5rem;
-    color: var(--muted); white-space: nowrap;
+    font-size: .72rem; font-weight: 600; border: 1px solid var(--line);
+    padding: .1rem .5rem; color: var(--muted); white-space: nowrap;
+    background: color-mix(in srgb, var(--muted) 8%, var(--paper));
   }
-  .chip.added { color: var(--ok); border-color: var(--ok); }
-  .chip.updated { color: var(--chg); border-color: var(--chg); }
-  .chip.security { color: var(--accent); border-color: var(--accent); }
-  .chip.notice { color: var(--info); border-color: var(--info); }
+  .chip.added { color: var(--ok); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); }
+  .chip.updated { color: var(--chg); border-color: var(--chg); background: color-mix(in srgb, var(--chg) 12%, var(--paper)); }
+  .chip.security { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--paper)); }
+  .chip.notice { color: var(--info); border-color: var(--info); background: color-mix(in srgb, var(--info) 12%, var(--paper)); }
   .pkgs { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .35rem; }
   .pkgs code { font-size: .85rem; white-space: nowrap; }
   .pkgs .ver { color: var(--muted); }
@@ -123,7 +129,7 @@
     <a href="https://pkg.haus">pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
     <span>rendered by the ingest
-    <time datetime="2026-08-18T07:58:30Z">2026-08-18 07:58:30 UTC</time></span>
+    <time datetime="2026-08-18T08:38:12Z">2026-08-18 08:38:12 UTC</time></span>
     <span>Apache-2.0</span>
   </footer>
 </main>
