@@ -88,7 +88,44 @@
   .pkgs { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: .35rem; }
   .pkgs code { font-size: .85rem; white-space: nowrap; }
   .pkgs .ver { color: var(--muted); }
-  p.rss { color: var(--muted); font-size: .85rem; margin: 0 0 1.5rem; }
+  p.rss { color: var(--muted); font-size: .85rem; margin: 1.25rem 0 0; }
+  /* Search and the type toggles are injected by the script below, so a
+     reader without JavaScript gets the whole log and no dead widgets. */
+  .controls { display: none; gap: .6rem; flex-wrap: wrap; align-items: center; margin: 1.5rem 0 .25rem; }
+  .controls.on { display: flex; }
+  .controls input {
+    font: inherit; font-size: .9rem; padding: .35rem .6rem; flex: 1 1 14rem;
+    min-width: 0; color: var(--ink); background: var(--paper); border: 1px solid var(--line);
+  }
+  .controls input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .types { display: flex; gap: .35rem; flex-wrap: wrap; }
+  .types button {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .72rem;
+    font-weight: 600; padding: .18rem .5rem; border: 1px solid var(--line);
+    background: var(--paper); color: var(--muted); cursor: pointer;
+  }
+  .types button[aria-pressed="true"] {
+    color: var(--accent-text); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, var(--paper));
+  }
+  .count { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem;
+    color: var(--muted); margin: .5rem 0 0; }
+  .count b { color: var(--ink); }
+  .more { display: none; gap: .6rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 0; }
+  .more.on { display: flex; }
+  .more button {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem;
+    color: var(--accent-text); background: none; border: 1px solid var(--line);
+    padding: .3rem .8rem; cursor: pointer;
+  }
+  .more button:hover { border-color: var(--accent); }
+  /* Secondary: an escape hatch, not the main action. */
+  .more button.all { color: var(--muted); border-color: transparent;
+    text-decoration: underline; padding-left: .2rem; }
+  .more button.all:hover { color: var(--accent-text); border-color: transparent; }
+  .more button.all[hidden] { display: none; }
+  .empty { display: none; color: var(--muted); font-size: .9rem; padding: 1.5rem 0; }
+  .empty.on { display: block; }
   footer {
     border-top: 3px solid var(--ink); padding-top: 1.5rem;
     display: flex; gap: 1.5rem; flex-wrap: wrap;
@@ -132,7 +169,7 @@
     <a href="https://pkg.haus">pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
     <span>rendered by the ingest
-    <time datetime="2026-08-18T08:58:32Z">2026-08-18 08:58:32 UTC</time></span>
+    <time datetime="2026-08-18T09:50:37Z">2026-08-18 09:50:37 UTC</time></span>
     <span>Apache-2.0</span>
   </footer>
 </main>
