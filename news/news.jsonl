@@ -10,3 +10,4 @@
 {"ts":"2026-08-16T08:06:33Z","type":"notice","title":"download statistics","detail":"Download statistics go live at <a href='/stats'>/stats</a>, counted at the edge, aggregate only."}
 {"ts":"2026-08-17T08:17:40Z","type":"updated","title":"updated: croc 11.1.1-1","detail":"Updated from 11.1.0-1.","pkgs":"croc=11.1.1-1"}
 {"ts":"2026-08-17T08:35:22Z","type":"updated","title":"updated: lychee 0.24.2-1","detail":"Updated from 0.15.1-1.","pkgs":"lychee=0.24.2-1"}
+{"ts":"2026-08-18T07:58:28Z","type":"updated","title":"updated: croc 11.1.2-1","detail":"Updated from 11.1.1-1.","pkgs":"croc=11.1.2-1"}

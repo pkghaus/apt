@@ -1,37 +1,37 @@
 Suite: unstable
 Codename: unstable
-Date: Mon, 17 Aug 2026 08:35:20 UTC
+Date: Tue, 18 Aug 2026 07:58:27 UTC
 Architectures: amd64 arm64
 Components: main
 Description: pkg.haus packages built for Debian unstable
 MD5Sum:
- 476268ae11730b7f171bda3d6dc2053c 18479 main/binary-amd64/Packages
- 54c82b4f1713f566f97b65922c0182ea 7254 main/binary-amd64/Packages.gz
+ 30fd7c65f909426dc49b064733b613f8 18479 main/binary-amd64/Packages
+ c14279ce8baea0ffe28c63c18de01b47 7254 main/binary-amd64/Packages.gz
  1d4035bf754a01f70e0d54fb66d5844b 111 main/binary-amd64/Release
- 64936c9eef2fdfb47ff48920b6034b06 18478 main/binary-arm64/Packages
- 397e367b445d45bb9e3e7ab4741e6b0a 7244 main/binary-arm64/Packages.gz
+ 951fe0016b35fb9fc6bf9e47eb17d85c 18478 main/binary-arm64/Packages
+ 86a946944ff51e0008b6010110da4362 7236 main/binary-arm64/Packages.gz
  a9d825474074d0c26f2301aadf8cb3ca 111 main/binary-arm64/Release
  8c1c91bbb5e7474db6f90a62638efb76 8317 main/Contents-amd64
  5da7962c33958aec28513c18bc16ddb4 1234 main/Contents-amd64.gz
  8c1c91bbb5e7474db6f90a62638efb76 8317 main/Contents-arm64
  5da7962c33958aec28513c18bc16ddb4 1234 main/Contents-arm64.gz
 SHA1:
- 5f238285763f793d8531ac1a47860f6bddf12833 18479 main/binary-amd64/Packages
- be9c5c6ec0f3a458f56a6a7ef5d594616ca8d4d7 7254 main/binary-amd64/Packages.gz
+ d722964a5d077ffa4257d3149d29204400850ee3 18479 main/binary-amd64/Packages
+ ff7a7394a0fdaf2d13d0e3c6d9be09f7b8cd991b 7254 main/binary-amd64/Packages.gz
  134ec24dec5676f74e9f956372a3592da55355a5 111 main/binary-amd64/Release
- 134125226903afb567b44395801e98cc84c3d4c5 18478 main/binary-arm64/Packages
- bf92de634e28adc92242e51d407c89459aa3078a 7244 main/binary-arm64/Packages.gz
+ 68d797ac486f0ab2741c2e554cfedd4b150581bd 18478 main/binary-arm64/Packages
+ 6839aca50ff8775411a24b827770c6ce8b94a5e9 7236 main/binary-arm64/Packages.gz
  ceb7e3b532a6bd8818236ffb83a7f46341709688 111 main/binary-arm64/Release
  231b6e7a98030d8fc8ff6d62c5b13c543e2e963f 8317 main/Contents-amd64
  988ff51e8b8202fec8e9ee894e734af0459d7e44 1234 main/Contents-amd64.gz
  231b6e7a98030d8fc8ff6d62c5b13c543e2e963f 8317 main/Contents-arm64
  988ff51e8b8202fec8e9ee894e734af0459d7e44 1234 main/Contents-arm64.gz
 SHA256:
- 5437cf61fa2408116a3e2590adea13d3c73a4e565c3b197bb85abf2d5e34c4de 18479 main/binary-amd64/Packages
- 03a48decd0a27ca7c15ab11f976386329af6aeed7c71218be848bcf76471634a 7254 main/binary-amd64/Packages.gz
+ da5916890da11a176aa8a8aa88679ca0f4f192b461992da5f321edb8d90ac053 18479 main/binary-amd64/Packages
+ 8753eca0e65f4fd13423a07f1c67b3083d35a6409070f9c64a1517a0dee3a119 7254 main/binary-amd64/Packages.gz
  d2522fc2ea4758f1011f4f14998312900bca0f2e28a1046f094c5b036649b179 111 main/binary-amd64/Release
- c82ec3e76de2446c3938db94d492b3312115596d150bd4ebcc1b45ff66e65c0b 18478 main/binary-arm64/Packages
- 843e86652d10e126a8190dd325eea5ee7d9a7f6c7f61a8ed20e7026c238f3601 7244 main/binary-arm64/Packages.gz
+ 21f391050612311188840af326ca6309e0cd628be0f137b2718a3343307196eb 18478 main/binary-arm64/Packages
+ 30582a71fd686210161ca1d779cd998f41935d94b6e561bfd3f39069180ebdaf 7236 main/binary-arm64/Packages.gz
  92bd15087a03eb6db2c784e177b21c166923fcf9b22f6fa9bcf354918be10930 111 main/binary-arm64/Release
  b4e453c0f0f71457b72991295d582119e95153199428289126235cab6b0a463b 8317 main/Contents-amd64
  8936666d98d83820f7911daf526f58f14553b97827c3beab515a8aa85f8cd683 1234 main/Contents-amd64.gz

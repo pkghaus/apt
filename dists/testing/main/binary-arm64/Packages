@@ -59,19 +59,19 @@ Description: healthy, bite-sized window manager
  sxhkd bindings and an autostart script.
 
 Package: croc
-Version: 11.1.1-1~testing1
+Version: 11.1.2-1~testing1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
-Installed-Size: 8462
+Installed-Size: 8463
 Depends: libc6 (>= 2.34)
 Homepage: https://github.com/schollz/croc
 Priority: optional
 Section: net
-Filename: pool/main/c/croc/croc_11.1.1-1~testing1_arm64.deb
-Size: 2385868
-SHA256: 525b2b647047b41ef6f9ba493eb6a6a776546c10c53c8371b0a0c2729b5c50ca
-SHA1: 75fe856b569c6032b67e7185ee1fe4cd88dc1837
-MD5sum: bd940e02bda370be35f2defd81baad15
+Filename: pool/main/c/croc/croc_11.1.2-1~testing1_arm64.deb
+Size: 2385464
+SHA256: 253c9d89f164a91d4f933f186f3dacee73712414394b56a0032be35d8ffc062f
+SHA1: b3d450d4dd1c1c68b88859e3cec13586d01c372d
+MD5sum: 729190917dc762e9ecfbf32fb1e4557d
 Description: securely send files and folders between computers
  croc transfers files and folders between any two machines through a
  relay, end-to-end encrypted via a password-authenticated key exchange:
