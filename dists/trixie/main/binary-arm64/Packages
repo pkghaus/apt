@@ -198,19 +198,22 @@ Description: display auto-configuration for i3wm
  assigned outputs.
 
 Package: i3lock-color
-Version: 2.13.c.5-3~haus13+1
+Version: 2.13.c.5-4~haus13+1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
 Installed-Size: 163
 Depends: libc6 (>= 2.38), libcairo2 (>= 1.7.2), libev4t64 (>= 1:4.04), libfontconfig1 (>= 2.12.6), libjpeg62-turbo (>= 1.3.1), libpam0g (>= 0.99.7.1), libxcb-composite0, libxcb-image0 (>= 0.2.1), libxcb-randr0 (>= 1.12), libxcb-util1 (>= 0.4.0), libxcb-xinerama0, libxcb-xkb1, libxcb-xrm0 (>= 0.0.0), libxcb1, libxkbcommon-x11-0 (>= 0.5.0), libxkbcommon0 (>= 0.5.0)
+Conflicts: i3lock
+Replaces: i3lock
+Provides: i3lock
 Homepage: https://github.com/Raymo111/i3lock-color
 Priority: optional
 Section: x11
-Filename: pool/main/i/i3lock-color/i3lock-color_2.13.c.5-3~haus13+1_arm64.deb
-Size: 53204
-SHA256: ebd41ce8dc71db28d10ff487caf062db5467f7c629b271ab78b9680148032eb9
-SHA1: c4bb4a9f13bba609e1b75f5487e9469d731591d8
-MD5sum: 74da8e04bd412121a8c33072a82c4701
+Filename: pool/main/i/i3lock-color/i3lock-color_2.13.c.5-4~haus13+1_arm64.deb
+Size: 53300
+SHA256: 3059aa22570e390095600eac824f67b59a979041ccbe352bd734afdd1ed1fa1f
+SHA1: c5873f9a5b57a7781108a0ab8048b018808a935d
+MD5sum: 83c46179b5c3e4102972a8de067b5503
 Description: Improved i3lock with color customization
  A modern version of i3lock with color functionality by eBrnd, maintained
  for a few years by PandorasFox and now maintained and being developed by
