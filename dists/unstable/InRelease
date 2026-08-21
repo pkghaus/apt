@@ -3,47 +3,47 @@ Hash: SHA512
 
 Suite: unstable
 Codename: unstable
-Date: Fri, 21 Aug 2026 09:22:44 UTC
+Date: Fri, 21 Aug 2026 09:35:12 UTC
 Architectures: amd64 arm64
 Components: main
 Description: pkg.haus packages built for Debian unstable
 MD5Sum:
- 47e1ec9b3fd2e52703d5cf8aeda9dffd 18531 main/binary-amd64/Packages
- e18705aed9277d0b2e7218825e897ea5 7276 main/binary-amd64/Packages.gz
+ 21d43b63e07dd4e845b0189a3c9b66c6 19562 main/binary-amd64/Packages
+ 0fc9e8b57ca44d4403935c6675efed97 7673 main/binary-amd64/Packages.gz
  1d4035bf754a01f70e0d54fb66d5844b 111 main/binary-amd64/Release
- b14f529376c0b75124529f02bf27dea0 18530 main/binary-arm64/Packages
- 95d4b4a09de6ff54a85b4cb9c7e9b473 7278 main/binary-arm64/Packages.gz
+ b21252335b8307270e39c3d13207b3bc 19561 main/binary-arm64/Packages
+ 23e64bc22b9fa10dbdb6220d4e244ef6 7678 main/binary-arm64/Packages.gz
  a9d825474074d0c26f2301aadf8cb3ca 111 main/binary-arm64/Release
- d6cc667778f40c853e76ec47c0624b8a 8326 main/Contents-amd64
- eb1753e5ba32da3b56a13f62d2b10b22 1237 main/Contents-amd64.gz
- d6cc667778f40c853e76ec47c0624b8a 8326 main/Contents-arm64
- eb1753e5ba32da3b56a13f62d2b10b22 1237 main/Contents-arm64.gz
+ ba03d19bcd461a23074f017bb5dc196f 8662 main/Contents-amd64
+ 409cab3bc30f15f0bb26e7afbba4033a 1288 main/Contents-amd64.gz
+ ba03d19bcd461a23074f017bb5dc196f 8662 main/Contents-arm64
+ 409cab3bc30f15f0bb26e7afbba4033a 1288 main/Contents-arm64.gz
 SHA1:
- e358ee7a539e56a50d1fb0833403e1602f907963 18531 main/binary-amd64/Packages
- f2680462ae8d88620a2ef833947b9ff309d78137 7276 main/binary-amd64/Packages.gz
+ 1447772027300d0daeb6580562e1840457d92d47 19562 main/binary-amd64/Packages
+ 7c2cb68175ff1f0c60878c4f53b0b4eb9befbe53 7673 main/binary-amd64/Packages.gz
  134ec24dec5676f74e9f956372a3592da55355a5 111 main/binary-amd64/Release
- e31f6583adff708cc51acae9653ed53e09bb0e52 18530 main/binary-arm64/Packages
- cae46c0b437d86d12c48139a1b73281aa62d7e5a 7278 main/binary-arm64/Packages.gz
+ 12479852aa63afa051e529842e8a7212bfa0dbe2 19561 main/binary-arm64/Packages
+ 7ada3ba99f709a18dcbf1ad298f9e95407e3c118 7678 main/binary-arm64/Packages.gz
  ceb7e3b532a6bd8818236ffb83a7f46341709688 111 main/binary-arm64/Release
- 8878fd1ea7acffb5bca8063409471ea5453bf7e5 8326 main/Contents-amd64
- b2ece2b822d19067f372972f04f4dcf73a73a6a4 1237 main/Contents-amd64.gz
- 8878fd1ea7acffb5bca8063409471ea5453bf7e5 8326 main/Contents-arm64
- b2ece2b822d19067f372972f04f4dcf73a73a6a4 1237 main/Contents-arm64.gz
+ 348f50cf7a6dce0bfb422aeef05b19b76f6ce7c0 8662 main/Contents-amd64
+ 09d7bb9743cbf366ff7bf58c630aaabf144a4dec 1288 main/Contents-amd64.gz
+ 348f50cf7a6dce0bfb422aeef05b19b76f6ce7c0 8662 main/Contents-arm64
+ 09d7bb9743cbf366ff7bf58c630aaabf144a4dec 1288 main/Contents-arm64.gz
 SHA256:
- 960dd0919f2074687ef695b2bc0aeed378706f734fa36ba976d93af9fd48b309 18531 main/binary-amd64/Packages
- 22f64edf30ca3c5d876b75ed39f9ba8e2fdf6e3886477b355a4f6333135dc22b 7276 main/binary-amd64/Packages.gz
+ 31fb2fdee8b70dd9ef8068fc33f8e31da6a5064f7c283e02ce879bc4ca1d00d7 19562 main/binary-amd64/Packages
+ b34697186028175f592a605d2e2f1b308622a10ba06e843eb5eda0d1b74b49d0 7673 main/binary-amd64/Packages.gz
  d2522fc2ea4758f1011f4f14998312900bca0f2e28a1046f094c5b036649b179 111 main/binary-amd64/Release
- fcc7424622b48af3cddd3767c4162ff664f541b7c5a3a1d071b394cec40f9bbb 18530 main/binary-arm64/Packages
- c0284398bb18267538d08b67c9f6ea59384e6c22b10fe82fecd62068f4da1b87 7278 main/binary-arm64/Packages.gz
+ 3f8d421453264c8e3189bc64bb0811f8f723d410bdaffb65a767f25a0ac9485a 19561 main/binary-arm64/Packages
+ d1098bc1ab4db6c989fcdd25bd9614b7ffba2e21913421d8815c02aa42a819ee 7678 main/binary-arm64/Packages.gz
  92bd15087a03eb6db2c784e177b21c166923fcf9b22f6fa9bcf354918be10930 111 main/binary-arm64/Release
- 1920ca9e69af6669bd4999719de49e0b897804282cb480debc21ea0a6d2c01c5 8326 main/Contents-amd64
- a3c16288effba0a7ea92baed23c0f9323bb60aaac1114ff4cff489f100301d62 1237 main/Contents-amd64.gz
- 1920ca9e69af6669bd4999719de49e0b897804282cb480debc21ea0a6d2c01c5 8326 main/Contents-arm64
- a3c16288effba0a7ea92baed23c0f9323bb60aaac1114ff4cff489f100301d62 1237 main/Contents-arm64.gz
+ f9ec6ec0ef5cfc22c56acfd9953f7e91d54f219e4781bb3c490907097b54e88c 8662 main/Contents-amd64
+ ada62989364786d33afa0774db6122ec587faab2b6ea31e2625b3b2af4897fd2 1288 main/Contents-amd64.gz
+ f9ec6ec0ef5cfc22c56acfd9953f7e91d54f219e4781bb3c490907097b54e88c 8662 main/Contents-arm64
+ ada62989364786d33afa0774db6122ec587faab2b6ea31e2625b3b2af4897fd2 1288 main/Contents-arm64.gz
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQTdNMQud2tZH7/rcqFitn8+ofpt7AUCaogY5AAKCRBitn8+ofpt
-7NZeAP0ba+K+iWyqVuqqXkn5CSjePNCxg330vlscpX8tqFRsNAD+P7j1GqZK5+fz
-O7Z+pWKJbJoDAv6g0ErWbZIfBnhF3QQ=
-=mX7J
+iHUEARYKAB0WIQTdNMQud2tZH7/rcqFitn8+ofpt7AUCaogb0AAKCRBitn8+ofpt
+7Lb4AQCXwyLwlLHfIHRmSxxj64wtR7NQtukgiPrcy8FOqb08TQEAypnl/bjuRa72
+dqr8t4C/neIkVL75peI0mQWD0B5zVwM=
+=4rCi
 -----END PGP SIGNATURE-----

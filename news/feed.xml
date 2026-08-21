@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>added: betterlockscreen 4.4.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-added-betterlockscreen-4.4.0-1</guid>
+<pubDate>Fri, 21 Aug 2026 09:35:12 +0000</pubDate>
+<description>Joins the archive in all three suites. (betterlockscreen 4.4.0-1)</description>
+</item>
+<item>
 <title>updated: i3lock-color 2.13.c.5-4</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-21-updated-i3lock-color-2.13.c.5-4</guid>

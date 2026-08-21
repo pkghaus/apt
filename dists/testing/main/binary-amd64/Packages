@@ -58,6 +58,30 @@ Description: healthy, bite-sized window manager
  managed at runtime through its berryc client; the package ships example
  sxhkd bindings and an autostart script.
 
+Package: betterlockscreen
+Version: 4.4.0-1~testing1
+Architecture: all
+Maintainer: pkg.haus archive <archive@pkg.haus>
+Installed-Size: 45
+Depends: bc, fontconfig, i3lock-color, imagemagick, procps, x11-utils, x11-xserver-utils
+Recommends: feh
+Suggests: dunst
+Homepage: https://github.com/betterlockscreen/betterlockscreen
+Priority: optional
+Section: x11
+Filename: pool/main/b/betterlockscreen/betterlockscreen_4.4.0-1~testing1_all.deb
+Size: 9364
+SHA256: 067fd324a73a36ac167c3d44c3ac9af5d437298170fa5644b0338bc62a3898a8
+SHA1: 9f3952037278f72ceb1c8fa43274afc80c0bf54d
+MD5sum: 9fdabfed414743ec56a6f13f55167142
+Description: lock screen wrapper around i3lock-color
+ betterlockscreen pre-renders your wallpaper into blurred, dimmed and
+ pixelated variants, caches them per resolution, and locks the screen with
+ i3lock-color using the cached image. Locking is therefore instant rather
+ than waiting on image processing. A clock, a text greeter and per-state
+ ring colours are configurable, and a template systemd unit is included for
+ locking on suspend.
+
 Package: croc
 Version: 11.2.4-1~testing1
 Architecture: amd64
