@@ -7,6 +7,34 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: zola 0.23.4-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-zola-0.23.4-1</guid>
+<pubDate>Fri, 21 Aug 2026 06:23:54 +0000</pubDate>
+<description>Updated from 0.23.3-3. (zola 0.23.4-1)</description>
+</item>
+<item>
+<title>updated: vale 3.18.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-vale-3.18.0-1</guid>
+<pubDate>Fri, 21 Aug 2026 06:23:54 +0000</pubDate>
+<description>Updated from 3.17.1-1. (vale 3.18.0-1)</description>
+</item>
+<item>
+<title>updated: rustic 0.11.4-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-rustic-0.11.4-1</guid>
+<pubDate>Fri, 21 Aug 2026 06:23:54 +0000</pubDate>
+<description>Updated from 0.11.3-1. (rustic 0.11.4-1)</description>
+</item>
+<item>
+<title>updated: croc 11.2.4-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-croc-11.2.4-1</guid>
+<pubDate>Fri, 21 Aug 2026 06:23:54 +0000</pubDate>
+<description>Updated from 11.1.2-1. (croc 11.2.4-1)</description>
+</item>
+<item>
 <title>updated: croc 11.1.2-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-18-updated-croc-11.1.2-1</guid>

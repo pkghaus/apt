@@ -59,19 +59,19 @@ Description: healthy, bite-sized window manager
  sxhkd bindings and an autostart script.
 
 Package: croc
-Version: 11.1.2-1
+Version: 11.2.4-1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
-Installed-Size: 8463
+Installed-Size: 8977
 Depends: libc6 (>= 2.34)
 Homepage: https://github.com/schollz/croc
 Priority: optional
 Section: net
-Filename: pool/main/c/croc/croc_11.1.2-1_arm64.deb
-Size: 2386484
-SHA256: aa240cece26c970c69417569ddc807f0ef287feac7d7a2c7c917a2121dd5289f
-SHA1: 9f68287c9f720537a2ec72527fcb05429079cf41
-MD5sum: 6dd993d99b699e1a59750aeaab32d754
+Filename: pool/main/c/croc/croc_11.2.4-1_arm64.deb
+Size: 2577532
+SHA256: 4d6de40e9aeab7e643b68a5dfc6fd3773a44d427d05dcc1d6f328e9f5375bb0a
+SHA1: c87fa794158770addf7f16682c2a5eedc92c5743
+MD5sum: 79dbec886fd7120610500bea55802c13
 Description: securely send files and folders between computers
  croc transfers files and folders between any two machines through a
  relay, end-to-end encrypted via a password-authenticated key exchange:
@@ -334,19 +334,19 @@ Description: lightweight and stable reverse tunnel for NAT traversal
  a small TOML file (examples included).
 
 Package: rustic
-Version: 0.11.3-1
+Version: 0.11.4-1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
-Installed-Size: 23474
+Installed-Size: 22963
 Depends: libc6 (>= 2.39), libgcc-s1 (>= 4.2)
 Homepage: https://rustic.cli.rs
 Priority: optional
 Section: admin
-Filename: pool/main/r/rustic/rustic_0.11.3-1_arm64.deb
-Size: 6693344
-SHA256: e43b841171a57174f6bbc696e2663c855de565ea6ce2ad6856ce344f2f93d0c4
-SHA1: 3664093fd0c406b4726abb70ce42891158c4a8f2
-MD5sum: 2ea069c6fbcbc23712fbf4e094cebd0d
+Filename: pool/main/r/rustic/rustic_0.11.4-1_arm64.deb
+Size: 6835924
+SHA256: 4e3dcda65986908f27149c1fa447d2080259b2eb69538cd61bee350a28323976
+SHA1: f2875389518feec8d81e436b0ccb1dcfac32944e
+MD5sum: a4bc0322a318afc4ad70878fb8d13f6d
 Description: fast, encrypted, deduplicated backups
  rustic backs up to restic-compatible repositories: content-defined
  chunking, encryption, deduplication and snapshots, with cold-storage
@@ -393,19 +393,19 @@ Description: markup-based typesetting system
  A watch mode recompiles incrementally on save.
 
 Package: vale
-Version: 3.17.1-1
+Version: 3.18.0-1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
-Installed-Size: 40537
+Installed-Size: 43481
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 5)
 Homepage: https://vale.sh
 Priority: optional
 Section: text
-Filename: pool/main/v/vale/vale_3.17.1-1_arm64.deb
-Size: 6944132
-SHA256: dd82bce1ae2a5f78fc8679a57dcbc2793814c4be9dbc5664fc700acefbe4f135
-SHA1: f1d0d263e91af868f937f00d0c21c8d1bcbfdd53
-MD5sum: f1958e9a5cd5b815f4998b849321dd43
+Filename: pool/main/v/vale/vale_3.18.0-1_arm64.deb
+Size: 7253788
+SHA256: 8813606ccbfbb6f896d814e85e0b291b582fc6f22fcbb447a290cf540f707eee
+SHA1: b4b55b0dca3af584310b6b07c147c315ce0bf7b9
+MD5sum: cd996621f749bc5015e292f2828a6815
 Description: syntax-aware linter for prose
  vale lints prose in Markdown, reStructuredText, AsciiDoc, HTML and
  source-code comments against configurable style rules. Editorial
@@ -452,19 +452,19 @@ Description: modern watch command with history and diffs
  and search.
 
 Package: zola
-Version: 0.23.3-3
+Version: 0.23.4-1
 Architecture: arm64
 Maintainer: pkg.haus archive <archive@pkg.haus>
-Installed-Size: 38889
+Installed-Size: 38890
 Depends: ca-certificates, libc6 (>= 2.43), libgcc-s1 (>= 4.2)
 Homepage: https://github.com/getzola/zola
 Priority: optional
 Section: web
-Filename: pool/main/z/zola/zola_0.23.3-3_arm64.deb
-Size: 9261284
-SHA256: 83d3be968fc803be05983483209521dde116ef3683ab2177ae4068a6986df8fa
-SHA1: a99f3b2e793a8d976fbaea6ed017802576b07128
-MD5sum: be9e911510aa8c07fc98dca068bda5df
+Filename: pool/main/z/zola/zola_0.23.4-1_arm64.deb
+Size: 9270988
+SHA256: 2a0f71fac9c0ee5f9cc9d1d33f865ed5a0fd2cedc28f683c40e5840693fa45e7
+SHA1: 7fc84cdd0fbc9dbab60584febc27a8656b771cf3
+MD5sum: aafdc5317988df68cd6d50f2bce53951
 Description: fast static site generator in a single binary
  Zola is a static site generator (SSG), similar to Hugo, Pelican, and Jekyll
  (for a comprehensive list of SSGs, please see Jamstack). It is written in

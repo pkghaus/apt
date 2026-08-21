@@ -1,7 +1,7 @@
 act	0.2.89-1
 actionlint	1.7.12-1
 berry	0.1.13-2
-croc	11.1.2-1
+croc	11.2.4-1
 d2	0.7.1-1
 difftastic	0.70.0-1
 frp	0.71.0-1
@@ -15,10 +15,10 @@ monolith	2.10.1-1
 ouch	0.8.1-1
 pkghaus-archive-keyring	2026.08.15
 rathole	0.5.0-1
-rustic	0.11.3-1
+rustic	0.11.4-1
 superfile	1.6.0-1
 typst	0.15.1-1
-vale	3.17.1-1
+vale	3.18.0-1
 vegeta	12.13.0-1
 viddy	1.3.1-1
-zola	0.23.3-3
+zola	0.23.4-1

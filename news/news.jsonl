@@ -11,3 +11,7 @@
 {"ts":"2026-08-17T08:17:40Z","type":"updated","title":"updated: croc 11.1.1-1","detail":"Updated from 11.1.0-1.","pkgs":"croc=11.1.1-1"}
 {"ts":"2026-08-17T08:35:22Z","type":"updated","title":"updated: lychee 0.24.2-1","detail":"Updated from 0.15.1-1.","pkgs":"lychee=0.24.2-1"}
 {"ts":"2026-08-18T07:58:28Z","type":"updated","title":"updated: croc 11.1.2-1","detail":"Updated from 11.1.1-1.","pkgs":"croc=11.1.2-1"}
+{"ts":"2026-08-21T06:23:54Z","type":"updated","title":"updated: croc 11.2.4-1","detail":"Updated from 11.1.2-1.","pkgs":"croc=11.2.4-1"}
+{"ts":"2026-08-21T06:23:54Z","type":"updated","title":"updated: rustic 0.11.4-1","detail":"Updated from 0.11.3-1.","pkgs":"rustic=0.11.4-1"}
+{"ts":"2026-08-21T06:23:54Z","type":"updated","title":"updated: vale 3.18.0-1","detail":"Updated from 3.17.1-1.","pkgs":"vale=3.18.0-1"}
+{"ts":"2026-08-21T06:23:54Z","type":"updated","title":"updated: zola 0.23.4-1","detail":"Updated from 0.23.3-3.","pkgs":"zola=0.23.4-1"}
