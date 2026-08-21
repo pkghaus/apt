@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: d2 0.7.1-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-d2-0.7.1-2</guid>
+<pubDate>Fri, 21 Aug 2026 07:28:13 +0000</pubDate>
+<description>Updated from 0.7.1-1. (d2 0.7.1-2)</description>
+</item>
+<item>
 <title>updated: vegeta 12.13.0-2</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-21-updated-vegeta-12.13.0-2</guid>

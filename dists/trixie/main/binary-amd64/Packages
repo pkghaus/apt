@@ -80,7 +80,7 @@ Description: securely send files and folders between computers
  a self-hosted one (an example systemd unit ships with the package).
 
 Package: d2
-Version: 0.7.1-1~haus13+1
+Version: 0.7.1-2~haus13+1
 Architecture: amd64
 Maintainer: pkg.haus archive <archive@pkg.haus>
 Installed-Size: 38740
@@ -88,11 +88,11 @@ Depends: libc6 (>= 2.34)
 Homepage: https://d2lang.com
 Priority: optional
 Section: graphics
-Filename: pool/main/d/d2/d2_0.7.1-1~haus13+1_amd64.deb
-Size: 9832360
-SHA256: 24db742e351c891df80a8fccf2379831d61752efa8a1293ba4d55bac7155076d
-SHA1: 2feb2747eb4e929930f648a40ea4ed25160462ad
-MD5sum: 2ad5570948591782242c0cfef0999a89
+Filename: pool/main/d/d2/d2_0.7.1-2~haus13+1_amd64.deb
+Size: 9833984
+SHA256: c402eb8c42c2a6aed9880d11665a081751df12364d9e0f253f36c2599d3196df
+SHA1: fb621f248b87f7b29155ccc8e212086ea065f8d5
+MD5sum: c201ff19c798a64219b4cc8840ba8f18
 Description: declarative diagramming language and compiler
  D2 turns text into diagrams: a scripting language whose compiler renders
  the description to SVG and other formats, with layout engines, themes
