@@ -29,3 +29,4 @@ pkghaus/ouch-debian
 pkghaus/lychee-debian
 pkghaus/vale-debian
 pkghaus/rathole-debian
+pkghaus/betterlockscreen-debian
