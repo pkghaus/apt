@@ -7,6 +7,27 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: vegeta 12.13.0-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-vegeta-12.13.0-2</guid>
+<pubDate>Fri, 21 Aug 2026 06:48:19 +0000</pubDate>
+<description>Updated from 12.13.0-1. (vegeta 12.13.0-2)</description>
+</item>
+<item>
+<title>updated: ouch 0.8.1-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-ouch-0.8.1-2</guid>
+<pubDate>Fri, 21 Aug 2026 06:48:19 +0000</pubDate>
+<description>Updated from 0.8.1-1. (ouch 0.8.1-2)</description>
+</item>
+<item>
+<title>updated: actionlint 1.7.12-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-21-updated-actionlint-1.7.12-2</guid>
+<pubDate>Fri, 21 Aug 2026 06:48:19 +0000</pubDate>
+<description>Updated from 1.7.12-1. (actionlint 1.7.12-2)</description>
+</item>
+<item>
 <title>updated: zola 0.23.4-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-21-updated-zola-0.23.4-1</guid>

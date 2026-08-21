@@ -20,18 +20,18 @@ Description: run GitHub Actions workflows locally
  is the default, hence the recommendation.
 
 Package: actionlint
-Version: 1.7.12-1~testing1
+Version: 1.7.12-2~testing1
 Architecture: amd64
 Maintainer: pkg.haus archive <archive@pkg.haus>
 Installed-Size: 6503
 Homepage: https://rhysd.github.io/actionlint/
 Priority: optional
 Section: devel
-Filename: pool/main/a/actionlint/actionlint_1.7.12-1~testing1_amd64.deb
-Size: 1842632
-SHA256: 1959127a8e1cbad93d888e209932eda41bcce93e795eb69bb5afcec080a3e40a
-SHA1: dfa14aeb89d57a493cecdd4edcf298a52e20ea8e
-MD5sum: 412dbbcd309bfdb9f6ab1f6d60466c7b
+Filename: pool/main/a/actionlint/actionlint_1.7.12-2~testing1_amd64.deb
+Size: 1842344
+SHA256: 6306f942f1d1a89247633e710ee464b49c63fe30f62496083f80e8aa893267a1
+SHA1: 66719305d5d8ed9a8bb0357c1df05e1d9f3354d5
+MD5sum: b48ef2d9cb378d4b9248336a0248c792
 Description: static checker for GitHub Actions workflow files
  actionlint lints .github/workflows/ files: expression type checks,
  action input validation, shellcheck integration for run: blocks,
@@ -276,7 +276,7 @@ Description: save any web page as a single self-contained HTML file
  metadata inclusion.
 
 Package: ouch
-Version: 0.8.1-1~testing1
+Version: 0.8.1-2~testing1
 Architecture: amd64
 Maintainer: pkg.haus archive <archive@pkg.haus>
 Installed-Size: 6218
@@ -284,11 +284,11 @@ Depends: libc6 (>= 2.34), libgcc-s1 (>= 4.2), libstdc++6 (>= 5.2)
 Homepage: https://github.com/ouch-org/ouch
 Priority: optional
 Section: utils
-Filename: pool/main/o/ouch/ouch_0.8.1-1~testing1_amd64.deb
-Size: 2112620
-SHA256: ccca83709ba1c9412fab83eac9eb85aa4261bbac3b4a963c9f0cdceb75c5fd35
-SHA1: c93ea1f0a3f552ff11b2d89463ccb56927402d8b
-MD5sum: 90eb82a938a5cf16b2db510c8518555b
+Filename: pool/main/o/ouch/ouch_0.8.1-2~testing1_amd64.deb
+Size: 2127596
+SHA256: 8de9669d64f36bb205917c99c88571af289333a8bdc44b95a1a4658a87c7ce9b
+SHA1: 076da35528081b7db62ecd25f3b823fab5b126b7
+MD5sum: 317671e8bdd69478dee2007ce7dab61a
 Description: painless compression and decompression
  ouch compresses and decompresses archives with a single consistent
  interface, inferring formats from file extensions: tar, zip, gzip,
@@ -413,7 +413,7 @@ Description: syntax-aware linter for prose
  directory; everything is driven by a .vale.ini.
 
 Package: vegeta
-Version: 12.13.0-1~testing1
+Version: 12.13.0-2~testing1
 Architecture: amd64
 Maintainer: pkg.haus archive <archive@pkg.haus>
 Installed-Size: 13669
@@ -421,11 +421,11 @@ Depends: libc6 (>= 2.34)
 Homepage: https://github.com/tsenart/vegeta
 Priority: optional
 Section: net
-Filename: pool/main/v/vegeta/vegeta_12.13.0-1~testing1_amd64.deb
-Size: 3879868
-SHA256: 3a7b0446d236a1b2e4cc49a5a76dd26fc4d2e60e3176150c27c671d37295ffd4
-SHA1: 9d9d3cdb22855fe4c2cef18acbe14996016b546d
-MD5sum: 479704ce82bce81d6d0ff835826fb496
+Filename: pool/main/v/vegeta/vegeta_12.13.0-2~testing1_amd64.deb
+Size: 3878648
+SHA256: a04df06ad28af397ef9abe7c41503ee310fcfa7831840cfbb7ddd496c7529043
+SHA1: 5e313bf0ca57d4bb685cab3d9a86a3592ea6b9df
+MD5sum: 00d1df657849c0f9749cb5314a0c67ed
 Description: HTTP load testing tool with constant request rate
  vegeta drives HTTP services at a constant request rate and reports
  latency distributions, throughput and status codes, as text, JSON
