@@ -127,6 +127,53 @@ echo "render refuses to replace pool listings with nothing"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+echo "the pool mirror refuses the two ways it could lose data"
+(
+    work="$(mktemp -d)"
+    export R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_ENDPOINT=https://example.invalid
+    export R2_BUCKET=pkghaus-apt
+
+    # Mirroring a bucket onto itself would sync the pool over the pool. The
+    # sync is additive so nothing would be lost today, but the mirror would
+    # then be the thing it is supposed to protect.
+    export R2_BACKUP_BUCKET=pkghaus-apt
+    out="$("$ROOT/scripts/backup-pool.sh" 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -eq 0 ]; then
+        no "mirroring the archive onto itself must fail" "exited 0"
+    elif ! grep -q 'backup bucket is the archive bucket' <<<"${out:-}"; then
+        no "mirroring the archive onto itself must fail" "wrong message: ${out:-}"
+    else
+        ok "mirroring the archive onto itself must fail"
+    fi
+
+    # A sync that silently copied nothing leaves a mirror smaller than the
+    # archive. Additive means it may hold MORE (a pruned version stays);
+    # fewer can only mean the copy did not finish.
+    mkdir -p "$work/bin"
+    cat > "$work/bin/aws" <<'FAKE'
+#!/bin/sh
+for a in "$@"; do
+  case "$a" in
+    s3://pkghaus-apt-backup/pool/) echo "2026-01-01 00:00:00 1 a.deb"; exit 0 ;;
+    s3://pkghaus-apt/pool/)        echo "2026-01-01 00:00:00 1 a.deb"
+                                   echo "2026-01-01 00:00:00 1 b.deb"; exit 0 ;;
+  esac
+done
+exit 0
+FAKE
+    chmod +x "$work/bin/aws"
+    export R2_BACKUP_BUCKET=pkghaus-apt-backup
+    out="$(PATH="$work/bin:$PATH" "$ROOT/scripts/backup-pool.sh" 2>&1)" && rc2=0 || rc2=$?
+    if [ "${rc2:-0}" -eq 0 ]; then
+        no "a short mirror must fail" "exited 0"
+    elif ! grep -q 'fewer debs' <<<"${out:-}"; then
+        no "a short mirror must fail" "wrong message: ${out:-}"
+    else
+        ok "a short mirror must fail"
+    fi
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
 if [ "$fail" -eq 0 ]; then
     echo "all tests passed"
