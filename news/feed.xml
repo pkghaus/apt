@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>apt asks you to accept an Origin and Label change</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-23-apt-asks-you-to-accept-an-Origin-and-Label-change</guid>
+<pubDate>Sun, 23 Aug 2026 10:24:46 +0000</pubDate>
+<description>The archive moved to new publishing tooling. Its Release files now carry Origin: pkg.haus and Label: pkg.haus, where before they carried neither, and apt requires that to be accepted once. Answer yes, or run apt update --allow-releaseinfo-change on machines with no one at the keyboard. Nothing else changed: same suites, same architectures, same signing key 62B67F3EA1FA6DEC.</description>
+</item>
+<item>
 <title>added: betterlockscreen 4.4.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-21-added-betterlockscreen-4.4.0-1</guid>
