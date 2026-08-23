@@ -2634,3 +2634,1537 @@
 10:15:05.638155 table@build exiting
 10:15:05.638158 table@build revert @655
 10:15:05.638280 db@close done T·1.396948ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:43.985457 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:43.985827 version@stat F·[4 142] S·195KiB[9KiB 186KiB] Sc·[1.00 0.00]
+10:18:43.985855 db@open opening
+10:18:43.986114 journal@recovery F·1
+10:18:43.986168 journal@recovery recovering @653
+10:18:43.986638 version@stat F·[4 142] S·195KiB[9KiB 186KiB] Sc·[1.00 0.00]
+10:18:43.990014 db@janitor F·148 G·0
+10:18:43.990043 db@open done T·4.169232ms
+10:18:43.990100 table@compaction L0·1 -> L1·1 S·120KiB Q·888
+10:18:43.990282 db@close closing
+10:18:43.992307 table@build created L1@657 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:43.992319 table@build exiting
+10:18:43.992329 table@build revert @657
+10:18:43.992463 db@close done T·2.178916ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:44.018125 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:44.018459 version@stat F·[4 142] S·195KiB[9KiB 186KiB] Sc·[1.00 0.00]
+10:18:44.018479 db@open opening
+10:18:44.018684 journal@recovery F·1
+10:18:44.018927 journal@recovery recovering @655
+10:18:44.019638 version@stat F·[4 142] S·195KiB[9KiB 186KiB] Sc·[1.00 0.00]
+10:18:44.022175 db@janitor F·148 G·0
+10:18:44.022215 db@open done T·3.711703ms
+10:18:44.022262 table@compaction L0·1 -> L1·1 S·120KiB Q·888
+10:18:44.024526 table@build created L1@659 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.024567 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.025045 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·2.755824ms
+10:18:44.025140 table@remove removed @642
+10:18:44.025217 table@remove removed @641
+10:18:44.055904 transaction@flush created L0@660 N·1 S·632B "xEP..f39,v889":"xEP..f39,v889"
+10:18:44.055938 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.056503 table@compaction L0·1 -> L1·1 S·119KiB Q·889
+10:18:44.058497 table@build created L1@661 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.058546 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.059065 table@compaction committed F-1 S-642B Ke·0 D·1 T·2.532044ms
+10:18:44.059132 table@remove removed @660
+10:18:44.059214 table@remove removed @659
+10:18:44.084064 transaction@flush created L0@662 N·1 S·616B "xEP..f31,v890":"xEP..f31,v890"
+10:18:44.084087 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.084730 table@compaction L0·1 -> L1·1 S·119KiB Q·890
+10:18:44.086873 table@build created L1@663 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.086917 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.087339 table@compaction committed F-1 S-618B Ke·0 D·1 T·2.586828ms
+10:18:44.087402 table@remove removed @662
+10:18:44.087460 table@remove removed @661
+10:18:44.095597 transaction@flush created L0@664 N·1 S·588B "xEP..a6b,v891":"xEP..a6b,v891"
+10:18:44.095616 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.096080 table@compaction L0·1 -> L1·1 S·118KiB Q·891
+10:18:44.098024 table@build created L1@665 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.098064 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.098448 table@compaction committed F-1 S-587B Ke·0 D·1 T·2.345334ms
+10:18:44.098514 table@remove removed @664
+10:18:44.098592 table@remove removed @663
+10:18:44.105986 transaction@flush created L0@666 N·1 S·577B "xEP..308,v892":"xEP..308,v892"
+10:18:44.106004 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.106614 table@compaction L0·1 -> L1·1 S·118KiB Q·892
+10:18:44.108400 table@build created L1@667 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.108436 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.109474 table@compaction committed F-1 S-565B Ke·0 D·1 T·2.839136ms
+10:18:44.109532 table@remove removed @666
+10:18:44.109603 table@remove removed @665
+10:18:44.109713 transaction@flush created L0@668 N·1 S·568B "xEP..0c5,v893":"xEP..0c5,v893"
+10:18:44.109725 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.110185 table@compaction L0·1 -> L1·1 S·118KiB Q·893
+10:18:44.111922 table@build created L1@669 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.111978 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.112682 table@compaction committed F-1 S-571B Ke·0 D·1 T·2.475783ms
+10:18:44.112754 table@remove removed @668
+10:18:44.113108 table@remove removed @667
+10:18:44.113237 transaction@flush created L0@670 N·1 S·575B "xEP..e3a,v894":"xEP..e3a,v894"
+10:18:44.113248 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.113757 table@compaction L0·1 -> L1·1 S·118KiB Q·894
+10:18:44.115466 table@build created L1@671 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.115498 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.116321 table@compaction committed F-1 S-574B Ke·0 D·1 T·2.548046ms
+10:18:44.116389 table@remove removed @670
+10:18:44.116455 table@remove removed @669
+10:18:44.116609 transaction@flush created L0@672 N·1 S·764B "xEP..d9c,v895":"xEP..d9c,v895"
+10:18:44.116621 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.117301 table@compaction L0·1 -> L1·1 S·119KiB Q·895
+10:18:44.118984 table@build created L1@673 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.119030 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.119439 table@compaction committed F-1 S-771B Ke·0 D·1 T·2.11562ms
+10:18:44.119507 table@remove removed @672
+10:18:44.119583 table@remove removed @671
+10:18:44.133868 transaction@flush created L0@674 N·1 S·732B "xEP..90e,v896":"xEP..90e,v896"
+10:18:44.133889 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.134457 table@compaction L0·1 -> L1·1 S·119KiB Q·896
+10:18:44.136222 table@build created L1@675 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.136261 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.136715 table@compaction committed F-1 S-747B Ke·0 D·1 T·2.220765ms
+10:18:44.136782 table@remove removed @674
+10:18:44.136841 table@remove removed @673
+10:18:44.149322 transaction@flush created L0@676 N·1 S·734B "xEP..7d3,v897":"xEP..7d3,v897"
+10:18:44.149349 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.149742 table@compaction L0·1 -> L1·1 S·119KiB Q·897
+10:18:44.151492 table@build created L1@677 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.151527 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.151925 table@compaction committed F-1 S-736B Ke·0 D·1 T·2.163387ms
+10:18:44.152037 table@remove removed @676
+10:18:44.152125 table@remove removed @675
+10:18:44.197801 transaction@flush created L0@678 N·1 S·564B "xEP..d54,v898":"xEP..d54,v898"
+10:18:44.197835 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.198425 table@compaction L0·1 -> L1·1 S·118KiB Q·898
+10:18:44.200188 table@build created L1@679 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.200227 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.200597 table@compaction committed F-1 S-568B Ke·0 D·1 T·2.145334ms
+10:18:44.200670 table@remove removed @678
+10:18:44.200733 table@remove removed @677
+10:18:44.241327 transaction@flush created L0@680 N·1 S·563B "xEP..045,v899":"xEP..045,v899"
+10:18:44.241365 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.241868 table@compaction L0·1 -> L1·1 S·118KiB Q·899
+10:18:44.243594 table@build created L1@681 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.243643 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.244067 table@compaction committed F-1 S-565B Ke·0 D·1 T·2.176209ms
+10:18:44.244153 table@remove removed @680
+10:18:44.244241 table@remove removed @679
+10:18:44.275270 transaction@flush created L0@682 N·1 S·705B "xEP..82c,v900":"xEP..82c,v900"
+10:18:44.275298 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.275882 table@compaction L0·1 -> L1·1 S·119KiB Q·900
+10:18:44.277713 table@build created L1@683 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.277760 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.278142 table@compaction committed F-1 S-706B Ke·0 D·1 T·2.236659ms
+10:18:44.278213 table@remove removed @682
+10:18:44.278285 table@remove removed @681
+10:18:44.307967 transaction@flush created L0@684 N·1 S·698B "xEP..284,v901":"xEP..284,v901"
+10:18:44.308000 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.308468 table@compaction L0·1 -> L1·1 S·119KiB Q·901
+10:18:44.310260 table@build created L1@685 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.310314 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.310721 table@compaction committed F-1 S-695B Ke·0 D·1 T·2.232222ms
+10:18:44.310784 table@remove removed @684
+10:18:44.310851 table@remove removed @683
+10:18:44.360313 transaction@flush created L0@686 N·1 S·773B "xEP..70f,v902":"xEP..70f,v902"
+10:18:44.360352 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.360908 table@compaction L0·1 -> L1·1 S·119KiB Q·902
+10:18:44.362720 table@build created L1@687 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.362773 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.363152 table@compaction committed F-1 S-773B Ke·0 D·1 T·2.223308ms
+10:18:44.363230 table@remove removed @686
+10:18:44.363313 table@remove removed @685
+10:18:44.405985 transaction@flush created L0@688 N·1 S·829B "xEP..d3a,v903":"xEP..d3a,v903"
+10:18:44.406007 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.406536 table@compaction L0·1 -> L1·1 S·119KiB Q·903
+10:18:44.408276 table@build created L1@689 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.408333 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.408766 table@compaction committed F-1 S-691B Ke·0 D·1 T·2.209703ms
+10:18:44.408825 table@remove removed @688
+10:18:44.408888 table@remove removed @687
+10:18:44.425783 transaction@flush created L0@690 N·1 S·584B "xEP..385,v904":"xEP..385,v904"
+10:18:44.425811 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.426298 table@compaction L0·1 -> L1·1 S·119KiB Q·904
+10:18:44.428133 table@build created L1@691 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.428181 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.432449 table@compaction committed F-1 S-587B Ke·0 D·1 T·6.118158ms
+10:18:44.432524 table@remove removed @690
+10:18:44.432604 table@remove removed @689
+10:18:44.443336 transaction@flush created L0@692 N·1 S·574B "xEP..531,v905":"xEP..531,v905"
+10:18:44.443368 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.444129 table@compaction L0·1 -> L1·1 S·119KiB Q·905
+10:18:44.445977 table@build created L1@693 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.446021 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.446400 table@compaction committed F-1 S-579B Ke·0 D·1 T·2.246713ms
+10:18:44.446492 table@remove removed @692
+10:18:44.446577 table@remove removed @691
+10:18:44.451165 transaction@flush created L0@694 N·1 S·505B "xEP..ee0,v906":"xEP..ee0,v906"
+10:18:44.451187 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.451706 table@compaction L0·1 -> L1·1 S·119KiB Q·906
+10:18:44.453484 table@build created L1@695 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.453530 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.453985 table@compaction committed F-1 S-509B Ke·0 D·1 T·2.256789ms
+10:18:44.454051 table@remove removed @694
+10:18:44.454130 table@remove removed @693
+10:18:44.457925 transaction@flush created L0@696 N·1 S·499B "xEP..7f5,v907":"xEP..7f5,v907"
+10:18:44.457971 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.458445 table@compaction L0·1 -> L1·1 S·119KiB Q·907
+10:18:44.460547 table@build created L1@697 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.460587 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.461044 table@compaction committed F-1 S-491B Ke·0 D·1 T·2.566291ms
+10:18:44.461100 table@remove removed @696
+10:18:44.461161 table@remove removed @695
+10:18:44.466877 transaction@flush created L0@698 N·1 S·562B "xEP..de2,v908":"xEP..de2,v908"
+10:18:44.466894 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.467468 table@compaction L0·1 -> L1·1 S·119KiB Q·908
+10:18:44.469103 table@build created L1@699 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.469146 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.470265 table@compaction committed F-1 S-566B Ke·0 D·1 T·2.764652ms
+10:18:44.470329 table@remove removed @698
+10:18:44.470403 table@remove removed @697
+10:18:44.475229 transaction@flush created L0@700 N·1 S·570B "xEP..bb3,v909":"xEP..bb3,v909"
+10:18:44.475269 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.476098 table@compaction L0·1 -> L1·1 S·119KiB Q·909
+10:18:44.478066 table@build created L1@701 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.478107 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.479003 table@compaction committed F-1 S-575B Ke·0 D·1 T·2.882732ms
+10:18:44.479063 table@remove removed @700
+10:18:44.479134 table@remove removed @699
+10:18:44.479233 transaction@flush created L0@702 N·1 S·572B "xEP..987,v910":"xEP..987,v910"
+10:18:44.479245 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.479794 table@compaction L0·1 -> L1·1 S·119KiB Q·910
+10:18:44.481574 table@build created L1@703 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.481604 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.482503 table@compaction committed F-1 S-578B Ke·0 D·1 T·2.681113ms
+10:18:44.482577 table@remove removed @702
+10:18:44.482828 table@remove removed @701
+10:18:44.482926 transaction@flush created L0@704 N·1 S·573B "xEP..514,v911":"xEP..514,v911"
+10:18:44.482939 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.483511 table@compaction L0·1 -> L1·1 S·119KiB Q·911
+10:18:44.486136 table@build created L1@705 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.486181 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.486563 table@compaction committed F-1 S-577B Ke·0 D·1 T·3.013304ms
+10:18:44.486634 table@remove removed @704
+10:18:44.486709 table@remove removed @703
+10:18:44.510134 transaction@flush created L0@706 N·1 S·610B "xEP..6f7,v912":"xEP..6f7,v912"
+10:18:44.510169 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.510700 table@compaction L0·1 -> L1·1 S·119KiB Q·912
+10:18:44.512427 table@build created L1@707 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.512474 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.512862 table@compaction committed F-1 S-623B Ke·0 D·1 T·2.14369ms
+10:18:44.512940 table@remove removed @706
+10:18:44.513048 table@remove removed @705
+10:18:44.534148 transaction@flush created L0@708 N·1 S·611B "xEP..4a9,v913":"xEP..4a9,v913"
+10:18:44.534173 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.534711 table@compaction L0·1 -> L1·1 S·119KiB Q·913
+10:18:44.536499 table@build created L1@709 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.536547 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.537537 table@compaction committed F-1 S-608B Ke·0 D·1 T·2.801017ms
+10:18:44.537547 transaction@flush created L0@710 N·1 S·537B "xEP..a93,v914":"xEP..a93,v914"
+10:18:44.537565 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.537812 table@remove removed @708
+10:18:44.537881 table@remove removed @707
+10:18:44.538376 table@compaction L0·1 -> L1·1 S·119KiB Q·914
+10:18:44.541091 table@build created L1@711 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.541140 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.541382 transaction@flush created L0@712 N·1 S·535B "xEP..7ec,v915":"xEP..7ec,v915"
+10:18:44.541680 table@compaction committed F-1 S-553B Ke·0 D·1 T·3.279437ms
+10:18:44.541740 table@remove removed @710
+10:18:44.541810 table@remove removed @709
+10:18:44.541829 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.542431 table@compaction L0·1 -> L1·1 S·118KiB Q·915
+10:18:44.544150 table@build created L1@713 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.544183 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.544652 table@compaction committed F-1 S-538B Ke·0 D·1 T·2.198586ms
+10:18:44.544712 table@remove removed @712
+10:18:44.544778 table@remove removed @711
+10:18:44.559414 transaction@flush created L0@714 N·1 S·612B "xEP..eb0,v916":"xEP..eb0,v916"
+10:18:44.559441 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.559974 table@compaction L0·1 -> L1·1 S·119KiB Q·916
+10:18:44.561820 table@build created L1@715 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.561867 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.562278 table@compaction committed F-1 S-608B Ke·0 D·1 T·2.277293ms
+10:18:44.562344 table@remove removed @714
+10:18:44.562423 table@remove removed @713
+10:18:44.578087 transaction@flush created L0@716 N·1 S·612B "xEP..f4f,v917":"xEP..f4f,v917"
+10:18:44.578119 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.578542 table@compaction L0·1 -> L1·1 S·119KiB Q·917
+10:18:44.580425 table@build created L1@717 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.580471 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.581013 table@compaction committed F-1 S-605B Ke·0 D·1 T·2.444649ms
+10:18:44.581083 table@remove removed @716
+10:18:44.581147 table@remove removed @715
+10:18:44.591121 transaction@flush created L0@718 N·1 S·573B "xEP..297,v918":"xEP..297,v918"
+10:18:44.591171 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.591745 table@compaction L0·1 -> L1·1 S·119KiB Q·918
+10:18:44.593691 table@build created L1@719 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.593737 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.594202 table@compaction committed F-1 S-570B Ke·0 D·1 T·2.424982ms
+10:18:44.594266 table@remove removed @718
+10:18:44.594339 table@remove removed @717
+10:18:44.602923 transaction@flush created L0@720 N·1 S·565B "xEP..2ad,v919":"xEP..2ad,v919"
+10:18:44.602942 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.603738 table@compaction L0·1 -> L1·1 S·119KiB Q·919
+10:18:44.605532 table@build created L1@721 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.605582 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.606483 table@compaction committed F-1 S-578B Ke·0 D·1 T·2.719235ms
+10:18:44.606540 table@remove removed @720
+10:18:44.606601 table@remove removed @719
+10:18:44.606495 transaction@flush created L0@722 N·1 S·613B "xEP..09a,v920":"xEP..09a,v920"
+10:18:44.606634 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.607232 table@compaction L0·1 -> L1·1 S·119KiB Q·920
+10:18:44.609174 table@build created L1@723 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.609213 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.609673 table@compaction committed F-1 S-617B Ke·0 D·1 T·2.414031ms
+10:18:44.609728 table@remove removed @722
+10:18:44.609785 table@remove removed @721
+10:18:44.615851 transaction@flush created L0@724 N·1 S·662B "xEP..2fc,v921":"xEP..2fc,v921"
+10:18:44.615870 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.616417 table@compaction L0·1 -> L1·1 S·119KiB Q·921
+10:18:44.618152 table@build created L1@725 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.618184 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.618545 table@compaction committed F-1 S-662B Ke·0 D·1 T·2.1064ms
+10:18:44.618604 table@remove removed @724
+10:18:44.618671 table@remove removed @723
+10:18:44.624317 transaction@flush created L0@726 N·1 S·653B "xEP..4a1,v922":"xEP..4a1,v922"
+10:18:44.624334 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.624850 table@compaction L0·1 -> L1·1 S·119KiB Q·922
+10:18:44.626504 table@build created L1@727 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.626532 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.626886 table@compaction committed F-1 S-652B Ke·0 D·1 T·2.021266ms
+10:18:44.626940 table@remove removed @726
+10:18:44.627045 table@remove removed @725
+10:18:44.662634 transaction@flush created L0@728 N·1 S·605B "xEP..037,v923":"xEP..037,v923"
+10:18:44.662682 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.663151 table@compaction L0·1 -> L1·1 S·119KiB Q·923
+10:18:44.664926 table@build created L1@729 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.664997 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.665387 table@compaction committed F-1 S-602B Ke·0 D·1 T·2.184823ms
+10:18:44.665454 table@remove removed @728
+10:18:44.665536 table@remove removed @727
+10:18:44.697374 transaction@flush created L0@730 N·1 S·612B "xEP..fd2,v924":"xEP..fd2,v924"
+10:18:44.697397 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.698062 table@compaction L0·1 -> L1·1 S·119KiB Q·924
+10:18:44.699871 table@build created L1@731 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.699915 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.700328 table@compaction committed F-1 S-608B Ke·0 D·1 T·2.245741ms
+10:18:44.700396 table@remove removed @730
+10:18:44.700468 table@remove removed @729
+10:18:44.728185 transaction@flush created L0@732 N·1 S·567B "xEP..551,v925":"xEP..551,v925"
+10:18:44.728216 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.728759 table@compaction L0·1 -> L1·1 S·119KiB Q·925
+10:18:44.730516 table@build created L1@733 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.730564 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.730976 table@compaction committed F-1 S-571B Ke·0 D·1 T·2.190949ms
+10:18:44.731054 table@remove removed @732
+10:18:44.731135 table@remove removed @731
+10:18:44.755367 transaction@flush created L0@734 N·1 S·570B "xEP..897,v926":"xEP..897,v926"
+10:18:44.755423 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.755848 table@compaction L0·1 -> L1·1 S·119KiB Q·926
+10:18:44.757601 table@build created L1@735 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.757645 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.758182 table@compaction committed F-1 S-568B Ke·0 D·1 T·2.311824ms
+10:18:44.758256 table@remove removed @734
+10:18:44.758338 table@remove removed @733
+10:18:44.830259 transaction@flush created L0@736 N·1 S·633B "xEP..280,v927":"xEP..280,v927"
+10:18:44.830306 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.830787 table@compaction L0·1 -> L1·1 S·119KiB Q·927
+10:18:44.832757 table@build created L1@737 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.832810 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.833290 table@compaction committed F-1 S-640B Ke·0 D·1 T·2.479362ms
+10:18:44.833372 table@remove removed @736
+10:18:44.833454 table@remove removed @735
+10:18:44.899574 transaction@flush created L0@738 N·1 S·622B "xEP..234,v928":"xEP..234,v928"
+10:18:44.899609 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.900128 table@compaction L0·1 -> L1·1 S·119KiB Q·928
+10:18:44.901933 table@build created L1@739 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.901996 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.902426 table@compaction committed F-1 S-621B Ke·0 D·1 T·2.247224ms
+10:18:44.902495 table@remove removed @738
+10:18:44.902579 table@remove removed @737
+10:18:44.939863 transaction@flush created L0@740 N·1 S·648B "xEP..de0,v929":"xEP..de0,v929"
+10:18:44.939897 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.940435 table@compaction L0·1 -> L1·1 S·119KiB Q·929
+10:18:44.942241 table@build created L1@741 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.942279 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.942762 table@compaction committed F-1 S-646B Ke·0 D·1 T·2.30193ms
+10:18:44.942831 table@remove removed @740
+10:18:44.942913 table@remove removed @739
+10:18:44.976230 transaction@flush created L0@742 N·1 S·648B "xEP..142,v930":"xEP..142,v930"
+10:18:44.976262 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.977033 table@compaction L0·1 -> L1·1 S·119KiB Q·930
+10:18:44.978944 table@build created L1@743 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.979006 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:44.979498 table@compaction committed F-1 S-617B Ke·0 D·1 T·2.432647ms
+10:18:44.979568 table@remove removed @742
+10:18:44.979651 table@remove removed @741
+10:18:44.997167 transaction@flush created L0@744 N·1 S·620B "xEP..ee6,v931":"xEP..ee6,v931"
+10:18:44.997196 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:44.997755 table@compaction L0·1 -> L1·1 S·119KiB Q·931
+10:18:44.999507 table@build created L1@745 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:44.999550 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.001040 table@compaction committed F-1 S-622B Ke·0 D·1 T·3.265168ms
+10:18:45.001123 table@remove removed @744
+10:18:45.001201 table@remove removed @743
+10:18:45.015920 transaction@flush created L0@746 N·1 S·624B "xEP..20f,v932":"xEP..20f,v932"
+10:18:45.015941 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.016514 table@compaction L0·1 -> L1·1 S·119KiB Q·932
+10:18:45.018540 table@build created L1@747 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:45.018586 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.019037 table@compaction committed F-1 S-824B Ke·0 D·1 T·2.495093ms
+10:18:45.019111 table@remove removed @746
+10:18:45.019194 table@remove removed @745
+10:18:45.030533 transaction@flush created L0@748 N·1 S·546B "xEP..1c0,v933":"xEP..1c0,v933"
+10:18:45.030556 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.031098 table@compaction L0·1 -> L1·1 S·118KiB Q·933
+10:18:45.032872 table@build created L1@749 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:45.032919 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.033317 table@compaction committed F-1 S-547B Ke·0 D·1 T·2.193846ms
+10:18:45.033394 table@remove removed @748
+10:18:45.033470 table@remove removed @747
+10:18:45.043767 transaction@flush created L0@750 N·1 S·549B "xEP..086,v934":"xEP..086,v934"
+10:18:45.043785 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.044346 table@compaction L0·1 -> L1·1 S·118KiB Q·934
+10:18:45.046050 table@build created L1@751 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:45.046099 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.046502 table@compaction committed F-1 S-548B Ke·0 D·1 T·2.132547ms
+10:18:45.046565 table@remove removed @750
+10:18:45.046646 table@remove removed @749
+10:18:45.095093 transaction@flush created L0@752 N·1 S·739B "xEP..ce3,v935":"xEP..ce3,v935"
+10:18:45.095116 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.095688 table@compaction L0·1 -> L1·1 S·119KiB Q·935
+10:18:45.097545 table@build created L1@753 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:45.097593 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.098048 table@compaction committed F-1 S-738B Ke·0 D·1 T·2.33678ms
+10:18:45.098128 table@remove removed @752
+10:18:45.098210 table@remove removed @751
+10:18:45.140893 transaction@flush created L0@754 N·1 S·748B "xEP..e96,v936":"xEP..e96,v936"
+10:18:45.140929 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.141372 table@compaction L0·1 -> L1·1 S·119KiB Q·936
+10:18:45.141459 db@close closing
+10:18:45.143144 table@build created L1@755 N·732 S·118KiB "E0a..004,v244":"xFP..0fd,v485"
+10:18:45.143155 table@build exiting
+10:18:45.143158 table@build revert @755
+10:18:45.143581 db@close done T·2.118114ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:45.162395 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:45.162835 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.162862 db@open opening
+10:18:45.163113 journal@recovery F·1
+10:18:45.163157 journal@recovery recovering @657
+10:18:45.163984 memdb@flush created L0@755 N·2 S·1KiB "E0a..004,v938":"L0a..004,v937"
+10:18:45.164431 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.167309 db@janitor F·149 G·0
+10:18:45.167328 db@open done T·4.458809ms
+10:18:45.167375 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·118KiB) -> (F·2 S·2KiB)+(F·1 S·118KiB)
+10:18:45.167385 table@compaction L0·2 -> L1·1 S·120KiB Q·939
+10:18:45.167587 db@close closing
+10:18:45.167652 db@close done T·64.271µs
+=============== Aug 23, 2026 (UTC) ===============
+10:18:45.184688 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:45.185038 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.185062 db@open opening
+10:18:45.185284 journal@recovery F·1
+10:18:45.185321 journal@recovery recovering @756
+10:18:45.185668 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.188666 db@janitor F·149 G·0
+10:18:45.188704 db@open done T·3.623594ms
+10:18:45.188771 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·118KiB) -> (F·2 S·2KiB)+(F·1 S·118KiB)
+10:18:45.188781 table@compaction L0·2 -> L1·1 S·120KiB Q·939
+10:18:45.189654 db@close closing
+10:18:45.190872 table@build created L1@760 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.190882 table@build exiting
+10:18:45.190885 table@build revert @760
+10:18:45.191037 db@close done T·1.381281ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:45.371706 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:45.372079 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.372111 db@open opening
+10:18:45.372358 journal@recovery F·1
+10:18:45.372702 journal@recovery recovering @758
+10:18:45.373404 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.376170 db@janitor F·149 G·0
+10:18:45.376202 db@open done T·4.082552ms
+10:18:45.376283 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·118KiB) -> (F·2 S·2KiB)+(F·1 S·118KiB)
+10:18:45.376293 table@compaction L0·2 -> L1·1 S·120KiB Q·939
+10:18:45.376630 db@close closing
+10:18:45.378109 table@build created L1@762 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.378123 table@build exiting
+10:18:45.378128 table@build revert @762
+10:18:45.378245 db@close done T·1.614492ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:45.401633 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:45.402004 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.402029 db@open opening
+10:18:45.402271 journal@recovery F·1
+10:18:45.402316 journal@recovery recovering @760
+10:18:45.402978 version@stat F·[5 142] S·196KiB[4KiB 192KiB] Sc·[1.25 0.00]
+10:18:45.405492 db@janitor F·149 G·0
+10:18:45.405512 db@open done T·3.476756ms
+10:18:45.405570 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·118KiB) -> (F·2 S·2KiB)+(F·1 S·118KiB)
+10:18:45.405596 table@compaction L0·2 -> L1·1 S·120KiB Q·939
+10:18:45.407607 table@build created L1@764 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.407654 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.408038 table@compaction committed F-2 S-2KiB Ke·0 D·3 T·2.427076ms
+10:18:45.408137 table@remove removed @755
+10:18:45.408194 table@remove removed @754
+10:18:45.408269 table@remove removed @753
+10:18:45.438970 transaction@flush created L0@765 N·1 S·615B "xEP..8fa,v940":"xEP..8fa,v940"
+10:18:45.439041 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.439616 table@compaction L0·1 -> L1·1 S·118KiB Q·940
+10:18:45.441656 table@build created L1@766 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.441698 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.442174 table@compaction committed F-1 S-621B Ke·0 D·1 T·2.536207ms
+10:18:45.442251 table@remove removed @765
+10:18:45.442336 table@remove removed @764
+10:18:45.467585 transaction@flush created L0@767 N·1 S·628B "xEP..210,v941":"xEP..210,v941"
+10:18:45.467607 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.468174 table@compaction L0·1 -> L1·1 S·118KiB Q·941
+10:18:45.469899 table@build created L1@768 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.469941 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.470359 table@compaction committed F-1 S-637B Ke·0 D·1 T·2.153869ms
+10:18:45.470429 table@remove removed @767
+10:18:45.470489 table@remove removed @766
+10:18:45.479483 transaction@flush created L0@769 N·1 S·576B "xEP..c31,v942":"xEP..c31,v942"
+10:18:45.479509 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.480013 table@compaction L0·1 -> L1·1 S·118KiB Q·942
+10:18:45.483321 table@build created L1@770 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.483352 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.483710 table@compaction committed F-1 S-576B Ke·0 D·1 T·3.67896ms
+10:18:45.483767 table@remove removed @769
+10:18:45.483829 table@remove removed @768
+10:18:45.490644 transaction@flush created L0@771 N·1 S·574B "xEP..9d8,v943":"xEP..9d8,v943"
+10:18:45.490673 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.491300 table@compaction L0·1 -> L1·1 S·118KiB Q·943
+10:18:45.493051 table@build created L1@772 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.493087 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.493893 table@compaction committed F-1 S-580B Ke·0 D·1 T·2.570149ms
+10:18:45.494122 table@remove removed @771
+10:18:45.494199 table@remove removed @770
+10:18:45.494243 transaction@flush created L0@773 N·1 S·570B "xEP..48b,v944":"xEP..48b,v944"
+10:18:45.494256 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.494746 table@compaction L0·1 -> L1·1 S·118KiB Q·944
+10:18:45.496584 table@build created L1@774 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.496613 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.497441 table@compaction committed F-1 S-568B Ke·0 D·1 T·2.679379ms
+10:18:45.497620 table@remove removed @773
+10:18:45.497702 table@remove removed @772
+10:18:45.497727 transaction@flush created L0@775 N·1 S·582B "xEP..bc8,v945":"xEP..bc8,v945"
+10:18:45.497737 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.498223 table@compaction L0·1 -> L1·1 S·118KiB Q·945
+10:18:45.499924 table@build created L1@776 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.499995 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.500856 table@compaction committed F-1 S-573B Ke·0 D·1 T·2.61284ms
+10:18:45.500918 table@remove removed @775
+10:18:45.501027 table@remove removed @774
+10:18:45.501107 transaction@flush created L0@777 N·1 S·741B "xEP..9c7,v946":"xEP..9c7,v946"
+10:18:45.501119 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.501716 table@compaction L0·1 -> L1·1 S·119KiB Q·946
+10:18:45.503496 table@build created L1@778 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.503534 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.503983 table@compaction committed F-1 S-735B Ke·0 D·1 T·2.249278ms
+10:18:45.504044 table@remove removed @777
+10:18:45.504115 table@remove removed @776
+10:18:45.518210 transaction@flush created L0@779 N·1 S·748B "xEP..a95,v947":"xEP..a95,v947"
+10:18:45.518241 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.518660 table@compaction L0·1 -> L1·1 S·119KiB Q·947
+10:18:45.520431 table@build created L1@780 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.520468 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.520887 table@compaction committed F-1 S-738B Ke·0 D·1 T·2.211412ms
+10:18:45.520971 table@remove removed @779
+10:18:45.521052 table@remove removed @778
+10:18:45.533288 transaction@flush created L0@781 N·1 S·746B "xEP..93b,v948":"xEP..93b,v948"
+10:18:45.533310 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.533763 table@compaction L0·1 -> L1·1 S·119KiB Q·948
+10:18:45.535495 table@build created L1@782 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.535536 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.535906 table@compaction committed F-1 S-740B Ke·0 D·1 T·2.121604ms
+10:18:45.536001 table@remove removed @781
+10:18:45.536085 table@remove removed @780
+10:18:45.582265 transaction@flush created L0@783 N·1 S·566B "xEP..911,v949":"xEP..911,v949"
+10:18:45.582289 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.582727 table@compaction L0·1 -> L1·1 S·118KiB Q·949
+10:18:45.594489 table@build created L1@784 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.594565 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.595183 table@compaction committed F-1 S-567B Ke·0 D·1 T·12.413337ms
+10:18:45.595260 table@remove removed @783
+10:18:45.595339 table@remove removed @782
+10:18:45.626372 transaction@flush created L0@785 N·1 S·560B "xEP..937,v950":"xEP..937,v950"
+10:18:45.626402 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.626862 table@compaction L0·1 -> L1·1 S·118KiB Q·950
+10:18:45.628678 table@build created L1@786 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.628714 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.629164 table@compaction committed F-1 S-563B Ke·0 D·1 T·2.284564ms
+10:18:45.629236 table@remove removed @785
+10:18:45.629319 table@remove removed @784
+10:18:45.660743 transaction@flush created L0@787 N·1 S·703B "xEP..c9c,v951":"xEP..c9c,v951"
+10:18:45.660773 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.661266 table@compaction L0·1 -> L1·1 S·119KiB Q·951
+10:18:45.663073 table@build created L1@788 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.663119 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.663597 table@compaction committed F-1 S-706B Ke·0 D·1 T·2.306046ms
+10:18:45.663673 table@remove removed @787
+10:18:45.663758 table@remove removed @786
+10:18:45.693463 transaction@flush created L0@789 N·1 S·710B "xEP..72e,v952":"xEP..72e,v952"
+10:18:45.693497 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.693927 table@compaction L0·1 -> L1·1 S·119KiB Q·952
+10:18:45.696044 table@build created L1@790 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.696080 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.696521 table@compaction committed F-1 S-709B Ke·0 D·1 T·2.574181ms
+10:18:45.696591 table@remove removed @789
+10:18:45.696657 table@remove removed @788
+10:18:45.746913 transaction@flush created L0@791 N·1 S·776B "xEP..113,v953":"xEP..113,v953"
+10:18:45.746939 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.747462 table@compaction L0·1 -> L1·1 S·119KiB Q·953
+10:18:45.749317 table@build created L1@792 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.749357 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.749752 table@compaction committed F-1 S-782B Ke·0 D·1 T·2.262838ms
+10:18:45.749820 table@remove removed @791
+10:18:45.749899 table@remove removed @790
+10:18:45.792526 transaction@flush created L0@793 N·1 S·829B "xEP..c27,v954":"xEP..c27,v954"
+10:18:45.792560 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.793009 table@compaction L0·1 -> L1·1 S·119KiB Q·954
+10:18:45.794837 table@build created L1@794 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.794875 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.795320 table@compaction committed F-1 S-836B Ke·0 D·1 T·2.285295ms
+10:18:45.795389 table@remove removed @793
+10:18:45.795474 table@remove removed @792
+10:18:45.812588 transaction@flush created L0@795 N·1 S·577B "xEP..863,v955":"xEP..863,v955"
+10:18:45.812620 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.813105 table@compaction L0·1 -> L1·1 S·118KiB Q·955
+10:18:45.814777 table@build created L1@796 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.814825 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.815423 table@compaction committed F-1 S-553B Ke·0 D·1 T·2.29306ms
+10:18:45.815486 table@remove removed @795
+10:18:45.815562 table@remove removed @794
+10:18:45.830295 transaction@flush created L0@797 N·1 S·560B "xEP..697,v956":"xEP..697,v956"
+10:18:45.830326 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.830766 table@compaction L0·1 -> L1·1 S·118KiB Q·956
+10:18:45.832651 table@build created L1@798 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.832685 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.833061 table@compaction committed F-1 S-555B Ke·0 D·1 T·2.275356ms
+10:18:45.833121 table@remove removed @797
+10:18:45.833182 table@remove removed @796
+10:18:45.837808 transaction@flush created L0@799 N·1 S·492B "xEP..b7d,v957":"xEP..b7d,v957"
+10:18:45.837828 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.838596 table@compaction L0·1 -> L1·1 S·118KiB Q·957
+10:18:45.840356 table@build created L1@800 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.840397 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.840783 table@compaction committed F-1 S-488B Ke·0 D·1 T·2.166428ms
+10:18:45.840854 table@remove removed @799
+10:18:45.840930 table@remove removed @798
+10:18:45.844933 transaction@flush created L0@801 N·1 S·489B "xEP..c2a,v958":"xEP..c2a,v958"
+10:18:45.844979 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.845548 table@compaction L0·1 -> L1·1 S·118KiB Q·958
+10:18:45.847214 table@build created L1@802 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.847245 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.847605 table@compaction committed F-1 S-482B Ke·0 D·1 T·2.022689ms
+10:18:45.847659 table@remove removed @801
+10:18:45.847719 table@remove removed @800
+10:18:45.854607 transaction@flush created L0@803 N·1 S·560B "xEP..490,v959":"xEP..490,v959"
+10:18:45.854631 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.855220 table@compaction L0·1 -> L1·1 S·118KiB Q·959
+10:18:45.856883 table@build created L1@804 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.856934 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.857362 table@compaction committed F-1 S-557B Ke·0 D·1 T·2.102334ms
+10:18:45.857441 table@remove removed @803
+10:18:45.857518 table@remove removed @802
+10:18:45.863354 transaction@flush created L0@805 N·1 S·560B "xEP..f89,v960":"xEP..f89,v960"
+10:18:45.863371 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.863763 table@compaction L0·1 -> L1·1 S·118KiB Q·960
+10:18:45.865409 table@build created L1@806 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.865454 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.866190 table@compaction committed F-1 S-580B Ke·0 D·1 T·2.403797ms
+10:18:45.866272 table@remove removed @805
+10:18:45.866492 table@remove removed @804
+10:18:45.866594 transaction@flush created L0@807 N·1 S·566B "xEP..689,v961":"xEP..689,v961"
+10:18:45.866612 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.867089 table@compaction L0·1 -> L1·1 S·118KiB Q·961
+10:18:45.868808 table@build created L1@808 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.868846 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.869567 table@compaction committed F-1 S-571B Ke·0 D·1 T·2.457048ms
+10:18:45.869636 table@remove removed @807
+10:18:45.869922 table@remove removed @806
+10:18:45.870105 transaction@flush created L0@809 N·1 S·566B "xEP..592,v962":"xEP..592,v962"
+10:18:45.870120 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.870607 table@compaction L0·1 -> L1·1 S·118KiB Q·962
+10:18:45.872350 table@build created L1@810 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.872379 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.872755 table@compaction committed F-1 S-567B Ke·0 D·1 T·2.13186ms
+10:18:45.872814 table@remove removed @809
+10:18:45.872879 table@remove removed @808
+10:18:45.896562 transaction@flush created L0@811 N·1 S·618B "xEP..fb2,v963":"xEP..fb2,v963"
+10:18:45.896585 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.897175 table@compaction L0·1 -> L1·1 S·118KiB Q·963
+10:18:45.898890 table@build created L1@812 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.898932 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.899342 table@compaction committed F-1 S-622B Ke·0 D·1 T·2.137348ms
+10:18:45.899419 table@remove removed @811
+10:18:45.899501 table@remove removed @810
+10:18:45.920524 transaction@flush created L0@813 N·1 S·611B "xEP..a5d,v964":"xEP..a5d,v964"
+10:18:45.920546 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.921119 table@compaction L0·1 -> L1·1 S·118KiB Q·964
+10:18:45.922881 table@build created L1@814 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.922916 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.923787 table@compaction committed F-1 S-615B Ke·0 D·1 T·2.635689ms
+10:18:45.924067 table@remove removed @813
+10:18:45.924154 table@remove removed @812
+10:18:45.924194 transaction@flush created L0@815 N·1 S·548B "xEP..193,v965":"xEP..193,v965"
+10:18:45.924208 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.924716 table@compaction L0·1 -> L1·1 S·118KiB Q·965
+10:18:45.926331 table@build created L1@816 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.926369 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.927124 table@compaction committed F-1 S-539B Ke·0 D·1 T·2.388158ms
+10:18:45.927230 table@remove removed @815
+10:18:45.927286 table@remove removed @814
+10:18:45.927725 transaction@flush created L0@817 N·1 S·539B "xEP..fc2,v966":"xEP..fc2,v966"
+10:18:45.927738 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.928225 table@compaction L0·1 -> L1·1 S·118KiB Q·966
+10:18:45.929987 table@build created L1@818 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.930028 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.930463 table@compaction committed F-1 S-531B Ke·0 D·1 T·2.216297ms
+10:18:45.930531 table@remove removed @817
+10:18:45.930604 table@remove removed @816
+10:18:45.945413 transaction@flush created L0@819 N·1 S·623B "xEP..511,v967":"xEP..511,v967"
+10:18:45.945433 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.945890 table@compaction L0·1 -> L1·1 S·118KiB Q·967
+10:18:45.947649 table@build created L1@820 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.947695 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.948058 table@compaction committed F-1 S-629B Ke·0 D·1 T·2.147149ms
+10:18:45.948130 table@remove removed @819
+10:18:45.948203 table@remove removed @818
+10:18:45.964227 transaction@flush created L0@821 N·1 S·610B "xEP..a9a,v968":"xEP..a9a,v968"
+10:18:45.964271 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.964856 table@compaction L0·1 -> L1·1 S·118KiB Q·968
+10:18:45.966598 table@build created L1@822 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.966642 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.967142 table@compaction committed F-1 S-612B Ke·0 D·1 T·2.264157ms
+10:18:45.967219 table@remove removed @821
+10:18:45.967304 table@remove removed @820
+10:18:45.977593 transaction@flush created L0@823 N·1 S·578B "xEP..aea,v969":"xEP..aea,v969"
+10:18:45.977611 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.978018 table@compaction L0·1 -> L1·1 S·118KiB Q·969
+10:18:45.979718 table@build created L1@824 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.979762 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.980133 table@compaction committed F-1 S-570B Ke·0 D·1 T·2.091592ms
+10:18:45.980213 table@remove removed @823
+10:18:45.980290 table@remove removed @822
+10:18:45.989516 transaction@flush created L0@825 N·1 S·584B "xEP..c3e,v970":"xEP..c3e,v970"
+10:18:45.989534 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.990154 table@compaction L0·1 -> L1·1 S·118KiB Q·970
+10:18:45.991844 table@build created L1@826 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.991885 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.992749 table@compaction committed F-1 S-585B Ke·0 D·1 T·2.565048ms
+10:18:45.992812 table@remove removed @825
+10:18:45.992889 table@remove removed @824
+10:18:45.993052 transaction@flush created L0@827 N·1 S·610B "xEP..42d,v971":"xEP..42d,v971"
+10:18:45.993067 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:45.993658 table@compaction L0·1 -> L1·1 S·118KiB Q·971
+10:18:45.995329 table@build created L1@828 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:45.995366 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:45.995775 table@compaction committed F-1 S-600B Ke·0 D·1 T·2.097323ms
+10:18:45.995842 table@remove removed @827
+10:18:45.995916 table@remove removed @826
+10:18:46.002181 transaction@flush created L0@829 N·1 S·666B "xEP..b69,v972":"xEP..b69,v972"
+10:18:46.002203 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.002636 table@compaction L0·1 -> L1·1 S·118KiB Q·972
+10:18:46.004369 table@build created L1@830 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.004410 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.004906 table@compaction committed F-1 S-663B Ke·0 D·1 T·2.250229ms
+10:18:46.004994 table@remove removed @829
+10:18:46.005059 table@remove removed @828
+10:18:46.010722 transaction@flush created L0@831 N·1 S·658B "xEP..fbf,v973":"xEP..fbf,v973"
+10:18:46.010746 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.011211 table@compaction L0·1 -> L1·1 S·118KiB Q·973
+10:18:46.013278 table@build created L1@832 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.013318 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.013921 table@compaction committed F-1 S-664B Ke·0 D·1 T·2.670588ms
+10:18:46.014014 table@remove removed @831
+10:18:46.014078 table@remove removed @830
+10:18:46.049030 transaction@flush created L0@833 N·1 S·614B "xEP..528,v974":"xEP..528,v974"
+10:18:46.049059 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.049504 table@compaction L0·1 -> L1·1 S·118KiB Q·974
+10:18:46.051334 table@build created L1@834 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.051373 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.051739 table@compaction committed F-1 S-620B Ke·0 D·1 T·2.214422ms
+10:18:46.051817 table@remove removed @833
+10:18:46.051899 table@remove removed @832
+10:18:46.084038 transaction@flush created L0@835 N·1 S·617B "xEP..db4,v975":"xEP..db4,v975"
+10:18:46.084075 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.084636 table@compaction L0·1 -> L1·1 S·118KiB Q·975
+10:18:46.086544 table@build created L1@836 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.086597 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.086999 table@compaction committed F-1 S-626B Ke·0 D·1 T·2.337906ms
+10:18:46.087079 table@remove removed @835
+10:18:46.087165 table@remove removed @834
+10:18:46.115424 transaction@flush created L0@837 N·1 S·566B "xEP..deb,v976":"xEP..deb,v976"
+10:18:46.115447 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.115923 table@compaction L0·1 -> L1·1 S·118KiB Q·976
+10:18:46.117769 table@build created L1@838 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.117814 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.118236 table@compaction committed F-1 S-567B Ke·0 D·1 T·2.290048ms
+10:18:46.118315 table@remove removed @837
+10:18:46.118394 table@remove removed @836
+10:18:46.142867 transaction@flush created L0@839 N·1 S·563B "xEP..589,v977":"xEP..589,v977"
+10:18:46.142890 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.143425 table@compaction L0·1 -> L1·1 S·118KiB Q·977
+10:18:46.145153 table@build created L1@840 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.145204 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.148297 table@compaction committed F-1 S-558B Ke·0 D·1 T·4.847469ms
+10:18:46.148365 table@remove removed @839
+10:18:46.148436 table@remove removed @838
+10:18:46.217634 transaction@flush created L0@841 N·1 S·622B "xEP..206,v978":"xEP..206,v978"
+10:18:46.217667 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.218166 table@compaction L0·1 -> L1·1 S·118KiB Q·978
+10:18:46.219933 table@build created L1@842 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.219994 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.220423 table@compaction committed F-1 S-617B Ke·0 D·1 T·2.212647ms
+10:18:46.220491 table@remove removed @841
+10:18:46.220560 table@remove removed @840
+10:18:46.286621 transaction@flush created L0@843 N·1 S·638B "xEP..52c,v979":"xEP..52c,v979"
+10:18:46.286644 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.287149 table@compaction L0·1 -> L1·1 S·118KiB Q·979
+10:18:46.289037 table@build created L1@844 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.289075 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.289573 table@compaction committed F-1 S-642B Ke·0 D·1 T·2.390393ms
+10:18:46.289646 table@remove removed @843
+10:18:46.289713 table@remove removed @842
+10:18:46.327540 transaction@flush created L0@845 N·1 S·648B "xEP..a10,v980":"xEP..a10,v980"
+10:18:46.327574 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.328014 table@compaction L0·1 -> L1·1 S·118KiB Q·980
+10:18:46.330180 table@build created L1@846 N·732 S·118KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.330231 version@stat F·[3 142] S·193KiB[1KiB 192KiB] Sc·[0.75 0.00]
+10:18:46.330769 table@compaction committed F-1 S-649B Ke·0 D·1 T·2.732166ms
+10:18:46.330834 table@remove removed @845
+10:18:46.330912 table@remove removed @844
+10:18:46.364225 transaction@flush created L0@847 N·1 S·640B "xEP..630,v981":"xEP..630,v981"
+10:18:46.364254 version@stat F·[4 142] S·194KiB[2KiB 192KiB] Sc·[1.00 0.00]
+10:18:46.364780 table@compaction L0·1 -> L1·1 S·118KiB Q·981
+10:18:46.366692 table@build created L1@848 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.366736 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.367132 table@compaction committed F-1 S-1KiB Ke·0 D·1 T·2.329017ms
+10:18:46.367202 table@remove removed @847
+10:18:46.367283 table@remove removed @846
+10:18:46.385780 transaction@flush created L0@849 N·1 S·619B "xEP..fe2,v982":"xEP..fe2,v982"
+10:18:46.385825 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.386261 table@compaction L0·1 -> L1·1 S·118KiB Q·982
+10:18:46.388050 table@build created L1@850 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.388098 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.388496 table@compaction committed F-1 S-612B Ke·0 D·1 T·2.212128ms
+10:18:46.388573 table@remove removed @849
+10:18:46.388654 table@remove removed @848
+10:18:46.404375 transaction@flush created L0@851 N·1 S·615B "xEP..23e,v983":"xEP..23e,v983"
+10:18:46.404395 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.404817 table@compaction L0·1 -> L1·1 S·118KiB Q·983
+10:18:46.406559 table@build created L1@852 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.406607 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.406986 table@compaction committed F-1 S-628B Ke·0 D·1 T·2.146225ms
+10:18:46.407066 table@remove removed @851
+10:18:46.407149 table@remove removed @850
+10:18:46.419207 transaction@flush created L0@853 N·1 S·542B "xEP..129,v984":"xEP..129,v984"
+10:18:46.419230 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.419741 table@compaction L0·1 -> L1·1 S·118KiB Q·984
+10:18:46.421356 table@build created L1@854 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.421395 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.421755 table@compaction committed F-1 S-542B Ke·0 D·1 T·1.995292ms
+10:18:46.421814 table@remove removed @853
+10:18:46.421908 table@remove removed @852
+10:18:46.432414 transaction@flush created L0@855 N·1 S·544B "xEP..795,v985":"xEP..795,v985"
+10:18:46.432443 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.432908 table@compaction L0·1 -> L1·1 S·118KiB Q·985
+10:18:46.434775 table@build created L1@856 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.434823 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.435267 table@compaction committed F-1 S-546B Ke·0 D·1 T·2.339262ms
+10:18:46.435340 table@remove removed @855
+10:18:46.435406 table@remove removed @854
+10:18:46.484299 transaction@flush created L0@857 N·1 S·740B "xEP..6cc,v986":"xEP..6cc,v986"
+10:18:46.484346 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.484873 table@compaction L0·1 -> L1·1 S·118KiB Q·986
+10:18:46.486697 table@build created L1@858 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.486744 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.487390 table@compaction committed F-1 S-740B Ke·0 D·1 T·2.495849ms
+10:18:46.487462 table@remove removed @857
+10:18:46.487542 table@remove removed @856
+10:18:46.530070 transaction@flush created L0@859 N·1 S·790B "xEP..0fd,v987":"xEP..0fd,v987"
+10:18:46.530099 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.530656 table@compaction L0·1 -> L1·1 S·118KiB Q·987
+10:18:46.530751 db@close closing
+10:18:46.532331 table@build created L1@860 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.532340 table@build exiting
+10:18:46.532344 table@build revert @860
+10:18:46.532715 db@close done T·1.962171ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:46.550874 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:46.551291 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.551321 db@open opening
+10:18:46.551564 journal@recovery F·1
+10:18:46.551607 journal@recovery recovering @762
+10:18:46.552485 memdb@flush created L0@860 N·2 S·1KiB "Ede..d92,v989":"Lde..d92,v988"
+10:18:46.552935 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.555627 db@janitor F·149 G·0
+10:18:46.555646 db@open done T·4.317822ms
+10:18:46.555744 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:46.555756 table@compaction L0·2 -> L1·1 S·120KiB Q·990
+10:18:46.556112 db@close closing
+10:18:46.557699 table@build created L1@863 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.557708 table@build exiting
+10:18:46.557712 table@build revert @863
+10:18:46.557874 db@close done T·1.75983ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:46.575067 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:46.575368 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.575394 db@open opening
+10:18:46.575620 journal@recovery F·1
+10:18:46.575656 journal@recovery recovering @861
+10:18:46.576267 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.579172 db@janitor F·149 G·0
+10:18:46.579200 db@open done T·3.788768ms
+10:18:46.579266 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:46.579276 table@compaction L0·2 -> L1·1 S·120KiB Q·990
+10:18:46.579980 db@close closing
+10:18:46.581309 table@build created L1@865 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.581325 table@build exiting
+10:18:46.581331 table@build revert @865
+10:18:46.581460 db@close done T·1.478836ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:46.765678 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:46.766054 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.766079 db@open opening
+10:18:46.766336 journal@recovery F·1
+10:18:46.766373 journal@recovery recovering @863
+10:18:46.767311 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.770364 db@janitor F·149 G·0
+10:18:46.770385 db@open done T·4.300016ms
+10:18:46.770460 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:46.770476 table@compaction L0·2 -> L1·1 S·120KiB Q·990
+10:18:46.770857 db@close closing
+10:18:46.772488 table@build created L1@867 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.772497 table@build exiting
+10:18:46.772501 table@build revert @867
+10:18:46.772634 db@close done T·1.775203ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:46.796588 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:46.796976 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.797017 db@open opening
+10:18:46.797264 journal@recovery F·1
+10:18:46.797303 journal@recovery recovering @865
+10:18:46.797795 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:46.800699 db@janitor F·149 G·0
+10:18:46.800734 db@open done T·3.699802ms
+10:18:46.800791 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:46.801026 table@compaction L0·2 -> L1·1 S·120KiB Q·990
+10:18:46.803189 table@build created L1@869 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.803231 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.803671 table@compaction committed F-2 S-2KiB Ke·0 D·3 T·2.628918ms
+10:18:46.803756 table@remove removed @860
+10:18:46.803806 table@remove removed @859
+10:18:46.803887 table@remove removed @858
+10:18:46.834219 transaction@flush created L0@870 N·1 S·616B "xEP..6ad,v991":"xEP..6ad,v991"
+10:18:46.834243 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.834820 table@compaction L0·1 -> L1·1 S·118KiB Q·991
+10:18:46.836767 table@build created L1@871 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.836813 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.837257 table@compaction committed F-1 S-608B Ke·0 D·1 T·2.413271ms
+10:18:46.837325 table@remove removed @870
+10:18:46.837407 table@remove removed @869
+10:18:46.862776 transaction@flush created L0@872 N·1 S·611B "xEP..25c,v992":"xEP..25c,v992"
+10:18:46.862822 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.863349 table@compaction L0·1 -> L1·1 S·118KiB Q·992
+10:18:46.867015 table@build created L1@873 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.867060 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.867506 table@compaction committed F-1 S-607B Ke·0 D·1 T·4.134434ms
+10:18:46.867574 table@remove removed @872
+10:18:46.867636 table@remove removed @871
+10:18:46.875281 transaction@flush created L0@874 N·1 S·565B "xEP..28c,v993":"xEP..28c,v993"
+10:18:46.875297 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.875844 table@compaction L0·1 -> L1·1 S·118KiB Q·993
+10:18:46.877725 table@build created L1@875 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.877764 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.878267 table@compaction committed F-1 S-568B Ke·0 D·1 T·2.386702ms
+10:18:46.878331 table@remove removed @874
+10:18:46.878390 table@remove removed @873
+10:18:46.885699 transaction@flush created L0@876 N·1 S·563B "xEP..f60,v994":"xEP..f60,v994"
+10:18:46.885721 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.886188 table@compaction L0·1 -> L1·1 S·118KiB Q·994
+10:18:46.887916 table@build created L1@877 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.887957 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.888881 table@compaction committed F-1 S-563B Ke·0 D·1 T·2.67294ms
+10:18:46.888937 table@remove removed @876
+10:18:46.889039 table@remove removed @875
+10:18:46.889161 transaction@flush created L0@878 N·1 S·560B "xEP..9dc,v995":"xEP..9dc,v995"
+10:18:46.889174 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.889660 table@compaction L0·1 -> L1·1 S·118KiB Q·995
+10:18:46.891410 table@build created L1@879 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.891446 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.892260 table@compaction committed F-1 S-567B Ke·0 D·1 T·2.576032ms
+10:18:46.892423 table@remove removed @878
+10:18:46.892490 table@remove removed @877
+10:18:46.892559 transaction@flush created L0@880 N·1 S·564B "xEP..9e9,v996":"xEP..9e9,v996"
+10:18:46.892571 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.893067 table@compaction L0·1 -> L1·1 S·118KiB Q·996
+10:18:46.894776 table@build created L1@881 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.894818 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.895603 table@compaction committed F-1 S-581B Ke·0 D·1 T·2.510094ms
+10:18:46.895613 transaction@flush created L0@882 N·1 S·732B "xEP..b79,v997":"xEP..b79,v997"
+10:18:46.895633 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.895900 table@remove removed @880
+10:18:46.896009 table@remove removed @879
+10:18:46.896370 table@compaction L0·1 -> L1·1 S·118KiB Q·997
+10:18:46.898547 table@build created L1@883 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.898586 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.898978 table@compaction committed F-1 S-732B Ke·0 D·1 T·2.589364ms
+10:18:46.899035 table@remove removed @882
+10:18:46.899091 table@remove removed @881
+10:18:46.913097 transaction@flush created L0@884 N·1 S·717B "xEP..6eb,v998":"xEP..6eb,v998"
+10:18:46.913138 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.913644 table@compaction L0·1 -> L1·1 S·118KiB Q·998
+10:18:46.915544 table@build created L1@885 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.915589 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.916025 table@compaction committed F-1 S-722B Ke·0 D·1 T·2.362315ms
+10:18:46.916085 table@remove removed @884
+10:18:46.916147 table@remove removed @883
+10:18:46.928187 transaction@flush created L0@886 N·1 S·718B "xEP..54a,v999":"xEP..54a,v999"
+10:18:46.928208 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.928907 table@compaction L0·1 -> L1·1 S·118KiB Q·999
+10:18:46.930802 table@build created L1@887 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.930846 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.931383 table@compaction committed F-1 S-720B Ke·0 D·1 T·2.453643ms
+10:18:46.931445 table@remove removed @886
+10:18:46.931536 table@remove removed @885
+10:18:46.978327 transaction@flush created L0@888 N·1 S·555B "xEP..7a7,v1000":"xEP..7a7,v1000"
+10:18:46.978364 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:46.978895 table@compaction L0·1 -> L1·1 S·118KiB Q·1000
+10:18:46.980881 table@build created L1@889 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:46.980929 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:46.981480 table@compaction committed F-1 S-555B Ke·0 D·1 T·2.559283ms
+10:18:46.981557 table@remove removed @888
+10:18:46.981641 table@remove removed @887
+10:18:47.022568 transaction@flush created L0@890 N·1 S·554B "xEP..b3b,v1001":"xEP..b3b,v1001"
+10:18:47.022591 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.023217 table@compaction L0·1 -> L1·1 S·118KiB Q·1001
+10:18:47.025055 table@build created L1@891 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.025103 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.025541 table@compaction committed F-1 S-549B Ke·0 D·1 T·2.296636ms
+10:18:47.025602 table@remove removed @890
+10:18:47.025665 table@remove removed @889
+10:18:47.057320 transaction@flush created L0@892 N·1 S·693B "xEP..31d,v1002":"xEP..31d,v1002"
+10:18:47.057345 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.057897 table@compaction L0·1 -> L1·1 S·118KiB Q·1002
+10:18:47.060034 table@build created L1@893 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.060073 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.060691 table@compaction committed F-1 S-695B Ke·0 D·1 T·2.771001ms
+10:18:47.060788 table@remove removed @892
+10:18:47.060878 table@remove removed @891
+10:18:47.091055 transaction@flush created L0@894 N·1 S·697B "xEP..535,v1003":"xEP..535,v1003"
+10:18:47.091096 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.091609 table@compaction L0·1 -> L1·1 S·118KiB Q·1003
+10:18:47.093557 table@build created L1@895 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.093614 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.094015 table@compaction committed F-1 S-694B Ke·0 D·1 T·2.382026ms
+10:18:47.094102 table@remove removed @894
+10:18:47.094182 table@remove removed @893
+10:18:47.144878 transaction@flush created L0@896 N·1 S·764B "xEP..b55,v1004":"xEP..b55,v1004"
+10:18:47.144902 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.145364 table@compaction L0·1 -> L1·1 S·118KiB Q·1004
+10:18:47.147141 table@build created L1@897 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.147195 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.147587 table@compaction committed F-1 S-764B Ke·0 D·1 T·2.196846ms
+10:18:47.147672 table@remove removed @896
+10:18:47.147756 table@remove removed @895
+10:18:47.191134 transaction@flush created L0@898 N·1 S·755B "xEP..a09,v1005":"xEP..a09,v1005"
+10:18:47.191160 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.191665 table@compaction L0·1 -> L1·1 S·118KiB Q·1005
+10:18:47.193375 table@build created L1@899 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.193422 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.193830 table@compaction committed F-1 S-761B Ke·0 D·1 T·2.142429ms
+10:18:47.193907 table@remove removed @898
+10:18:47.194019 table@remove removed @897
+10:18:47.211359 transaction@flush created L0@900 N·1 S·547B "xEP..397,v1006":"xEP..397,v1006"
+10:18:47.211391 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.211821 table@compaction L0·1 -> L1·1 S·118KiB Q·1006
+10:18:47.223707 table@build created L1@901 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.223763 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.224220 table@compaction committed F-1 S-551B Ke·0 D·1 T·12.36973ms
+10:18:47.224294 table@remove removed @900
+10:18:47.224374 table@remove removed @899
+10:18:47.229468 transaction@flush created L0@902 N·1 S·566B "xEP..f47,v1007":"xEP..f47,v1007"
+10:18:47.229487 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.229962 table@compaction L0·1 -> L1·1 S·118KiB Q·1007
+10:18:47.231689 table@build created L1@903 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.231733 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.232135 table@compaction committed F-1 S-566B Ke·0 D·1 T·2.144689ms
+10:18:47.232208 table@remove removed @902
+10:18:47.232288 table@remove removed @901
+10:18:47.237272 transaction@flush created L0@904 N·1 S·479B "xEP..a96,v1008":"xEP..a96,v1008"
+10:18:47.237290 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.237843 table@compaction L0·1 -> L1·1 S·118KiB Q·1008
+10:18:47.239567 table@build created L1@905 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.239615 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.240113 table@compaction committed F-1 S-472B Ke·0 D·1 T·2.239341ms
+10:18:47.240171 table@remove removed @904
+10:18:47.240228 table@remove removed @903
+10:18:47.244163 transaction@flush created L0@906 N·1 S·491B "xEP..2fc,v1009":"xEP..2fc,v1009"
+10:18:47.244186 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.244844 table@compaction L0·1 -> L1·1 S·118KiB Q·1009
+10:18:47.246517 table@build created L1@907 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.246557 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.247001 table@compaction committed F-1 S-502B Ke·0 D·1 T·2.124636ms
+10:18:47.247073 table@remove removed @906
+10:18:47.247150 table@remove removed @905
+10:18:47.253615 transaction@flush created L0@908 N·1 S·552B "xEP..54e,v1010":"xEP..54e,v1010"
+10:18:47.253643 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.254187 table@compaction L0·1 -> L1·1 S·118KiB Q·1010
+10:18:47.256058 table@build created L1@909 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.256100 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.256493 table@compaction committed F-1 S-560B Ke·0 D·1 T·2.278509ms
+10:18:47.256561 table@remove removed @908
+10:18:47.256638 table@remove removed @907
+10:18:47.262160 transaction@flush created L0@910 N·1 S·547B "xEP..171,v1011":"xEP..171,v1011"
+10:18:47.262187 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.262717 table@compaction L0·1 -> L1·1 S·118KiB Q·1011
+10:18:47.264376 table@build created L1@911 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.264425 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.265156 table@compaction committed F-1 S-554B Ke·0 D·1 T·2.416303ms
+10:18:47.265235 table@remove removed @910
+10:18:47.265409 table@remove removed @909
+10:18:47.265477 transaction@flush created L0@912 N·1 S·566B "xEP..0e4,v1012":"xEP..0e4,v1012"
+10:18:47.265499 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.265925 table@compaction L0·1 -> L1·1 S·118KiB Q·1012
+10:18:47.267510 table@build created L1@913 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.267549 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.267852 table@compaction committed F-1 S-559B Ke·0 D·1 T·1.906236ms
+10:18:47.267915 table@remove removed @912
+10:18:47.268006 table@remove removed @911
+10:18:47.268572 transaction@flush created L0@914 N·1 S·567B "xEP..410,v1013":"xEP..410,v1013"
+10:18:47.268591 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.269009 table@compaction L0·1 -> L1·1 S·118KiB Q·1013
+10:18:47.270528 table@build created L1@915 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.270569 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.270892 table@compaction committed F-1 S-568B Ke·0 D·1 T·1.859362ms
+10:18:47.270985 table@remove removed @914
+10:18:47.271062 table@remove removed @913
+10:18:47.294608 transaction@flush created L0@916 N·1 S·604B "xEP..c75,v1014":"xEP..c75,v1014"
+10:18:47.294641 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.295015 table@compaction L0·1 -> L1·1 S·118KiB Q·1014
+10:18:47.296541 table@build created L1@917 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.296585 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.296891 table@compaction committed F-1 S-603B Ke·0 D·1 T·1.853091ms
+10:18:47.296981 table@remove removed @916
+10:18:47.297064 table@remove removed @915
+10:18:47.318266 transaction@flush created L0@918 N·1 S·634B "xEP..8d5,v1015":"xEP..8d5,v1015"
+10:18:47.318292 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.318665 table@compaction L0·1 -> L1·1 S·118KiB Q·1015
+10:18:47.320246 table@build created L1@919 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.320293 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.320616 table@compaction committed F-1 S-636B Ke·0 D·1 T·1.926252ms
+10:18:47.320682 table@remove removed @918
+10:18:47.320762 table@remove removed @917
+10:18:47.321486 transaction@flush created L0@920 N·1 S·528B "xEP..54d,v1016":"xEP..54d,v1016"
+10:18:47.321504 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.321905 table@compaction L0·1 -> L1·1 S·118KiB Q·1016
+10:18:47.323509 table@build created L1@921 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.323554 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.335936 table@compaction committed F-1 S-536B Ke·0 D·1 T·14.006251ms
+10:18:47.336036 table@remove removed @920
+10:18:47.336130 table@remove removed @919
+10:18:47.336177 transaction@flush created L0@922 N·1 S·528B "xEP..31f,v1017":"xEP..31f,v1017"
+10:18:47.336191 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.336697 table@compaction L0·1 -> L1·1 S·118KiB Q·1017
+10:18:47.338334 table@build created L1@923 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.338369 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.338678 table@compaction committed F-1 S-526B Ke·0 D·1 T·1.961074ms
+10:18:47.338756 table@remove removed @922
+10:18:47.338836 table@remove removed @921
+10:18:47.354128 transaction@flush created L0@924 N·1 S·616B "xEP..1db,v1018":"xEP..1db,v1018"
+10:18:47.354164 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.354606 table@compaction L0·1 -> L1·1 S·118KiB Q·1018
+10:18:47.356271 table@build created L1@925 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.356318 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.356677 table@compaction committed F-1 S-616B Ke·0 D·1 T·2.049074ms
+10:18:47.356740 table@remove removed @924
+10:18:47.356799 table@remove removed @923
+10:18:47.372532 transaction@flush created L0@926 N·1 S·616B "xEP..52a,v1019":"xEP..52a,v1019"
+10:18:47.372553 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.372888 table@compaction L0·1 -> L1·1 S·118KiB Q·1019
+10:18:47.374657 table@build created L1@927 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.374701 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.375005 table@compaction committed F-1 S-609B Ke·0 D·1 T·2.095645ms
+10:18:47.375068 table@remove removed @926
+10:18:47.375140 table@remove removed @925
+10:18:47.385435 transaction@flush created L0@928 N·1 S·602B "xEP..f81,v1020":"xEP..f81,v1020"
+10:18:47.385475 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.385778 table@compaction L0·1 -> L1·1 S·118KiB Q·1020
+10:18:47.387648 table@build created L1@929 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.387682 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.388000 table@compaction committed F-1 S-610B Ke·0 D·1 T·2.201366ms
+10:18:47.388076 table@remove removed @928
+10:18:47.388139 table@remove removed @927
+10:18:47.396922 transaction@flush created L0@930 N·1 S·563B "xEP..998,v1021":"xEP..998,v1021"
+10:18:47.396996 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.397405 table@compaction L0·1 -> L1·1 S·118KiB Q·1021
+10:18:47.399028 table@build created L1@931 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.399090 version@stat F·[3 142] S·193KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.399826 table@compaction committed F-1 S-567B Ke·0 D·1 T·2.398747ms
+10:18:47.399895 table@remove removed @930
+10:18:47.400115 table@remove removed @929
+10:18:47.400208 transaction@flush created L0@932 N·1 S·601B "xEP..4ff,v1022":"xEP..4ff,v1022"
+10:18:47.400228 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.400586 table@compaction L0·1 -> L1·1 S·118KiB Q·1022
+10:18:47.402176 table@build created L1@933 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.402224 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.402551 table@compaction committed F-1 S-609B Ke·0 D·1 T·1.94138ms
+10:18:47.402612 table@remove removed @932
+10:18:47.402682 table@remove removed @931
+10:18:47.409165 transaction@flush created L0@934 N·1 S·643B "xEP..6e2,v1023":"xEP..6e2,v1023"
+10:18:47.409191 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.409632 table@compaction L0·1 -> L1·1 S·118KiB Q·1023
+10:18:47.411167 table@build created L1@935 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.411200 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.411528 table@compaction committed F-1 S-638B Ke·0 D·1 T·1.878035ms
+10:18:47.411596 table@remove removed @934
+10:18:47.411671 table@remove removed @933
+10:18:47.417312 transaction@flush created L0@936 N·1 S·647B "xEP..fa0,v1024":"xEP..fa0,v1024"
+10:18:47.417327 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.417723 table@compaction L0·1 -> L1·1 S·118KiB Q·1024
+10:18:47.419391 table@build created L1@937 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.419430 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.422226 table@compaction committed F-1 S-648B Ke·0 D·1 T·4.482179ms
+10:18:47.422291 table@remove removed @936
+10:18:47.422367 table@remove removed @935
+10:18:47.455469 transaction@flush created L0@938 N·1 S·593B "xEP..dc3,v1025":"xEP..dc3,v1025"
+10:18:47.455501 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.455915 table@compaction L0·1 -> L1·1 S·118KiB Q·1025
+10:18:47.457579 table@build created L1@939 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.457623 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.457980 table@compaction committed F-1 S-593B Ke·0 D·1 T·2.04614ms
+10:18:47.458045 table@remove removed @938
+10:18:47.458116 table@remove removed @937
+10:18:47.489885 transaction@flush created L0@940 N·1 S·596B "xEP..8fb,v1026":"xEP..8fb,v1026"
+10:18:47.489913 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.490408 table@compaction L0·1 -> L1·1 S·118KiB Q·1026
+10:18:47.492249 table@build created L1@941 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.492296 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.492625 table@compaction committed F-1 S-599B Ke·0 D·1 T·2.189459ms
+10:18:47.492710 table@remove removed @940
+10:18:47.492797 table@remove removed @939
+10:18:47.521083 transaction@flush created L0@942 N·1 S·576B "xEP..1b1,v1027":"xEP..1b1,v1027"
+10:18:47.521134 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.521518 table@compaction L0·1 -> L1·1 S·118KiB Q·1027
+10:18:47.523183 table@build created L1@943 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.523230 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.523559 table@compaction committed F-1 S-583B Ke·0 D·1 T·2.019459ms
+10:18:47.523639 table@remove removed @942
+10:18:47.523722 table@remove removed @941
+10:18:47.548323 transaction@flush created L0@944 N·1 S·555B "xEP..cbb,v1028":"xEP..cbb,v1028"
+10:18:47.548344 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.548806 table@compaction L0·1 -> L1·1 S·118KiB Q·1028
+10:18:47.550618 table@build created L1@945 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.550663 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.551023 table@compaction committed F-1 S-551B Ke·0 D·1 T·2.199893ms
+10:18:47.551103 table@remove removed @944
+10:18:47.551170 table@remove removed @943
+10:18:47.622918 transaction@flush created L0@946 N·1 S·618B "xEP..91e,v1029":"xEP..91e,v1029"
+10:18:47.622941 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.623281 table@compaction L0·1 -> L1·1 S·118KiB Q·1029
+10:18:47.625113 table@build created L1@947 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.625162 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.625477 table@compaction committed F-1 S-623B Ke·0 D·1 T·2.172215ms
+10:18:47.625537 table@remove removed @946
+10:18:47.625597 table@remove removed @945
+10:18:47.691701 transaction@flush created L0@948 N·1 S·611B "xEP..ac8,v1030":"xEP..ac8,v1030"
+10:18:47.691737 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.692144 table@compaction L0·1 -> L1·1 S·118KiB Q·1030
+10:18:47.693791 table@build created L1@949 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.693842 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.694328 table@compaction committed F-1 S-605B Ke·0 D·1 T·2.157648ms
+10:18:47.694399 table@remove removed @948
+10:18:47.694463 table@remove removed @947
+10:18:47.732153 transaction@flush created L0@950 N·1 S·622B "xEP..ba7,v1031":"xEP..ba7,v1031"
+10:18:47.732187 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.732541 table@compaction L0·1 -> L1·1 S·118KiB Q·1031
+10:18:47.734177 table@build created L1@951 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.734229 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.734544 table@compaction committed F-1 S-625B Ke·0 D·1 T·1.978426ms
+10:18:47.734628 table@remove removed @950
+10:18:47.734710 table@remove removed @949
+10:18:47.768546 transaction@flush created L0@952 N·1 S·621B "xEP..5d5,v1032":"xEP..5d5,v1032"
+10:18:47.768569 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.768997 table@compaction L0·1 -> L1·1 S·118KiB Q·1032
+10:18:47.770654 table@build created L1@953 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.770699 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.771207 table@compaction committed F-1 S-624B Ke·0 D·1 T·2.181133ms
+10:18:47.771288 table@remove removed @952
+10:18:47.771375 table@remove removed @951
+10:18:47.790012 transaction@flush created L0@954 N·1 S·615B "xEP..642,v1033":"xEP..642,v1033"
+10:18:47.790035 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.790414 table@compaction L0·1 -> L1·1 S·118KiB Q·1033
+10:18:47.792043 table@build created L1@955 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.792096 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.792444 table@compaction committed F-1 S-615B Ke·0 D·1 T·2.004429ms
+10:18:47.792519 table@remove removed @954
+10:18:47.792582 table@remove removed @953
+10:18:47.808341 transaction@flush created L0@956 N·1 S·608B "xEP..874,v1034":"xEP..874,v1034"
+10:18:47.808363 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.808743 table@compaction L0·1 -> L1·1 S·118KiB Q·1034
+10:18:47.812107 table@build created L1@957 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.812154 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.815534 table@compaction committed F-1 S-615B Ke·0 D·1 T·6.763413ms
+10:18:47.815610 table@remove removed @956
+10:18:47.815694 table@remove removed @955
+10:18:47.823646 transaction@flush created L0@958 N·1 S·535B "xEP..022,v1035":"xEP..022,v1035"
+10:18:47.823671 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.824225 table@compaction L0·1 -> L1·1 S·118KiB Q·1035
+10:18:47.825825 table@build created L1@959 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.825873 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.827203 table@compaction committed F-1 S-532B Ke·0 D·1 T·2.952354ms
+10:18:47.827270 table@remove removed @958
+10:18:47.827345 table@remove removed @957
+10:18:47.836822 transaction@flush created L0@960 N·1 S·565B "xEP..ab6,v1036":"xEP..ab6,v1036"
+10:18:47.836847 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.837340 table@compaction L0·1 -> L1·1 S·118KiB Q·1036
+10:18:47.839040 table@build created L1@961 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.839081 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.839405 table@compaction committed F-1 S-569B Ke·0 D·1 T·2.036638ms
+10:18:47.839488 table@remove removed @960
+10:18:47.839568 table@remove removed @959
+10:18:47.888049 transaction@flush created L0@962 N·1 S·731B "xEP..a40,v1037":"xEP..a40,v1037"
+10:18:47.888077 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.888468 table@compaction L0·1 -> L1·1 S·118KiB Q·1037
+10:18:47.890152 table@build created L1@963 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.890199 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:47.890512 table@compaction committed F-1 S-736B Ke·0 D·1 T·2.022123ms
+10:18:47.890576 table@remove removed @962
+10:18:47.890637 table@remove removed @961
+10:18:47.933418 transaction@flush created L0@964 N·1 S·730B "xEP..d72,v1038":"xEP..d72,v1038"
+10:18:47.933441 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.933800 table@compaction L0·1 -> L1·1 S·118KiB Q·1038
+10:18:47.933897 db@close closing
+10:18:47.935390 table@build created L1@965 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.935400 table@build exiting
+10:18:47.935404 table@build revert @965
+10:18:47.935804 db@close done T·1.904525ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:47.953641 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:47.954062 version@stat F·[4 142] S·193KiB[2KiB 191KiB] Sc·[1.00 0.00]
+10:18:47.954092 db@open opening
+10:18:47.954331 journal@recovery F·1
+10:18:47.954370 journal@recovery recovering @867
+10:18:47.955194 memdb@flush created L0@965 N·2 S·1KiB "Ed6..441,v1040":"Ld6..441,v1039"
+10:18:47.955729 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:47.957797 db@janitor F·149 G·0
+10:18:47.957832 db@open done T·3.721333ms
+10:18:47.957898 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:47.957907 table@compaction L0·2 -> L1·1 S·119KiB Q·1041
+10:18:47.958263 db@close closing
+10:18:47.959632 table@build created L1@968 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.959644 table@build exiting
+10:18:47.959649 table@build revert @968
+10:18:47.959838 db@close done T·1.570373ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:47.976660 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:47.977127 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:47.977157 db@open opening
+10:18:47.977374 journal@recovery F·1
+10:18:47.977409 journal@recovery recovering @966
+10:18:47.978039 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:47.980613 db@janitor F·149 G·0
+10:18:47.980652 db@open done T·3.468882ms
+10:18:47.980703 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:47.980711 table@compaction L0·2 -> L1·1 S·119KiB Q·1041
+10:18:47.981622 db@close closing
+10:18:47.982852 table@build created L1@970 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:47.982864 table@build exiting
+10:18:47.982869 table@build revert @970
+10:18:47.983014 db@close done T·1.391313ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:48.001743 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:48.002078 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.002102 db@open opening
+10:18:48.002342 journal@recovery F·1
+10:18:48.002379 journal@recovery recovering @968
+10:18:48.002921 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.005285 db@janitor F·149 G·0
+10:18:48.005323 db@open done T·3.201128ms
+10:18:48.005387 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:48.005397 table@compaction L0·2 -> L1·1 S·119KiB Q·1041
+10:18:48.005580 db@close closing
+10:18:48.007393 table@build created L1@972 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:48.007408 table@build exiting
+10:18:48.007414 table@build revert @972
+10:18:48.007551 db@close done T·1.969424ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:48.024788 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:48.025169 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.025198 db@open opening
+10:18:48.025449 journal@recovery F·1
+10:18:48.025500 journal@recovery recovering @970
+10:18:48.025837 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.028371 db@janitor F·149 G·0
+10:18:48.028406 db@open done T·3.191839ms
+10:18:48.028448 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:48.028460 table@compaction L0·2 -> L1·1 S·119KiB Q·1041
+10:18:48.029311 db@close closing
+10:18:48.030456 table@build created L1@974 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:48.030471 table@build exiting
+10:18:48.030476 table@build revert @974
+10:18:48.030627 db@close done T·1.314741ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:48.048375 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:48.048795 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.048815 db@open opening
+10:18:48.049061 journal@recovery F·1
+10:18:48.049106 journal@recovery recovering @972
+10:18:48.049561 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.051996 db@janitor F·149 G·0
+10:18:48.052021 db@open done T·3.197427ms
+10:18:48.052072 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:48.052239 table@compaction L0·2 -> L1·1 S·119KiB Q·1041
+10:18:48.052320 db@close closing
+10:18:48.054069 table@build created L1@976 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:48.054079 table@build exiting
+10:18:48.054082 table@build revert @976
+10:18:48.054208 db@close done T·1.887128ms
+=============== Aug 23, 2026 (UTC) ===============
+10:18:48.070369 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:18:48.070670 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.070695 db@open opening
+10:18:48.070936 journal@recovery F·1
+10:18:48.071003 journal@recovery recovering @974
+10:18:48.071551 version@stat F·[5 142] S·195KiB[4KiB 191KiB] Sc·[1.25 0.00]
+10:18:48.073934 db@janitor F·149 G·0
+10:18:48.073991 db@open done T·3.282452ms
+10:18:48.074034 table@compaction expanding L0+L1 (F·1 S·1KiB)+(F·1 S·117KiB) -> (F·2 S·2KiB)+(F·1 S·117KiB)
+10:18:48.074045 table@compaction L0·2 -> L1·1 S·119KiB Q·1041
+10:18:48.075840 table@build created L1@978 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:18:48.075888 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:18:48.076206 table@compaction committed F-2 S-2KiB Ke·0 D·3 T·2.144484ms
+10:18:48.076279 table@remove removed @965
+10:18:48.076321 table@remove removed @964
+10:18:48.076397 table@remove removed @963
+10:19:12.437975 db@close closing
+10:19:12.438118 db@close done T·141.324µs
+=============== Aug 23, 2026 (UTC) ===============
+10:19:12.455994 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:12.456317 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:19:12.456342 db@open opening
+10:19:12.456554 journal@recovery F·1
+10:19:12.456599 journal@recovery recovering @976
+10:19:12.457465 memdb@flush created L0@979 N·2 S·2KiB "E2e..ain,v1043":"Us3..xie,v1042"
+10:19:12.457908 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.460094 db@janitor F·148 G·0
+10:19:12.460123 db@open done T·3.765212ms
+10:19:12.460174 table@compaction L0·1 -> L1·1 S·119KiB Q·1044
+10:19:12.460643 db@close closing
+10:19:12.461992 table@build created L1@982 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:12.462003 table@build exiting
+10:19:12.462006 table@build revert @982
+10:19:12.462152 db@close done T·1.505888ms
+=============== Aug 23, 2026 (UTC) ===============
+10:19:12.478656 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:12.479027 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.479050 db@open opening
+10:19:12.479257 journal@recovery F·1
+10:19:12.479294 journal@recovery recovering @980
+10:19:12.479422 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.481617 db@janitor F·148 G·0
+10:19:12.481650 db@open done T·2.581557ms
+10:19:12.481696 table@compaction L0·1 -> L1·1 S·119KiB Q·1044
+10:19:12.483530 db@close closing
+10:19:12.484740 table@build created L1@984 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:12.484750 table@build exiting
+10:19:12.484753 table@build revert @984
+10:19:12.484891 db@close done T·1.35908ms
+=============== Aug 23, 2026 (UTC) ===============
+10:19:12.502320 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:12.502670 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.502689 db@open opening
+10:19:12.502889 journal@recovery F·1
+10:19:12.502929 journal@recovery recovering @982
+10:19:12.503262 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.505670 db@janitor F·148 G·0
+10:19:12.505700 db@open done T·2.995774ms
+10:19:12.505770 table@compaction L0·1 -> L1·1 S·119KiB Q·1044
+10:19:12.506131 db@close closing
+10:19:12.507535 table@build created L1@986 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:12.507551 table@build exiting
+10:19:12.507556 table@build revert @986
+10:19:12.507678 db@close done T·1.545653ms
+=============== Aug 23, 2026 (UTC) ===============
+10:19:12.523771 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:12.524096 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.524123 db@open opening
+10:19:12.524337 journal@recovery F·1
+10:19:12.524552 journal@recovery recovering @984
+10:19:12.525200 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:12.527310 db@janitor F·148 G·0
+10:19:12.527345 db@open done T·3.202421ms
+10:19:12.527404 table@compaction L0·1 -> L1·1 S·119KiB Q·1044
+10:19:12.529308 table@build created L1@988 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:12.529353 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:19:12.529701 table@compaction committed F-1 S-2KiB Ke·0 D·2 T·2.274043ms
+10:19:12.529793 table@remove removed @979
+10:19:12.529857 table@remove removed @978
+10:19:37.404373 db@close closing
+10:19:37.404529 db@close done T·152.894µs
+=============== Aug 23, 2026 (UTC) ===============
+10:19:37.422239 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:37.422544 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:19:37.422563 db@open opening
+10:19:37.422778 journal@recovery F·1
+10:19:37.422840 journal@recovery recovering @986
+10:19:37.423763 memdb@flush created L0@989 N·2 S·2KiB "E16..ain,v1046":"Us3..ing,v1045"
+10:19:37.423866 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.426033 db@janitor F·148 G·0
+10:19:37.426068 db@open done T·3.486913ms
+10:19:37.426127 table@compaction L0·1 -> L1·1 S·119KiB Q·1047
+10:19:37.426607 db@close closing
+10:19:37.426864 db@close done T·254.507µs
+=============== Aug 23, 2026 (UTC) ===============
+10:19:37.443112 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:37.443479 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.443501 db@open opening
+10:19:37.443757 journal@recovery F·1
+10:19:37.444001 journal@recovery recovering @990
+10:19:37.444798 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.447641 db@janitor F·148 G·0
+10:19:37.447660 db@open done T·4.152406ms
+10:19:37.447728 table@compaction L0·1 -> L1·1 S·119KiB Q·1047
+10:19:37.448688 db@close closing
+10:19:37.449651 table@build created L1@994 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:37.449661 table@build exiting
+10:19:37.449665 table@build revert @994
+10:19:37.449821 db@close done T·1.131417ms
+=============== Aug 23, 2026 (UTC) ===============
+10:19:37.467157 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:37.467443 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.467462 db@open opening
+10:19:37.467677 journal@recovery F·1
+10:19:37.467715 journal@recovery recovering @992
+10:19:37.468206 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.470700 db@janitor F·148 G·0
+10:19:37.470721 db@open done T·3.246233ms
+10:19:37.470786 table@compaction L0·1 -> L1·1 S·119KiB Q·1047
+10:19:37.471167 db@close closing
+10:19:37.472879 table@build created L1@996 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:37.472889 table@build exiting
+10:19:37.472893 table@build revert @996
+10:19:37.473029 db@close done T·1.861281ms
+=============== Aug 23, 2026 (UTC) ===============
+10:19:37.488410 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+10:19:37.488740 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.488770 db@open opening
+10:19:37.489000 journal@recovery F·1
+10:19:37.489039 journal@recovery recovering @994
+10:19:37.489159 version@stat F·[4 142] S·195KiB[3KiB 191KiB] Sc·[1.00 0.00]
+10:19:37.491264 db@janitor F·148 G·0
+10:19:37.491292 db@open done T·2.50703ms
+10:19:37.491366 table@compaction L0·1 -> L1·1 S·119KiB Q·1047
+10:19:37.494577 table@build created L1@998 N·732 S·117KiB "E0a..004,v938":"xFP..0fd,v485"
+10:19:37.494607 version@stat F·[3 142] S·192KiB[1KiB 191KiB] Sc·[0.75 0.00]
+10:19:37.495129 table@compaction committed F-1 S-2KiB Ke·0 D·2 T·3.744746ms
+10:19:37.495221 table@remove removed @989
+10:19:37.495315 table@remove removed @988
+10:20:01.667843 db@close closing
+10:20:01.668023 db@close done T·177.533µs
