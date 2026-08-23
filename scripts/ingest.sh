@@ -5,8 +5,8 @@
 # The archive is fed from the packaging repositories listed in repos.txt: for
 # each one, the newest tag is the release. Anything that tag should provide and
 # the archive does not yet carry gets built with the deb-builder image and
-# included into the reprepro pool. Published pool files are never rebuilt or
-# replaced -- a version, once in the archive, is immutable.
+# added to the aptly repo for its suite. Published pool files are never rebuilt
+# or replaced -- a version, once in the archive, is immutable.
 #
 # Subcommands, designed around the CI job split:
 #
@@ -14,8 +14,10 @@
 #   build <plan>     build this host's architecture's share of a plan
 #   include <dir>    include built packages into the archive and re-export
 #
-# Layout: conf/ lives on master; the published tree (db/, dists/, pool/) lives
-# in $ARCHIVE_DIR, which CI checks out from the `archive` branch.
+# Layout: conf/ lives on master. aptly's state (its leveldb and its
+# content-addressed pool) lives in $APTLY_ROOT, which CI checks out from the
+# `aptly` branch; it is never served, and aptly cannot publish without the pool
+# so it has to persist. The published tree goes to R2, not to disk.
 
 set -euo pipefail
 
@@ -28,11 +30,22 @@ ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
 BUILD_DIR="${BUILD_DIR:-build}"
 SUITES="${SUITES:-trixie testing unstable}"
 
+# shellcheck source=scripts/aptly-lib.sh
+. "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
+
 log() { printf '%s\n' "$*" >&2; }
 
 die() {
     log "FATAL: $*"
     exit 1
+}
+
+ensure_repo() {
+    local repo
+    repo="$(repo_of "$1")"
+    aptly_ repo show "$repo" >/dev/null 2>&1 && return 0
+    aptly_ repo create -distribution="$1" -component=main "$repo" >/dev/null
+    log "created aptly repo $repo"
 }
 
 # The suite qualifier, mirroring the deb-builder entrypoint. The stable release
@@ -72,7 +85,7 @@ changelog_header() {
 }
 
 # Whether every binary stanza in debian/control is Architecture: all. Such a
-# package builds once -- reprepro lands the single .deb in every
+# package builds once -- one aptly repo add files the single .deb into every
 # architecture's index -- so the plan emits one leg with arch "all" instead
 # of one per architecture.
 arch_all_only() {
@@ -80,16 +93,13 @@ arch_all_only() {
         "$1/debian/control"
 }
 
-# What the archive already carries: "reprepro list <suite> <pkg>" prints one
-# line per architecture, e.g. "trixie|main|amd64: zola 0.23.3-1~haus13+1".
-# An Architecture: all package shows the same version on every line.
+# What the archive already carries. An Architecture: all package is filed once
+# as _all and satisfies every architecture, which is what reprepro's per-arch
+# listing expressed differently.
 archived_version() {
-    local suite="$1" pkg="$2" arch="$3"
-
-    [ -d "$ARCHIVE_DIR/db" ] || return 0
-    reprepro -b "$ARCHIVE_DIR" --confdir ./conf list "$suite" "$pkg" 2>/dev/null \
-        | awk -F': ' -v want="$arch" '$1 ~ "\\|" want "$" {print $2}' \
-        | awk '{print $2}'
+    suite_contents "$1" "Name ($2)" \
+        | awk -F'\t' -v want="$3" '$3 == want || $3 == "all" { print $2 }' \
+        | head -n1
 }
 
 plan() {
@@ -208,9 +218,11 @@ suite_of() {
 
 include() {
     local dir="${1:?usage: ingest.sh include <dir>}"
-    local deb version suite included=0
+    local deb version suite included=0 touched=""
 
     [ -d "$ARCHIVE_DIR" ] || mkdir -p "$ARCHIVE_DIR"
+
+    require_r2
 
     for deb in "$dir"/*.deb; do
         [ -e "$deb" ] || die "no .deb files in $dir"
@@ -219,11 +231,40 @@ include() {
         suite="$(suite_of "$version")"
 
         log "INCLUDE $(basename "$deb") -> $suite"
-        reprepro -b "$ARCHIVE_DIR" --confdir ./conf includedeb "$suite" "$deb"
+        ensure_repo "$suite"
+        aptly_ repo add "$(repo_of "$suite")" "$deb" >/dev/null
+        prune_older "$suite" "$deb"
+        touched="$touched$suite\n"
         included=$((included + 1))
     done
 
+    # Publish once per touched suite rather than once per deb. First publish for
+    # a suite creates the publish point; later ones update it in place.
+    for suite in $(printf '%b' "$touched" | sort -u); do
+        publish_suite "$suite"
+    done
+
     log "included $included packages"
+}
+
+# One version per package per suite. reprepro enforced this because the trixie
+# build has no multiple-version support; aptly keeps every version, so without
+# this the archive would grow a version for every release ever made and the pool
+# would never shrink. Scoped to the same architecture and to strictly older
+# versions, so the amd64 and arm64 legs of one package cannot evict each other
+# and the order they arrive in does not matter. -force-replace does not help:
+# it resolves same-version conflicts, not older versions.
+prune_older() {
+    local suite="$1" deb="$2" pkg version arch removed
+    pkg="$(dpkg-deb -f "$deb" Package)"
+    version="$(dpkg-deb -f "$deb" Version)"
+    arch="$(dpkg-deb -f "$deb" Architecture)"
+
+    removed="$(aptly_ repo remove "$(repo_of "$suite")" \
+        "Name ($pkg), \$Version (<< $version), \$Architecture ($arch)" 2>&1 \
+        | grep -c '^\[-\]' || true)"
+    [ "$removed" -gt 0 ] && log "PRUNE $pkg: dropped $removed older $arch version(s) from $suite"
+    return 0
 }
 
 case "${1:-}" in

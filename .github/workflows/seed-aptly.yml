@@ -1,0 +1,96 @@
+name: Seed aptly from the published archive
+
+# Rebuilds aptly's database and the R2 archive from whatever apt.pkg.haus
+# currently serves, by downloading the published .debs rather than rebuilding
+# them: a rebuild from the same upstream tag produces different bytes, and the
+# archive's versions are immutable.
+#
+# Run once to move off reprepro. Kept afterwards as the recovery path for a
+# lost database, which is why it is idempotent -- a second run against an
+# archive it already matches adds nothing and republishes the same indices.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_url:
+        description: Archive to read the packages from
+        required: true
+        default: https://apt.pkg.haus
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Fetch aptly state
+        env:
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: |
+          if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
+              git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
+          else
+              echo "no aptly branch yet -- starting empty"
+              mkdir -p aptly-state
+          fi
+
+      - name: Install aptly
+        uses: ./.github/actions/install-aptly
+
+      - name: Import the archive signing key
+        env:
+          ARCHIVE_SIGNING_KEY: ${{ secrets.ARCHIVE_SIGNING_KEY }}
+        run: |
+          printf '%s' "$ARCHIVE_SIGNING_KEY" | gpg --batch --import
+          gpg --list-secret-keys
+
+      - name: Seed and publish
+        env:
+          SOURCE_URL: ${{ inputs.source_url }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+        run: scripts/seed-aptly.sh
+
+      - name: Compare the result against the source archive
+        env:
+          SOURCE_URL: ${{ inputs.source_url }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+        # Every package the source serves must be in the new indices at the
+        # same path and the same SHA256. A path that moved would break every
+        # URL an apt client or a CDN edge already holds.
+        run: scripts/compare-archives.sh
+
+      - name: Commit aptly state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SOURCE_URL: ${{ inputs.source_url }}
+        run: |
+          cd aptly-state
+          rm -f aptly.conf
+          rm -rf pool
+          git init -q -b aptly 2>/dev/null || true
+          git add -A
+          git -c user.name=pkghaus-ingest -c user.email=github@pkg.haus \
+              commit -qm "Seed from ${SOURCE_URL:-the published archive}" || {
+                  echo "nothing changed"; exit 0; }
+          git push \
+              "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" \
+              aptly

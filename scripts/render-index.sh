@@ -13,6 +13,12 @@
 set -euo pipefail
 
 ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
+BASE_URL="${BASE_URL:-https://apt.pkg.haus}"
+
+# shellcheck source=scripts/aptly-lib.sh
+. "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
+SUITES="${SUITES:-trixie testing unstable}"
+ARCHES="${ARCHES:-amd64 arm64}"
 
 STYLE='<style>
   :root {
@@ -244,6 +250,135 @@ render_favicon() {
 EOF_ICON
 }
 
+# Breadcrumb for a directory page: the root name links home at full size, the
+# path rides a smaller tier. Beyond two segments the middle collapses to an
+# ellipsis (../ in the listing still walks up), and <wbr> before each separator
+# lets a pathological segment wrap at a slash instead of clipping.
+breadcrumb_for() {
+    local rel="$1" depth path_html
+    depth="$(printf '%s' "$rel" | awk -F/ '{print NF}')"
+    if [ "$depth" -le 2 ]; then
+        path_html='<span class="sep">/</span>'"$(
+            printf '%s' "$rel" | sed 's|/|<wbr><span class="sep">/</span>|g')"
+    else
+        path_html='<span class="sep">/</span><span class="gap">&hellip;</span><wbr><span class="sep">/</span>'"${rel##*/}"
+    fi
+    printf '%s' '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path">'"$path_html"'</span>'
+}
+
+# The pool lives in R2, so there is nothing local to walk. Its shape is fully
+# described by the suite indices: every deb has a Filename and a Size. Emit
+# "<relative-path>\t<bytes>" for the union across suites and architectures, so
+# an arch-all package appears once rather than per index.
+#
+# The metadata tree, described by the suites' own Release files: the checksum
+# section names every file under dists/<suite>/ and its size. The three signed
+# files at the top are not listed inside themselves, so they are measured.
+#
+# Restores browsing that reprepro's on-disk tree gave for free. apt never reads
+# these pages, but the archive was navigable before the move and has to stay so.
+dists_manifest() {
+    local suite release path bytes
+    for suite in $SUITES; do
+        release="$(archive_object "dists/$suite/Release")"
+        [ -n "$release" ] || continue
+
+        printf '%s' "$release" \
+            | awk -v s="$suite" '
+                /^SHA256:/ { inhash = 1; next }
+                /^[A-Za-z]/ { inhash = 0 }
+                inhash && NF == 3 { print "dists/" s "/" $3 "\t" $2 }'
+
+        for path in InRelease Release Release.gpg; do
+            if [ "$path" = Release ]; then
+                bytes="${#release}"
+            else
+                bytes="$(archive_object "dists/$suite/$path" | wc -c)"
+            fi
+            [ "$bytes" -gt 0 ] && printf 'dists/%s/%s\t%s\n' "$suite" "$path" "$bytes"
+        done
+    done | LC_ALL=C sort -u
+}
+
+pool_manifest() {
+    local suite arch
+    for suite in $SUITES; do
+        for arch in $ARCHES; do
+            index_text "$suite" "$arch" \
+                | awk '/^Filename: /{f=$2} /^Size: /{if(f!=""){print f "\t" $2; f=""}}'
+        done
+    done | LC_ALL=C sort -u
+}
+
+# Materialise listing pages for the synthetic pool tree. Only index.html files
+# are written; the debs themselves are served from R2. The worker falls through
+# to Pages for anything that is not an object, which is what makes these pages
+# reachable under a pool/ path.
+render_synthetic_listings() {
+    local manifest="$1" dirs d rel
+
+    # Every ancestor directory of every path, deduplicated.
+    dirs="$(awk -F'\t' '{
+        n = split($1, part, "/")
+        acc = ""
+        for (i = 1; i < n; i++) { acc = acc part[i] "/"; print acc }
+    }' "$manifest" | LC_ALL=C sort -u)"
+
+    printf '%s\n' "$dirs" | while read -r d; do
+        [ -n "$d" ] || continue
+        mkdir -p "$ARCHIVE_DIR/$d"
+        rel="${d%/}"
+        {
+            page_open "apt.pkg.haus/$rel/" "$(breadcrumb_for "$rel")" 80
+            synthetic_table "$manifest" "$d"
+            page_close
+        } > "$ARCHIVE_DIR/$d/index.html"
+    done
+    echo "rendered $(printf '%s\n' "$dirs" | grep -c .) synthetic listings from the indices" >&2
+}
+
+# One synthetic directory's rows: child directories, then files with real sizes.
+#
+# Sorting is left to sort(1) rather than done in awk: asorti is a gawk
+# extension and the runners' awk is mawk. The leading 0/1 column orders
+# directories before files and is stripped on the way out.
+synthetic_table() {
+    local manifest="$1" dir="$2"
+    cat <<EOF
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>name</th><th class="size">size</th></tr>
+      </thead>
+      <tbody>
+      <tr><td><a href="../"><code>../</code></a></td><td class="size">-</td></tr>
+$(awk -F'\t' -v d="$dir" '
+    function human(b,   u, i) {
+        split("B K M G", u, " ")
+        i = 1
+        while (b >= 1024 && i < 4) { b /= 1024; i++ }
+        return (i == 1) ? b u[i] : sprintf("%.1f%s", b, u[i])
+    }
+    index($1, d) == 1 {
+        rest = substr($1, length(d) + 1)
+        slash = index(rest, "/")
+        if (slash > 0) {
+            name = substr(rest, 1, slash - 1)
+            print "0\t" name "\t"
+        } else {
+            print "1\t" rest "\t" human($2)
+        }
+    }
+' "$manifest" | LC_ALL=C sort -u | awk -F'\t' '
+    $1 == 0 { printf "      <tr><td><a href=\"%s/\"><code>%s/</code></a></td><td class=\"size\">-</td></tr>\n", $2, $2 }
+    $1 == 1 { printf "      <tr><td><a href=\"%s\"><code>%s</code></a></td><td class=\"size\">%s</td></tr>\n", $2, $2, $3 }
+')
+      </tbody>
+    </table>
+  </div>
+EOF
+}
+
 # One directory's rows: optional parent link, then directories, then files,
 # each sorted; index.html and favicon.svg hide themselves.
 listing_rows() {
@@ -301,27 +436,19 @@ render_root() {
 }
 
 render_listings() {
-    # news/ is excluded: its index.html is the news page (render_news),
-    # not a listing. The anchored path keeps a hypothetical pool package
-    # named news* listable.
+    # news/ is excluded: its index.html is the news page (render_news), not a
+    # listing. pool/ and dists/ are excluded because they are described by the
+    # published indices rather than by what is on disk -- their listings are
+    # written by render_synthetic_listings, which runs after this and would
+    # otherwise be overwritten with a tree of nothing but index.html files.
     local dir rel crumbs
     find "$ARCHIVE_DIR" -mindepth 1 -type d -not -path '*/.git*' -not -path '*/.well-known*' \
-        -not -path "$ARCHIVE_DIR/news" -not -path "$ARCHIVE_DIR/news/*" -print \
+        -not -path "$ARCHIVE_DIR/news" -not -path "$ARCHIVE_DIR/news/*" \
+        -not -path "$ARCHIVE_DIR/pool" -not -path "$ARCHIVE_DIR/pool/*" \
+        -not -path "$ARCHIVE_DIR/dists" -not -path "$ARCHIVE_DIR/dists/*" -print \
         | LC_ALL=C sort | while read -r dir; do
             rel="${dir#"$ARCHIVE_DIR"/}"
-            # Breadcrumb: the root name links home at full size; the path
-            # rides a smaller tier. Beyond two segments the middle
-            # collapses to an ellipsis (../ in the listing still walks
-            # up), and <wbr> before each separator lets a pathological
-            # segment wrap at a slash instead of clipping.
-            depth="$(printf '%s' "$rel" | awk -F/ '{print NF}')"
-            if [ "$depth" -le 2 ]; then
-                path_html='<span class="sep">/</span>'"$(
-                    printf '%s' "$rel" | sed 's|/|<wbr><span class="sep">/</span>|g')"
-            else
-                path_html='<span class="sep">/</span><span class="gap">&hellip;</span><wbr><span class="sep">/</span>'"${rel##*/}"
-            fi
-            crumbs='<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path">'"$path_html"'</span>'
+            crumbs="$(breadcrumb_for "$rel")"
             {
                 page_open "apt.pkg.haus/$rel/" "$crumbs" 80
                 listing_table "$dir" parent
@@ -577,6 +704,43 @@ EOF
     news_feed "$news" > "$ARCHIVE_DIR/news/feed.xml"
 }
 
+# The suite indices and the .debs are served from R2 now. Whatever the reprepro
+# era left in the tree would still be served from Pages, still count against its
+# 1 GB limit, and still be found by apt -- an unsigned second copy of the
+# archive drifting away from the real one. Only the listing pages stay under
+# pool/.
+prune_moved() {
+    local d
+    # reprepro's own database was being served publicly; it is not ours to
+    # publish and nothing replaces it.
+    rm -rf "${ARCHIVE_DIR:?}/db"
+    for d in pool dists; do
+        [ -d "$ARCHIVE_DIR/$d" ] || continue
+        find "$ARCHIVE_DIR/$d" -type f ! -name index.html -delete
+        find "$ARCHIVE_DIR/$d" -type d -empty -delete
+    done
+}
+
+# Read the indices before anything is deleted. prune_moved clears the pool
+# tree that render_pool_listings then rebuilds from this, so an empty manifest
+# -- R2 unreachable, credentials missing, aws absent -- would replace every
+# listing with nothing, quietly, and the publish would ship it. The only
+# archive that legitimately has no pool is one that has never published.
+manifest="$(mktemp)"
+trap 'rm -f "$manifest"' EXIT
+{ pool_manifest; dists_manifest; } > "$manifest"
+
+if [ ! -s "$manifest" ] &&
+    find "$ARCHIVE_DIR/pool" "$ARCHIVE_DIR/dists" -name index.html -print -quit 2>/dev/null | grep -q .; then
+    echo "FATAL: the indices describe no archive, but $ARCHIVE_DIR still has listings." >&2
+    echo "       Refusing to replace them with nothing. Check R2 credentials and the bucket." >&2
+    exit 1
+fi
+
+prune_moved
+# Before render_root, so the two synthetic trees exist as directories and the
+# root listing offers them.
+render_synthetic_listings "$manifest"
 render_favicon
 render_root
 render_listings

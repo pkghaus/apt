@@ -20,6 +20,9 @@ set -euo pipefail
 
 ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
 BUILD_DIR="${BUILD_DIR:-build}"
+
+# shellcheck source=scripts/aptly-lib.sh
+. "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 NEWS_DIR="$ARCHIVE_DIR/news"
 SEED="${SEED:-scripts/news-seed.jsonl}"
 NOTICES="${NOTICES:-scripts/news-notices.jsonl}"
@@ -52,15 +55,9 @@ urgency_of() {
     done
 }
 
-# Current package set; unstable carries the plain version. Both
-# architecture lines collapse under sort -u.
+# Current package set; unstable carries the plain version.
 current="$(mktemp)"
-if [ -d "$ARCHIVE_DIR/db" ]; then
-    reprepro -b "$ARCHIVE_DIR" --confdir ./conf list unstable 2>/dev/null \
-        | awk '{print $2 "\t" $3}' | LC_ALL=C sort -u > "$current"
-else
-    : > "$current"
-fi
+suite_contents unstable | cut -f1,2 | LC_ALL=C sort -u > "$current"
 
 known="$NEWS_DIR/known-packages.tsv"
 
@@ -77,6 +74,11 @@ if [ ! -f "$known" ]; then
     # First run: the seed covers history; snapshot silently.
     cp "$current" "$known"
     log "bootstrapped known-packages.tsv with $(wc -l < "$known") packages, no events emitted"
+elif [ ! -s "$current" ] && [ -s "$known" ]; then
+    # An unreadable or unfetched aptly state looks exactly like an emptied
+    # archive, and the retirement pass below would then retire every package.
+    log "FATAL: aptly reports an empty archive but $known lists $(wc -l < "$known") packages"
+    exit 1
 else
     while IFS="$(printf '\t')" read -r pkg ver; do
         [ -n "$pkg" ] || continue

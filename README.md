@@ -61,12 +61,17 @@ retained.
 - Each validated release triggers the
   [ingest](.github/workflows/ingest.yml), which compares the repository's
   newest tag against the archive, builds only what is missing (natively per
-  architecture, no emulation), and includes it into a
-  [reprepro](https://salsa.debian.org/debian/reprepro) pool.
-- Published pool files are immutable - reprepro refuses a different binary
-  under an existing version, and the plan only ever adds missing versions.
-- The published tree lives on the [`archive`](../../tree/archive) branch and is
-  served by GitHub Pages behind `apt.pkg.haus`.
+  architecture, no emulation), and includes it into an
+  [aptly](https://www.aptly.info/) repository.
+- Published pool files are immutable: the plan only ever adds missing
+  versions, and a version already in the archive is never rebuilt.
+- `dists/` and `pool/` are objects in an R2 bucket, served through a Cloudflare
+  Worker. The human-facing tree - the pool's listing pages, the news log, the
+  keyring - lives on the [`archive`](../../tree/archive) branch and is served
+  by GitHub Pages. Both answer under `apt.pkg.haus`.
+- aptly's database lives on the [`aptly`](../../tree/aptly) branch. Its package
+  pool does not: at the bucket's root prefix aptly only reads a package file it
+  cannot already find published, so each run keeps just what it built.
 
 ## License
 

@@ -1,0 +1,22 @@
+name: Install aptly
+description: >-
+  Install a pinned aptly release binary. Pinned rather than taken from the
+  runner's distribution because the archive's on-disk database format and its
+  published layout are decided by whichever aptly writes them, and the runner
+  image bumps its own package on its own schedule.
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        APTLY_VERSION: 1.6.2
+        APTLY_SHA256: c180d6d3c1e78f08a9e36cb07f64f3d98a5dba4111b02f58050b06f220a76c15
+      run: |
+        zip="aptly_${APTLY_VERSION}_linux_amd64"
+        curl -fsSLo /tmp/aptly.zip \
+            "https://github.com/aptly-dev/aptly/releases/download/v${APTLY_VERSION}/${zip}.zip"
+        echo "${APTLY_SHA256}  /tmp/aptly.zip" | sha256sum -c -
+        sudo unzip -q -j -o /tmp/aptly.zip "${zip}/aptly" -d /usr/local/bin
+        sudo chmod +x /usr/local/bin/aptly
+        aptly version

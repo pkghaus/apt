@@ -18,17 +18,25 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - name: Install shellcheck
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends shellcheck
-
       - name: shellcheck
-        run: shellcheck -x scripts/*.sh
+        # Pinned by digest rather than taken from the runner image. Its
+        # shellcheck moves on its own schedule, and the info-level checks
+        # differ between versions: 0.9 fails this repo's tests on SC2317
+        # where 0.11 does not. A lint that passes locally and fails in CI for
+        # no reason anyone changed is worse than a slightly stale linter.
+        run: |
+          docker run --rm \
+            --volume "$PWD:/repo" \
+            --workdir /repo \
+            koalaman/shellcheck@sha256:61862eba1fcf09a484ebcc6feea46f1782532571a34ed51fedf90dd25f925a8d \
+            -x scripts/*.sh tests/*.sh
+
+      - name: Test
+        run: tests/run.sh
 
       - name: actionlint
         # Pinned by digest; go-yaml inside it also rejects duplicate mapping
