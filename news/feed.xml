@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.2.5-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-23-updated-croc-11.2.5-1</guid>
+<pubDate>Sun, 23 Aug 2026 11:45:11 +0000</pubDate>
+<description>Updated from 11.2.4-1. (croc 11.2.5-1)</description>
+</item>
+<item>
 <title>apt asks you to accept an Origin and Label change</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-23-apt-asks-you-to-accept-an-Origin-and-Label-change</guid>
