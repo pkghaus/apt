@@ -1,0 +1,2549 @@
+=============== Aug 23, 2026 (UTC) ===============
+09:13:04.964559 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:04.967032 db@open opening
+09:13:04.967140 version@stat F·[] S·0B[] Sc·[]
+09:13:04.967598 db@janitor F·2 G·0
+09:13:04.967623 db@open done T·571.993µs
+09:13:04.967654 db@close closing
+09:13:04.967685 db@close done T·30.688µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:04.983089 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:04.983228 version@stat F·[] S·0B[] Sc·[]
+09:13:04.983268 db@open opening
+09:13:04.983320 journal@recovery F·1
+09:13:04.983359 journal@recovery recovering @1
+09:13:04.983774 version@stat F·[] S·0B[] Sc·[]
+09:13:04.986728 db@janitor F·2 G·0
+09:13:04.986745 db@open done T·3.463214ms
+09:13:04.986843 db@close closing
+09:13:04.986880 db@close done T·36.078µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:05.015146 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:05.015310 version@stat F·[] S·0B[] Sc·[]
+09:13:05.015331 db@open opening
+09:13:05.015364 journal@recovery F·1
+09:13:05.015420 journal@recovery recovering @2
+09:13:05.016316 memdb@flush created L0@4 N·1 S·300B "L0a..004,v1":"L0a..004,v1"
+09:13:05.016424 version@stat F·[1] S·300B[300B] Sc·[0.25]
+09:13:05.018713 db@janitor F·3 G·0
+09:13:05.018726 db@open done T·3.38924ms
+09:13:05.051329 memdb@flush N·1 S·385B
+09:13:05.052153 memdb@flush created L0@8 N·1 S·536B "Cd1..deb,v3":"Cd1..deb,v3"
+09:13:05.052203 version@stat F·[2] S·836B[836B] Sc·[0.50]
+09:13:05.052704 memdb@flush committed F·1 T·1.346992ms
+09:13:05.052742 journal@remove removed @5
+09:13:05.053728 transaction@flush created L0@9 N·4 S·1KiB "Pam..f39,v4":"xFP..f39,v5"
+09:13:05.053744 version@stat F·[3] S·2KiB[2KiB] Sc·[0.75]
+09:13:05.080739 memdb@flush N·1 S·385B
+09:13:05.081577 memdb@flush created L0@11 N·1 S·543B "C8c..deb,v8":"C8c..deb,v8"
+09:13:05.081607 version@stat F·[4] S·2KiB[2KiB] Sc·[1.00]
+09:13:05.082034 memdb@flush committed F·1 T·1.270138ms
+09:13:05.082075 journal@remove removed @7
+09:13:05.082201 table@move L0@11 -> L1
+09:13:05.082251 version@stat F·[3 1] S·2KiB[2KiB 543B] Sc·[0.75 0.00]
+09:13:05.083116 transaction@flush created L0@12 N·4 S·1KiB "Par..f31,v9":"xFP..f31,v10"
+09:13:05.083134 version@stat F·[4 1] S·3KiB[3KiB 543B] Sc·[1.00 0.00]
+09:13:05.083561 table@compaction L0·2 -> L1·0 S·2KiB Q·12
+09:13:05.084694 table@build created L1@13 N·8 S·1KiB "Pam..f39,v4":"xFP..f31,v10"
+09:13:05.084729 version@stat F·[2 2] S·3KiB[836B 2KiB] Sc·[0.50 0.00]
+09:13:05.085171 table@compaction committed F-1 S-818B Ke·0 D·0 T·1.590482ms
+09:13:05.085295 table@remove removed @12
+09:13:05.085346 table@remove removed @9
+09:13:05.094608 memdb@flush N·1 S·392B
+09:13:05.095358 memdb@flush created L0@15 N·1 S·544B "Ccd..deb,v13":"Ccd..deb,v13"
+09:13:05.095381 version@stat F·[3 2] S·3KiB[1KiB 2KiB] Sc·[0.75 0.00]
+09:13:05.095809 memdb@flush committed F·1 T·1.186982ms
+09:13:05.095844 journal@remove removed @10
+09:13:05.096853 transaction@flush created L0@16 N·4 S·1KiB "Pam..a6b,v14":"xFP..a6b,v15"
+09:13:05.096871 version@stat F·[4 2] S·4KiB[2KiB 2KiB] Sc·[1.00 0.00]
+09:13:05.097384 table@compaction L0·1 -> L1·1 S·2KiB Q·17
+09:13:05.098056 table@build created L1@17 N·12 S·2KiB "Pam..f39,v4":"xFP..f31,v10"
+09:13:05.098086 version@stat F·[3 2] S·4KiB[1KiB 2KiB] Sc·[0.75 0.00]
+09:13:05.098487 table@compaction committed F-1 S-507B Ke·0 D·0 T·1.07721ms
+09:13:05.098551 table@remove removed @16
+09:13:05.098596 table@remove removed @13
+09:13:05.106297 memdb@flush N·1 S·392B
+09:13:05.106912 memdb@flush created L0@19 N·1 S·544B "Caa..deb,v18":"Caa..deb,v18"
+09:13:05.106937 version@stat F·[4 2] S·4KiB[1KiB 2KiB] Sc·[1.00 0.00]
+09:13:05.107323 memdb@flush committed F·1 T·1.003091ms
+09:13:05.107367 journal@remove removed @14
+09:13:05.107462 table@move L0@19 -> L1
+09:13:05.107481 version@stat F·[3 3] S·4KiB[1KiB 3KiB] Sc·[0.75 0.00]
+09:13:05.108263 transaction@flush created L0@20 N·4 S·1KiB "Par..308,v19":"xFP..308,v20"
+09:13:05.108280 version@stat F·[4 3] S·5KiB[2KiB 3KiB] Sc·[1.00 0.00]
+09:13:05.108661 table@compaction L0·1 -> L1·1 S·3KiB Q·22
+09:13:05.109508 table@build created L1@21 N·16 S·2KiB "Pam..f39,v4":"xFP..308,v20"
+09:13:05.109542 version@stat F·[3 3] S·5KiB[1KiB 4KiB] Sc·[0.75 0.00]
+09:13:05.109952 table@compaction committed F-1 S-520B Ke·0 D·0 T·1.272078ms
+09:13:05.110007 table@remove removed @20
+09:13:05.110040 table@remove removed @17
+09:13:05.110665 memdb@flush N·1 S·385B
+09:13:05.111222 memdb@flush created L0@23 N·1 S·535B "C22..deb,v23":"C22..deb,v23"
+09:13:05.111275 version@stat F·[4 3] S·5KiB[1KiB 4KiB] Sc·[1.00 0.00]
+09:13:05.111627 memdb@flush committed F·1 T·946.865µs
+09:13:05.111666 journal@remove removed @18
+09:13:05.111782 table@move L0@23 -> L1
+09:13:05.111799 version@stat F·[3 4] S·5KiB[1KiB 4KiB] Sc·[0.75 0.00]
+09:13:05.112612 transaction@flush created L0@24 N·4 S·1KiB "Pam..0c5,v24":"xFP..0c5,v25"
+09:13:05.112630 version@stat F·[4 4] S·7KiB[2KiB 4KiB] Sc·[1.00 0.00]
+09:13:05.113087 table@compaction L0·1 -> L1·1 S·4KiB Q·27
+09:13:05.113947 table@build created L1@25 N·20 S·3KiB "Pam..f39,v4":"xFP..308,v20"
+09:13:05.113971 version@stat F·[3 4] S·6KiB[1KiB 5KiB] Sc·[0.75 0.00]
+09:13:05.114366 table@compaction committed F-1 S-575B Ke·0 D·0 T·1.262377ms
+09:13:05.114440 table@remove removed @24
+09:13:05.114490 table@remove removed @21
+09:13:05.114961 memdb@flush N·1 S·385B
+09:13:05.115568 memdb@flush created L0@27 N·1 S·543B "C18..deb,v28":"C18..deb,v28"
+09:13:05.115592 version@stat F·[4 4] S·7KiB[1KiB 5KiB] Sc·[1.00 0.00]
+09:13:05.115980 memdb@flush committed F·1 T·997.506µs
+09:13:05.116017 journal@remove removed @22
+09:13:05.116302 table@move L0@27 -> L1
+09:13:05.116326 version@stat F·[3 5] S·7KiB[1KiB 5KiB] Sc·[0.75 0.00]
+09:13:05.117466 transaction@flush created L0@28 N·4 S·1KiB "Par..e3a,v29":"xFP..e3a,v30"
+09:13:05.117483 version@stat F·[4 5] S·8KiB[2KiB 5KiB] Sc·[1.00 0.00]
+09:13:05.118031 table@compaction L0·1 -> L1·1 S·4KiB Q·32
+09:13:05.118657 table@build created L1@29 N·24 S·4KiB "Pam..f39,v4":"xFP..e3a,v30"
+09:13:05.118691 version@stat F·[3 5] S·8KiB[1KiB 6KiB] Sc·[0.75 0.00]
+09:13:05.119321 table@compaction committed F-1 S-311B Ke·0 D·0 T·1.270674ms
+09:13:05.119393 table@remove removed @28
+09:13:05.119434 table@remove removed @25
+09:13:05.119817 memdb@flush N·1 S·393B
+09:13:05.120412 memdb@flush created L0@31 N·1 S·544B "C8e..deb,v33":"C8e..deb,v33"
+09:13:05.120456 version@stat F·[4 5] S·8KiB[1KiB 6KiB] Sc·[1.00 0.00]
+09:13:05.121228 memdb@flush committed F·1 T·1.387351ms
+09:13:05.121302 journal@remove removed @26
+09:13:05.121327 table@move L0@31 -> L1
+09:13:05.121342 version@stat F·[3 6] S·8KiB[1KiB 7KiB] Sc·[0.75 0.00]
+09:13:05.122360 transaction@flush created L0@32 N·4 S·1KiB "Pal..d9c,v34":"xFP..d9c,v35"
+09:13:05.122376 version@stat F·[4 6] S·9KiB[2KiB 7KiB] Sc·[1.00 0.00]
+09:13:05.122834 table@compaction L0·1 -> L1·1 S·5KiB Q·37
+09:13:05.123600 table@build created L1@33 N·28 S·5KiB "Pal..d9c,v34":"xFP..e3a,v30"
+09:13:05.123625 version@stat F·[3 6] S·9KiB[1KiB 8KiB] Sc·[0.75 0.00]
+09:13:05.124028 table@compaction committed F-1 S-131B Ke·0 D·0 T·1.177268ms
+09:13:05.124098 table@remove removed @32
+09:13:05.124136 table@remove removed @29
+09:13:05.138494 memdb@flush N·1 S·386B
+09:13:05.139299 memdb@flush created L0@35 N·1 S·536B "Cd3..deb,v38":"Cd3..deb,v38"
+09:13:05.139325 version@stat F·[4 6] S·10KiB[1KiB 8KiB] Sc·[1.00 0.00]
+09:13:05.139827 memdb@flush committed F·1 T·1.314565ms
+09:13:05.139862 journal@remove removed @30
+09:13:05.139953 table@move L0@35 -> L1
+09:13:05.139974 version@stat F·[3 7] S·10KiB[1KiB 9KiB] Sc·[0.75 0.00]
+09:13:05.141107 transaction@flush created L0@36 N·4 S·1KiB "Pam..90e,v39":"xFP..90e,v40"
+09:13:05.141123 version@stat F·[4 7] S·11KiB[2KiB 9KiB] Sc·[1.00 0.00]
+09:13:05.141554 table@compaction L0·1 -> L1·1 S·7KiB Q·42
+09:13:05.142543 table@build created L1@37 N·32 S·6KiB "Pal..d9c,v34":"xFP..e3a,v30"
+09:13:05.142576 version@stat F·[3 7] S·11KiB[1KiB 9KiB] Sc·[0.75 0.00]
+09:13:05.142984 table@compaction committed F-1 S-683B Ke·0 D·0 T·1.404033ms
+09:13:05.143045 table@remove removed @36
+09:13:05.143081 table@remove removed @33
+09:13:05.155478 memdb@flush N·1 S·386B
+09:13:05.159078 memdb@flush created L0@39 N·1 S·535B "Cdf..deb,v43":"Cdf..deb,v43"
+09:13:05.159110 version@stat F·[4 7] S·11KiB[1KiB 9KiB] Sc·[1.00 0.00]
+09:13:05.159591 memdb@flush committed F·1 T·4.093443ms
+09:13:05.159640 journal@remove removed @34
+09:13:05.159679 table@move L0@39 -> L1
+09:13:05.159702 version@stat F·[3 8] S·11KiB[1KiB 10KiB] Sc·[0.75 0.00]
+09:13:05.160792 transaction@flush created L0@40 N·4 S·1KiB "Par..7d3,v44":"xFP..7d3,v45"
+09:13:05.160808 version@stat F·[4 8] S·12KiB[2KiB 10KiB] Sc·[1.00 0.00]
+09:13:05.161378 table@compaction L0·1 -> L1·1 S·7KiB Q·47
+09:13:05.162215 table@build created L1@41 N·36 S·6KiB "Pal..d9c,v34":"xFP..7d3,v45"
+09:13:05.162269 version@stat F·[3 8] S·11KiB[1KiB 10KiB] Sc·[0.75 0.00]
+09:13:05.162649 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.247501ms
+09:13:05.162702 table@remove removed @40
+09:13:05.162736 table@remove removed @37
+09:13:05.208090 memdb@flush N·1 S·383B
+09:13:05.208956 memdb@flush created L0@43 N·1 S·531B "Cc4..deb,v48":"Cc4..deb,v48"
+09:13:05.208986 version@stat F·[4 8] S·12KiB[1KiB 10KiB] Sc·[1.00 0.00]
+09:13:05.209479 memdb@flush committed F·1 T·1.368855ms
+09:13:05.209523 journal@remove removed @38
+09:13:05.209642 table@move L0@43 -> L1
+09:13:05.209663 version@stat F·[3 9] S·12KiB[1KiB 10KiB] Sc·[0.75 0.00]
+09:13:05.210731 transaction@flush created L0@44 N·4 S·1KiB "Pam..d54,v49":"xFP..d54,v50"
+09:13:05.210746 version@stat F·[4 9] S·13KiB[2KiB 10KiB] Sc·[1.00 0.00]
+09:13:05.211160 table@compaction L0·1 -> L1·1 S·7KiB Q·52
+09:13:05.211871 table@build created L1@45 N·40 S·7KiB "Pal..d9c,v34":"xFP..7d3,v45"
+09:13:05.211905 version@stat F·[3 9] S·13KiB[1KiB 11KiB] Sc·[0.75 0.00]
+09:13:05.212382 table@compaction committed F-1 S-361B Ke·0 D·0 T·1.198386ms
+09:13:05.212463 table@remove removed @44
+09:13:05.212524 table@remove removed @41
+09:13:05.258531 memdb@flush N·1 S·383B
+09:13:05.259474 memdb@flush created L0@47 N·1 S·531B "Cbd..deb,v53":"Cbd..deb,v53"
+09:13:05.259524 version@stat F·[4 9] S·13KiB[1KiB 11KiB] Sc·[1.00 0.00]
+09:13:05.259937 memdb@flush committed F·1 T·1.365791ms
+09:13:05.259982 journal@remove removed @42
+09:13:05.260014 table@move L0@47 -> L1
+09:13:05.260189 version@stat F·[3 10] S·13KiB[1KiB 12KiB] Sc·[0.75 0.00]
+09:13:05.261427 transaction@flush created L0@48 N·4 S·1KiB "Par..045,v54":"xFP..045,v55"
+09:13:05.261444 version@stat F·[4 10] S·14KiB[2KiB 12KiB] Sc·[1.00 0.00]
+09:13:05.261956 table@compaction L0·1 -> L1·1 S·8KiB Q·57
+09:13:05.262767 table@build created L1@49 N·44 S·8KiB "Pal..d9c,v34":"xFP..045,v55"
+09:13:05.262814 version@stat F·[3 10] S·14KiB[1KiB 13KiB] Sc·[0.75 0.00]
+09:13:05.263205 table@compaction committed F-1 S-79B Ke·0 D·0 T·1.226498ms
+09:13:05.263292 table@remove removed @48
+09:13:05.263335 table@remove removed @45
+09:13:05.294630 memdb@flush N·1 S·392B
+09:13:05.295463 memdb@flush created L0@51 N·1 S·544B "Cd1..deb,v58":"Cd1..deb,v58"
+09:13:05.295486 version@stat F·[4 10] S·15KiB[1KiB 13KiB] Sc·[1.00 0.00]
+09:13:05.296184 memdb@flush committed F·1 T·1.537081ms
+09:13:05.296217 journal@remove removed @46
+09:13:05.296250 table@move L0@51 -> L1
+09:13:05.296274 version@stat F·[3 11] S·15KiB[1KiB 13KiB] Sc·[0.75 0.00]
+09:13:05.297445 transaction@flush created L0@52 N·4 S·1KiB "Pam..82c,v59":"xFP..82c,v60"
+09:13:05.297461 version@stat F·[4 11] S·16KiB[2KiB 13KiB] Sc·[1.00 0.00]
+09:13:05.297914 table@compaction L0·1 -> L1·1 S·9KiB Q·62
+09:13:05.298791 table@build created L1@53 N·48 S·9KiB "Pal..d9c,v34":"xFP..045,v55"
+09:13:05.298822 version@stat F·[3 11] S·16KiB[1KiB 15KiB] Sc·[0.75 0.00]
+09:13:05.299516 table@compaction committed F-1 S-11B Ke·0 D·0 T·1.581505ms
+09:13:05.299577 table@remove removed @52
+09:13:05.299613 table@remove removed @49
+09:13:05.328889 memdb@flush N·1 S·392B
+09:13:05.329614 memdb@flush created L0@55 N·1 S·544B "Cff..deb,v63":"Cff..deb,v63"
+09:13:05.329645 version@stat F·[4 11] S·17KiB[1KiB 15KiB] Sc·[1.00 0.00]
+09:13:05.330116 memdb@flush committed F·1 T·1.205893ms
+09:13:05.330162 journal@remove removed @50
+09:13:05.330203 table@move L0@55 -> L1
+09:13:05.330223 version@stat F·[3 12] S·17KiB[1KiB 15KiB] Sc·[0.75 0.00]
+09:13:05.331406 transaction@flush created L0@56 N·4 S·1KiB "Par..284,v64":"xFP..284,v65"
+09:13:05.331422 version@stat F·[4 12] S·18KiB[2KiB 15KiB] Sc·[1.00 0.00]
+09:13:05.331901 table@compaction L0·1 -> L1·1 S·11KiB Q·67
+09:13:05.332690 table@build created L1@57 N·52 S·11KiB "Pal..d9c,v34":"xFP..284,v65"
+09:13:05.332724 version@stat F·[3 12] S·18KiB[1KiB 16KiB] Sc·[0.75 0.00]
+09:13:05.333334 table@compaction committed F-1 S-119B Ke·0 D·0 T·1.411395ms
+09:13:05.333391 table@remove removed @56
+09:13:05.333425 table@remove removed @53
+09:13:05.382761 memdb@flush N·1 S·385B
+09:13:05.383550 memdb@flush created L0@59 N·1 S·536B "C23..deb,v68":"C23..deb,v68"
+09:13:05.383583 version@stat F·[4 12] S·18KiB[1KiB 16KiB] Sc·[1.00 0.00]
+09:13:05.384014 memdb@flush committed F·1 T·1.233571ms
+09:13:05.384060 journal@remove removed @54
+09:13:05.384103 table@move L0@59 -> L1
+09:13:05.384125 version@stat F·[3 13] S·18KiB[1KiB 17KiB] Sc·[0.75 0.00]
+09:13:05.385257 transaction@flush created L0@60 N·4 S·1KiB "Pam..70f,v69":"xFP..70f,v70"
+09:13:05.385281 version@stat F·[4 13] S·20KiB[2KiB 17KiB] Sc·[1.00 0.00]
+09:13:05.385826 table@compaction L0·1 -> L1·1 S·12KiB Q·72
+09:13:05.386629 table@build created L1@61 N·56 S·11KiB "Pal..d9c,v34":"xFP..284,v65"
+09:13:05.386666 version@stat F·[3 13] S·19KiB[1KiB 18KiB] Sc·[0.75 0.00]
+09:13:05.387075 table@compaction committed F-1 S-763B Ke·0 D·0 T·1.230116ms
+09:13:05.387122 table@remove removed @60
+09:13:05.387157 table@remove removed @57
+09:13:05.428841 memdb@flush N·1 S·385B
+09:13:05.429562 memdb@flush created L0@63 N·1 S·537B "C43..deb,v73":"C43..deb,v73"
+09:13:05.429586 version@stat F·[4 13] S·19KiB[1KiB 18KiB] Sc·[1.00 0.00]
+09:13:05.430015 memdb@flush committed F·1 T·1.158181ms
+09:13:05.430058 journal@remove removed @58
+09:13:05.430086 table@move L0@63 -> L1
+09:13:05.430104 version@stat F·[3 14] S·19KiB[1KiB 18KiB] Sc·[0.75 0.00]
+09:13:05.431195 transaction@flush created L0@64 N·4 S·1KiB "Par..d3a,v74":"xFP..d3a,v75"
+09:13:05.431210 version@stat F·[4 14] S·21KiB[2KiB 18KiB] Sc·[1.00 0.00]
+09:13:05.431630 table@compaction L0·1 -> L1·1 S·13KiB Q·77
+09:13:05.432431 table@build created L1@65 N·60 S·12KiB "Pal..d9c,v34":"xFP..d3a,v75"
+09:13:05.432463 version@stat F·[3 14] S·20KiB[1KiB 19KiB] Sc·[0.75 0.00]
+09:13:05.432844 table@compaction committed F-1 S-474B Ke·0 D·0 T·1.192594ms
+09:13:05.432904 table@remove removed @64
+09:13:05.432942 table@remove removed @61
+09:13:05.449701 memdb@flush N·1 S·384B
+09:13:05.450451 memdb@flush created L0@67 N·1 S·537B "C92..deb,v78":"C92..deb,v78"
+09:13:05.450501 version@stat F·[4 14] S·21KiB[1KiB 19KiB] Sc·[1.00 0.00]
+09:13:05.450974 memdb@flush committed F·1 T·1.254507ms
+09:13:05.451016 journal@remove removed @62
+09:13:05.451045 table@move L0@67 -> L1
+09:13:05.451064 version@stat F·[3 15] S·21KiB[1KiB 20KiB] Sc·[0.75 0.00]
+09:13:05.452307 transaction@flush created L0@68 N·4 S·1KiB "Pam..385,v79":"xFP..385,v80"
+09:13:05.452321 version@stat F·[4 15] S·22KiB[2KiB 20KiB] Sc·[1.00 0.00]
+09:13:05.452804 table@compaction L0·1 -> L1·1 S·13KiB Q·82
+09:13:05.453572 table@build created L1@69 N·64 S·13KiB "Pal..d9c,v34":"xFP..d3a,v75"
+09:13:05.453607 version@stat F·[3 15] S·22KiB[1KiB 21KiB] Sc·[0.75 0.00]
+09:13:05.454007 table@compaction committed F-1 S+60B Ke·0 D·0 T·1.185465ms
+09:13:05.454066 table@remove removed @68
+09:13:05.454104 table@remove removed @65
+09:13:05.468590 memdb@flush N·1 S·384B
+09:13:05.469293 memdb@flush created L0@71 N·1 S·537B "C8b..deb,v83":"C8b..deb,v83"
+09:13:05.469332 version@stat F·[4 15] S·23KiB[1KiB 21KiB] Sc·[1.00 0.00]
+09:13:05.469756 memdb@flush committed F·1 T·1.146239ms
+09:13:05.469789 journal@remove removed @66
+09:13:05.469888 table@move L0@71 -> L1
+09:13:05.469929 version@stat F·[3 16] S·23KiB[1KiB 21KiB] Sc·[0.75 0.00]
+09:13:05.470767 transaction@flush created L0@72 N·4 S·1KiB "Par..531,v84":"xFP..531,v85"
+09:13:05.470791 version@stat F·[4 16] S·24KiB[2KiB 21KiB] Sc·[1.00 0.00]
+09:13:05.471658 table@compaction L0·1 -> L1·1 S·15KiB Q·87
+09:13:05.472512 table@build created L1@73 N·68 S·14KiB "Pal..d9c,v34":"xFP..531,v85"
+09:13:05.472543 version@stat F·[3 16] S·23KiB[1KiB 22KiB] Sc·[0.75 0.00]
+09:13:05.473087 table@compaction committed F-1 S-518B Ke·0 D·0 T·1.390617ms
+09:13:05.473136 table@remove removed @72
+09:13:05.473172 table@remove removed @69
+09:13:05.477677 memdb@flush N·1 S·389B
+09:13:05.478476 memdb@flush created L0@75 N·1 S·537B "Cb8..deb,v88":"Cb8..deb,v88"
+09:13:05.478504 version@stat F·[4 16] S·24KiB[1KiB 22KiB] Sc·[1.00 0.00]
+09:13:05.478962 memdb@flush committed F·1 T·1.268484ms
+09:13:05.478996 journal@remove removed @70
+09:13:05.479030 table@move L0@75 -> L1
+09:13:05.479049 version@stat F·[3 17] S·24KiB[1KiB 22KiB] Sc·[0.75 0.00]
+09:13:05.480146 transaction@flush created L0@76 N·4 S·1KiB "Pam..ee0,v89":"xFP..ee0,v90"
+09:13:05.480162 version@stat F·[4 17] S·25KiB[2KiB 22KiB] Sc·[1.00 0.00]
+09:13:05.480661 table@compaction L0·1 -> L1·1 S·15KiB Q·92
+09:13:05.481460 table@build created L1@77 N·72 S·15KiB "Pal..d9c,v34":"xFP..531,v85"
+09:13:05.481494 version@stat F·[3 17] S·24KiB[1KiB 23KiB] Sc·[0.75 0.00]
+09:13:05.481910 table@compaction committed F-1 S-493B Ke·0 D·0 T·1.225278ms
+09:13:05.481963 table@remove removed @76
+09:13:05.481998 table@remove removed @73
+09:13:05.486025 memdb@flush N·1 S·389B
+09:13:05.486672 memdb@flush created L0@79 N·1 S·537B "C4a..deb,v93":"C4a..deb,v93"
+09:13:05.486695 version@stat F·[4 17] S·25KiB[1KiB 23KiB] Sc·[1.00 0.00]
+09:13:05.489956 memdb@flush committed F·1 T·3.913465ms
+09:13:05.489990 journal@remove removed @74
+09:13:05.490022 table@move L0@79 -> L1
+09:13:05.490045 version@stat F·[3 18] S·25KiB[1KiB 24KiB] Sc·[0.75 0.00]
+09:13:05.491225 transaction@flush created L0@80 N·4 S·1KiB "Par..7f5,v94":"xFP..7f5,v95"
+09:13:05.491258 version@stat F·[4 18] S·26KiB[2KiB 24KiB] Sc·[1.00 0.00]
+09:13:05.491717 table@compaction L0·1 -> L1·1 S·16KiB Q·97
+09:13:05.492470 table@build created L1@81 N·76 S·15KiB "Pal..d9c,v34":"xFP..7f5,v95"
+09:13:05.492495 version@stat F·[3 18] S·26KiB[1KiB 24KiB] Sc·[0.75 0.00]
+09:13:05.492873 table@compaction committed F-1 S-464B Ke·0 D·0 T·1.14009ms
+09:13:05.492924 table@remove removed @80
+09:13:05.492959 table@remove removed @77
+09:13:05.499320 memdb@flush N·1 S·393B
+09:13:05.499947 memdb@flush created L0@83 N·1 S·544B "Cfe..deb,v98":"Cfe..deb,v98"
+09:13:05.499974 version@stat F·[4 18] S·26KiB[1KiB 24KiB] Sc·[1.00 0.00]
+09:13:05.500358 memdb@flush committed F·1 T·1.012778ms
+09:13:05.500404 journal@remove removed @78
+09:13:05.500443 table@move L0@83 -> L1
+09:13:05.500461 version@stat F·[3 19] S·26KiB[1KiB 25KiB] Sc·[0.75 0.00]
+09:13:05.501451 transaction@flush created L0@84 N·4 S·1KiB "Pam..de2,v99":"xFP..de2,v100"
+09:13:05.501467 version@stat F·[4 19] S·27KiB[2KiB 25KiB] Sc·[1.00 0.00]
+09:13:05.501894 table@compaction L0·1 -> L1·1 S·16KiB Q·102
+09:13:05.502897 table@build created L1@85 N·80 S·16KiB "Pal..d9c,v34":"xFP..7f5,v95"
+09:13:05.502933 version@stat F·[3 19] S·27KiB[1KiB 26KiB] Sc·[0.75 0.00]
+09:13:05.503422 table@compaction committed F-1 S-347B Ke·0 D·0 T·1.508396ms
+09:13:05.503481 table@remove removed @84
+09:13:05.503517 table@remove removed @81
+09:13:05.508559 memdb@flush N·1 S·393B
+09:13:05.509214 memdb@flush created L0@87 N·1 S·544B "C72..deb,v103":"C72..deb,v103"
+09:13:05.509272 version@stat F·[4 19] S·27KiB[1KiB 26KiB] Sc·[1.00 0.00]
+09:13:05.509765 memdb@flush committed F·1 T·1.186433ms
+09:13:05.509810 journal@remove removed @82
+09:13:05.509927 table@move L0@87 -> L1
+09:13:05.509945 version@stat F·[3 20] S·27KiB[1KiB 26KiB] Sc·[0.75 0.00]
+09:13:05.511065 transaction@flush created L0@88 N·4 S·1KiB "Par..bb3,v104":"xFP..bb3,v105"
+09:13:05.511080 version@stat F·[4 20] S·29KiB[2KiB 26KiB] Sc·[1.00 0.00]
+09:13:05.511555 table@compaction L0·1 -> L1·1 S·17KiB Q·107
+09:13:05.512515 table@build created L1@89 N·84 S·17KiB "Pal..d9c,v34":"xFP..bb3,v105"
+09:13:05.512540 version@stat F·[3 20] S·28KiB[1KiB 27KiB] Sc·[0.75 0.00]
+09:13:05.512950 table@compaction committed F-1 S-363B Ke·0 D·0 T·1.374613ms
+09:13:05.513008 table@remove removed @88
+09:13:05.513055 table@remove removed @85
+09:13:05.513609 memdb@flush N·1 S·396B
+09:13:05.514168 memdb@flush created L0@91 N·1 S·544B "C26..deb,v108":"C26..deb,v108"
+09:13:05.514186 version@stat F·[4 20] S·29KiB[1KiB 27KiB] Sc·[1.00 0.00]
+09:13:05.514606 memdb@flush committed F·1 T·973.875µs
+09:13:05.514644 journal@remove removed @86
+09:13:05.514666 table@move L0@91 -> L1
+09:13:05.514683 version@stat F·[3 21] S·29KiB[1KiB 27KiB] Sc·[0.75 0.00]
+09:13:05.516267 transaction@flush created L0@92 N·4 S·1KiB "Pam..987,v109":"xFP..987,v110"
+09:13:05.516283 version@stat F·[4 21] S·30KiB[2KiB 27KiB] Sc·[1.00 0.00]
+09:13:05.516725 table@compaction L0·1 -> L1·1 S·18KiB Q·112
+09:13:05.517538 table@build created L1@93 N·88 S·18KiB "Pal..d9c,v34":"xFP..bb3,v105"
+09:13:05.517571 version@stat F·[3 21] S·30KiB[1KiB 29KiB] Sc·[0.75 0.00]
+09:13:05.518082 table@compaction committed F-1 S-392B Ke·0 D·0 T·1.335816ms
+09:13:05.518139 table@remove removed @92
+09:13:05.518177 table@remove removed @89
+09:13:05.518777 memdb@flush N·1 S·396B
+09:13:05.519448 memdb@flush created L0@95 N·1 S·544B "C30..deb,v113":"C30..deb,v113"
+09:13:05.519472 version@stat F·[4 21] S·30KiB[1KiB 29KiB] Sc·[1.00 0.00]
+09:13:05.519831 memdb@flush committed F·1 T·1.036563ms
+09:13:05.519863 journal@remove removed @90
+09:13:05.520025 table@move L0@95 -> L1
+09:13:05.520164 version@stat F·[3 22] S·30KiB[1KiB 29KiB] Sc·[0.75 0.00]
+09:13:05.521446 transaction@flush created L0@96 N·4 S·1KiB "Par..514,v114":"xFP..514,v115"
+09:13:05.521462 version@stat F·[4 22] S·32KiB[2KiB 29KiB] Sc·[1.00 0.00]
+09:13:05.521903 table@compaction L0·1 -> L1·1 S·19KiB Q·117
+09:13:05.522668 table@build created L1@97 N·92 S·19KiB "Pal..d9c,v34":"xFP..514,v115"
+09:13:05.522693 version@stat F·[3 22] S·32KiB[1KiB 30KiB] Sc·[0.75 0.00]
+09:13:05.523173 table@compaction committed F-1 S-182B Ke·0 D·0 T·1.252719ms
+09:13:05.523262 table@remove removed @96
+09:13:05.523324 table@remove removed @93
+09:13:05.546565 memdb@flush N·1 S·388B
+09:13:05.547329 memdb@flush created L0@99 N·1 S·537B "C58..deb,v118":"C58..deb,v118"
+09:13:05.547352 version@stat F·[4 22] S·32KiB[1KiB 30KiB] Sc·[1.00 0.00]
+09:13:05.547800 memdb@flush committed F·1 T·1.219405ms
+09:13:05.547842 journal@remove removed @94
+09:13:05.547871 table@move L0@99 -> L1
+09:13:05.547894 version@stat F·[3 23] S·32KiB[1KiB 31KiB] Sc·[0.75 0.00]
+09:13:05.548935 transaction@flush created L0@100 N·4 S·1KiB "Pam..6f7,v119":"xFP..6f7,v120"
+09:13:05.548950 version@stat F·[4 23] S·33KiB[2KiB 31KiB] Sc·[1.00 0.00]
+09:13:05.549341 table@compaction L0·1 -> L1·1 S·20KiB Q·122
+09:13:05.550414 table@build created L1@101 N·96 S·20KiB "Pal..d9c,v34":"xFP..514,v115"
+09:13:05.550447 version@stat F·[3 23] S·33KiB[1KiB 32KiB] Sc·[0.75 0.00]
+09:13:05.550919 table@compaction committed F-1 S-490B Ke·0 D·0 T·1.555405ms
+09:13:05.550975 table@remove removed @100
+09:13:05.551013 table@remove removed @97
+09:13:05.571535 memdb@flush N·1 S·388B
+09:13:05.572237 memdb@flush created L0@103 N·1 S·537B "Cdd..deb,v123":"Cdd..deb,v123"
+09:13:05.572266 version@stat F·[4 23] S·33KiB[1KiB 32KiB] Sc·[1.00 0.00]
+09:13:05.572724 memdb@flush committed F·1 T·1.16786ms
+09:13:05.572756 journal@remove removed @98
+09:13:05.572781 table@move L0@103 -> L1
+09:13:05.572803 version@stat F·[3 24] S·33KiB[1KiB 32KiB] Sc·[0.75 0.00]
+09:13:05.573912 transaction@flush created L0@104 N·4 S·1KiB "Par..4a9,v124":"xFP..4a9,v125"
+09:13:05.573931 version@stat F·[4 24] S·35KiB[2KiB 32KiB] Sc·[1.00 0.00]
+09:13:05.574397 table@compaction L0·1 -> L1·1 S·21KiB Q·127
+09:13:05.575190 table@build created L1@105 N·100 S·21KiB "Pal..d9c,v34":"xFP..4a9,v125"
+09:13:05.575211 version@stat F·[3 24] S·34KiB[1KiB 33KiB] Sc·[0.75 0.00]
+09:13:05.575623 table@compaction committed F-1 S-332B Ke·0 D·0 T·1.20465ms
+09:13:05.575695 table@remove removed @104
+09:13:05.575748 table@remove removed @101
+09:13:05.576361 memdb@flush N·1 S·388B
+09:13:05.576934 memdb@flush created L0@107 N·1 S·537B "C18..deb,v128":"C18..deb,v128"
+09:13:05.576951 version@stat F·[4 24] S·35KiB[1KiB 33KiB] Sc·[1.00 0.00]
+09:13:05.577325 memdb@flush committed F·1 T·945.524µs
+09:13:05.577363 journal@remove removed @102
+09:13:05.577387 table@move L0@107 -> L1
+09:13:05.577406 version@stat F·[3 25] S·35KiB[1KiB 34KiB] Sc·[0.75 0.00]
+09:13:05.578471 transaction@flush created L0@108 N·4 S·1KiB "Pam..a93,v129":"xFP..a93,v130"
+09:13:05.578487 version@stat F·[4 25] S·36KiB[2KiB 34KiB] Sc·[1.00 0.00]
+09:13:05.578950 table@compaction L0·1 -> L1·1 S·22KiB Q·132
+09:13:05.579974 table@build created L1@109 N·104 S·22KiB "Pal..d9c,v34":"xFP..4a9,v125"
+09:13:05.580006 version@stat F·[3 25] S·36KiB[1KiB 35KiB] Sc·[0.75 0.00]
+09:13:05.580422 table@compaction committed F-1 S-208B Ke·0 D·0 T·1.453764ms
+09:13:05.580480 table@remove removed @108
+09:13:05.580523 table@remove removed @105
+09:13:05.580947 memdb@flush N·1 S·388B
+09:13:05.581514 memdb@flush created L0@111 N·1 S·537B "Ce9..deb,v133":"Ce9..deb,v133"
+09:13:05.581533 version@stat F·[4 25] S·36KiB[1KiB 35KiB] Sc·[1.00 0.00]
+09:13:05.582045 memdb@flush committed F·1 T·1.074947ms
+09:13:05.582077 journal@remove removed @106
+09:13:05.582103 table@move L0@111 -> L1
+09:13:05.582121 version@stat F·[3 26] S·36KiB[1KiB 35KiB] Sc·[0.75 0.00]
+09:13:05.583119 transaction@flush created L0@112 N·4 S·1KiB "Par..7ec,v134":"xFP..7ec,v135"
+09:13:05.583139 version@stat F·[4 26] S·38KiB[2KiB 35KiB] Sc·[1.00 0.00]
+09:13:05.583597 table@compaction L0·1 -> L1·1 S·23KiB Q·137
+09:13:05.584647 table@build created L1@113 N·108 S·23KiB "Pal..d9c,v34":"xFP..7ec,v135"
+09:13:05.584673 version@stat F·[3 26] S·37KiB[1KiB 36KiB] Sc·[0.75 0.00]
+09:13:05.585064 table@compaction committed F-1 S-464B Ke·0 D·0 T·1.447536ms
+09:13:05.585135 table@remove removed @112
+09:13:05.585188 table@remove removed @109
+09:13:05.599614 memdb@flush N·1 S·390B
+09:13:05.600558 memdb@flush created L0@115 N·1 S·544B "Cb8..deb,v138":"Cb8..deb,v138"
+09:13:05.600593 version@stat F·[4 26] S·38KiB[1KiB 36KiB] Sc·[1.00 0.00]
+09:13:05.601248 memdb@flush committed F·1 T·1.617082ms
+09:13:05.601296 journal@remove removed @110
+09:13:05.601319 table@move L0@115 -> L1
+09:13:05.601337 version@stat F·[3 27] S·38KiB[1KiB 36KiB] Sc·[0.75 0.00]
+09:13:05.602346 transaction@flush created L0@116 N·4 S·1KiB "Pam..eb0,v139":"xFP..eb0,v140"
+09:13:05.602361 version@stat F·[4 27] S·39KiB[2KiB 36KiB] Sc·[1.00 0.00]
+09:13:05.602879 table@compaction L0·1 -> L1·1 S·24KiB Q·142
+09:13:05.603704 table@build created L1@117 N·112 S·23KiB "Pal..d9c,v34":"xFP..7ec,v135"
+09:13:05.603737 version@stat F·[3 27] S·38KiB[1KiB 37KiB] Sc·[0.75 0.00]
+09:13:05.604281 table@compaction committed F-1 S-456B Ke·0 D·0 T·1.38456ms
+09:13:05.604332 table@remove removed @116
+09:13:05.604369 table@remove removed @113
+09:13:05.620093 memdb@flush N·1 S·390B
+09:13:05.620751 memdb@flush created L0@119 N·1 S·543B "C12..deb,v143":"C12..deb,v143"
+09:13:05.620770 version@stat F·[4 27] S·39KiB[1KiB 37KiB] Sc·[1.00 0.00]
+09:13:05.621207 memdb@flush committed F·1 T·1.094503ms
+09:13:05.621264 journal@remove removed @114
+09:13:05.621295 table@move L0@119 -> L1
+09:13:05.621311 version@stat F·[3 28] S·39KiB[1KiB 38KiB] Sc·[0.75 0.00]
+09:13:05.623255 transaction@flush created L0@120 N·4 S·1KiB "Par..f4f,v144":"xFP..f4f,v145"
+09:13:05.623273 version@stat F·[4 28] S·40KiB[2KiB 38KiB] Sc·[1.00 0.00]
+09:13:05.623673 table@compaction L0·1 -> L1·1 S·25KiB Q·147
+09:13:05.624562 table@build created L1@121 N·116 S·24KiB "Pal..d9c,v34":"xFP..f4f,v145"
+09:13:05.624588 version@stat F·[3 28] S·40KiB[1KiB 39KiB] Sc·[0.75 0.00]
+09:13:05.624988 table@compaction committed F-1 S-319B Ke·0 D·0 T·1.291374ms
+09:13:05.625046 table@remove removed @120
+09:13:05.625089 table@remove removed @117
+09:13:05.635263 memdb@flush N·1 S·385B
+09:13:05.635940 memdb@flush created L0@123 N·1 S·537B "C77..deb,v148":"C77..deb,v148"
+09:13:05.635959 version@stat F·[4 28] S·40KiB[1KiB 39KiB] Sc·[1.00 0.00]
+09:13:05.636341 memdb@flush committed F·1 T·1.06054ms
+09:13:05.636380 journal@remove removed @118
+09:13:05.636408 table@move L0@123 -> L1
+09:13:05.636426 version@stat F·[3 29] S·40KiB[1KiB 39KiB] Sc·[0.75 0.00]
+09:13:05.637304 transaction@flush created L0@124 N·4 S·1KiB "Pam..297,v149":"xFP..297,v150"
+09:13:05.637322 version@stat F·[4 29] S·42KiB[2KiB 39KiB] Sc·[1.00 0.00]
+09:13:05.637795 table@compaction L0·1 -> L1·1 S·26KiB Q·152
+09:13:05.638743 table@build created L1@125 N·120 S·25KiB "Pal..d9c,v34":"xFP..f4f,v145"
+09:13:05.638769 version@stat F·[3 29] S·41KiB[1KiB 40KiB] Sc·[0.75 0.00]
+09:13:05.639190 table@compaction committed F-1 S-474B Ke·0 D·0 T·1.379314ms
+09:13:05.639293 table@remove removed @124
+09:13:05.639340 table@remove removed @121
+09:13:05.648062 memdb@flush N·1 S·385B
+09:13:05.648787 memdb@flush created L0@127 N·1 S·536B "Ca0..deb,v153":"Ca0..deb,v153"
+09:13:05.648815 version@stat F·[4 29] S·42KiB[1KiB 40KiB] Sc·[1.00 0.00]
+09:13:05.649212 memdb@flush committed F·1 T·1.129308ms
+09:13:05.649276 journal@remove removed @122
+09:13:05.649308 table@move L0@127 -> L1
+09:13:05.649326 version@stat F·[3 30] S·42KiB[1KiB 40KiB] Sc·[0.75 0.00]
+09:13:05.650493 transaction@flush created L0@128 N·4 S·1KiB "Par..2ad,v154":"xFP..2ad,v155"
+09:13:05.650508 version@stat F·[4 30] S·43KiB[2KiB 40KiB] Sc·[1.00 0.00]
+09:13:05.650984 table@compaction L0·1 -> L1·1 S·26KiB Q·157
+09:13:05.651833 table@build created L1@129 N·124 S·26KiB "Pal..d9c,v34":"xFP..2ad,v155"
+09:13:05.651865 version@stat F·[3 30] S·42KiB[1KiB 41KiB] Sc·[0.75 0.00]
+09:13:05.652299 table@compaction committed F-1 S-710B Ke·0 D·0 T·1.295623ms
+09:13:05.652358 table@remove removed @128
+09:13:05.652395 table@remove removed @125
+09:13:05.652754 memdb@flush N·1 S·403B
+09:13:05.653413 memdb@flush created L0@131 N·1 S·550B "Cae..deb,v158":"Cae..deb,v158"
+09:13:05.653432 version@stat F·[4 30] S·43KiB[1KiB 41KiB] Sc·[1.00 0.00]
+09:13:05.653796 memdb@flush committed F·1 T·1.021187ms
+09:13:05.653834 journal@remove removed @126
+09:13:05.653947 table@move L0@131 -> L1
+09:13:05.653968 version@stat F·[3 31] S·43KiB[1KiB 41KiB] Sc·[0.75 0.00]
+09:13:05.654987 transaction@flush created L0@132 N·4 S·1KiB "Pal..09a,v159":"xFP..09a,v160"
+09:13:05.655001 version@stat F·[4 31] S·44KiB[2KiB 41KiB] Sc·[1.00 0.00]
+09:13:05.655451 table@compaction L0·1 -> L1·1 S·27KiB Q·162
+09:13:05.656364 table@build created L1@133 N·128 S·27KiB "Pal..d9c,v34":"xFP..2ad,v155"
+09:13:05.656401 version@stat F·[3 31] S·44KiB[1KiB 42KiB] Sc·[0.75 0.00]
+09:13:05.656829 table@compaction committed F-1 S-169B Ke·0 D·0 T·1.356375ms
+09:13:05.656882 table@remove removed @132
+09:13:05.657289 table@remove removed @129
+09:13:05.663102 memdb@flush N·1 S·388B
+09:13:05.663722 memdb@flush created L0@135 N·1 S·537B "C05..deb,v163":"C05..deb,v163"
+09:13:05.663745 version@stat F·[4 31] S·44KiB[1KiB 42KiB] Sc·[1.00 0.00]
+09:13:05.664104 memdb@flush committed F·1 T·978.897µs
+09:13:05.664140 journal@remove removed @130
+09:13:05.664162 table@move L0@135 -> L1
+09:13:05.664179 version@stat F·[3 32] S·44KiB[1KiB 43KiB] Sc·[0.75 0.00]
+09:13:05.665587 transaction@flush created L0@136 N·4 S·1KiB "Pam..2fc,v164":"xFP..2fc,v165"
+09:13:05.665602 version@stat F·[4 32] S·46KiB[2KiB 43KiB] Sc·[1.00 0.00]
+09:13:05.665991 table@compaction L0·1 -> L1·1 S·28KiB Q·167
+09:13:05.666959 table@build created L1@137 N·132 S·27KiB "Pal..d9c,v34":"xFP..2ad,v155"
+09:13:05.666991 version@stat F·[3 32] S·45KiB[1KiB 44KiB] Sc·[0.75 0.00]
+09:13:05.667466 table@compaction committed F-1 S-513B Ke·0 D·0 T·1.455949ms
+09:13:05.667528 table@remove removed @136
+09:13:05.667566 table@remove removed @133
+09:13:05.673160 memdb@flush N·1 S·388B
+09:13:05.673825 memdb@flush created L0@139 N·1 S·536B "C5d..deb,v168":"C5d..deb,v168"
+09:13:05.673841 version@stat F·[4 32] S·46KiB[1KiB 44KiB] Sc·[1.00 0.00]
+09:13:05.674284 memdb@flush committed F·1 T·1.107478ms
+09:13:05.674317 journal@remove removed @134
+09:13:05.674347 table@move L0@139 -> L1
+09:13:05.674366 version@stat F·[3 33] S·46KiB[1KiB 44KiB] Sc·[0.75 0.00]
+09:13:05.675366 transaction@flush created L0@140 N·4 S·1KiB "Par..4a1,v169":"xFP..4a1,v170"
+09:13:05.675381 version@stat F·[4 33] S·47KiB[2KiB 44KiB] Sc·[1.00 0.00]
+09:13:05.675775 table@compaction L0·1 -> L1·1 S·29KiB Q·172
+09:13:05.676611 table@build created L1@141 N·136 S·28KiB "Pal..d9c,v34":"xFP..4a1,v170"
+09:13:05.676636 version@stat F·[3 33] S·46KiB[1KiB 45KiB] Sc·[0.75 0.00]
+09:13:05.677287 table@compaction committed F-1 S-549B Ke·0 D·0 T·1.494684ms
+09:13:05.677351 table@remove removed @140
+09:13:05.677408 table@remove removed @137
+09:13:05.712545 memdb@flush N·1 S·388B
+09:13:05.713442 memdb@flush created L0@143 N·1 S·537B "C39..deb,v173":"C39..deb,v173"
+09:13:05.713473 version@stat F·[4 33] S·47KiB[1KiB 45KiB] Sc·[1.00 0.00]
+09:13:05.713854 memdb@flush committed F·1 T·1.29035ms
+09:13:05.713887 journal@remove removed @138
+09:13:05.713920 table@move L0@143 -> L1
+09:13:05.713938 version@stat F·[3 34] S·47KiB[1KiB 46KiB] Sc·[0.75 0.00]
+09:13:05.715079 transaction@flush created L0@144 N·4 S·1KiB "Pam..037,v174":"xFP..037,v175"
+09:13:05.715093 version@stat F·[4 34] S·48KiB[2KiB 46KiB] Sc·[1.00 0.00]
+09:13:05.715489 table@compaction L0·1 -> L1·1 S·29KiB Q·177
+09:13:05.716364 table@build created L1@145 N·140 S·29KiB "Pal..d9c,v34":"xFP..4a1,v170"
+09:13:05.716401 version@stat F·[3 34] S·48KiB[1KiB 47KiB] Sc·[0.75 0.00]
+09:13:05.716864 table@compaction committed F-1 S-66B Ke·0 D·0 T·1.351412ms
+09:13:05.716928 table@remove removed @144
+09:13:05.716970 table@remove removed @141
+09:13:05.749591 memdb@flush N·1 S·388B
+09:13:05.750450 memdb@flush created L0@147 N·1 S·544B "C7b..deb,v178":"C7b..deb,v178"
+09:13:05.750486 version@stat F·[4 34] S·49KiB[1KiB 47KiB] Sc·[1.00 0.00]
+09:13:05.750919 memdb@flush committed F·1 T·1.309543ms
+09:13:05.750963 journal@remove removed @142
+09:13:05.750990 table@move L0@147 -> L1
+09:13:05.751009 version@stat F·[3 35] S·49KiB[1KiB 47KiB] Sc·[0.75 0.00]
+09:13:05.752600 transaction@flush created L0@148 N·4 S·1KiB "Par..fd2,v179":"xFP..fd2,v180"
+09:13:05.752616 version@stat F·[4 35] S·50KiB[2KiB 47KiB] Sc·[1.00 0.00]
+09:13:05.753104 table@compaction L0·1 -> L1·1 S·31KiB Q·182
+09:13:05.754096 table@build created L1@149 N·144 S·30KiB "Pal..d9c,v34":"xFP..fd2,v180"
+09:13:05.754127 version@stat F·[3 35] S·49KiB[1KiB 48KiB] Sc·[0.75 0.00]
+09:13:05.754530 table@compaction committed F-1 S-352B Ke·0 D·0 T·1.390776ms
+09:13:05.754614 table@remove removed @148
+09:13:05.754670 table@remove removed @145
+09:13:05.782215 memdb@flush N·1 S·390B
+09:13:05.782946 memdb@flush created L0@151 N·1 S·544B "C22..deb,v183":"C22..deb,v183"
+09:13:05.782989 version@stat F·[4 35] S·50KiB[1KiB 48KiB] Sc·[1.00 0.00]
+09:13:05.783440 memdb@flush committed F·1 T·1.203026ms
+09:13:05.783490 journal@remove removed @146
+09:13:05.783531 table@move L0@151 -> L1
+09:13:05.783555 version@stat F·[3 36] S·50KiB[1KiB 49KiB] Sc·[0.75 0.00]
+09:13:05.784725 transaction@flush created L0@152 N·4 S·1KiB "Pam..551,v184":"xFP..551,v185"
+09:13:05.784742 version@stat F·[4 36] S·51KiB[2KiB 49KiB] Sc·[1.00 0.00]
+09:13:05.785190 table@compaction L0·1 -> L1·1 S·31KiB Q·187
+09:13:05.786155 table@build created L1@153 N·148 S·31KiB "Pal..d9c,v34":"xFP..fd2,v180"
+09:13:05.786191 version@stat F·[3 36] S·51KiB[1KiB 49KiB] Sc·[0.75 0.00]
+09:13:05.786583 table@compaction committed F-1 S-444B Ke·0 D·0 T·1.372522ms
+09:13:05.786647 table@remove removed @152
+09:13:05.786692 table@remove removed @149
+09:13:05.810578 memdb@flush N·1 S·390B
+09:13:05.811341 memdb@flush created L0@155 N·1 S·544B "C58..deb,v188":"C58..deb,v188"
+09:13:05.811372 version@stat F·[4 36] S·51KiB[1KiB 49KiB] Sc·[1.00 0.00]
+09:13:05.811865 memdb@flush committed F·1 T·1.270033ms
+09:13:05.811898 journal@remove removed @150
+09:13:05.811929 table@move L0@155 -> L1
+09:13:05.811953 version@stat F·[3 37] S·51KiB[1KiB 50KiB] Sc·[0.75 0.00]
+09:13:05.813069 transaction@flush created L0@156 N·4 S·1KiB "Par..897,v189":"xFP..897,v190"
+09:13:05.813083 version@stat F·[4 37] S·52KiB[2KiB 50KiB] Sc·[1.00 0.00]
+09:13:05.813560 table@compaction L0·1 -> L1·1 S·32KiB Q·192
+09:13:05.814867 table@build created L1@157 N·152 S·32KiB "Pal..d9c,v34":"xFP..897,v190"
+09:13:05.814890 version@stat F·[3 37] S·52KiB[1KiB 51KiB] Sc·[0.75 0.00]
+09:13:05.815289 table@compaction committed F-1 S-410B Ke·0 D·0 T·1.713069ms
+09:13:05.815350 table@remove removed @156
+09:13:05.815399 table@remove removed @153
+09:13:05.886446 memdb@flush N·1 S·387B
+09:13:05.887217 memdb@flush created L0@159 N·1 S·537B "C78..deb,v193":"C78..deb,v193"
+09:13:05.887237 version@stat F·[4 37] S·53KiB[1KiB 51KiB] Sc·[1.00 0.00]
+09:13:05.887731 memdb@flush committed F·1 T·1.266245ms
+09:13:05.887774 journal@remove removed @154
+09:13:05.887802 table@move L0@159 -> L1
+09:13:05.887819 version@stat F·[3 38] S·53KiB[1KiB 51KiB] Sc·[0.75 0.00]
+09:13:05.889078 transaction@flush created L0@160 N·4 S·1KiB "Pam..280,v194":"xFP..280,v195"
+09:13:05.889093 version@stat F·[4 38] S·54KiB[2KiB 51KiB] Sc·[1.00 0.00]
+09:13:05.889503 table@compaction L0·1 -> L1·1 S·33KiB Q·197
+09:13:05.890507 table@build created L1@161 N·156 S·33KiB "Pal..d9c,v34":"xFP..897,v190"
+09:13:05.890533 version@stat F·[3 38] S·53KiB[1KiB 52KiB] Sc·[0.75 0.00]
+09:13:05.890950 table@compaction committed F-1 S-417B Ke·0 D·0 T·1.427165ms
+09:13:05.891022 table@remove removed @160
+09:13:05.891082 table@remove removed @157
+09:13:05.957044 memdb@flush N·1 S·387B
+09:13:05.957867 memdb@flush created L0@163 N·1 S·537B "C42..deb,v198":"C42..deb,v198"
+09:13:05.957903 version@stat F·[4 38] S·54KiB[1KiB 52KiB] Sc·[1.00 0.00]
+09:13:05.958346 memdb@flush committed F·1 T·1.2811ms
+09:13:05.958395 journal@remove removed @158
+09:13:05.958421 table@move L0@163 -> L1
+09:13:05.958438 version@stat F·[3 39] S·54KiB[1KiB 53KiB] Sc·[0.75 0.00]
+09:13:05.959678 transaction@flush created L0@164 N·4 S·1KiB "Par..234,v199":"xFP..234,v200"
+09:13:05.959698 version@stat F·[4 39] S·55KiB[2KiB 53KiB] Sc·[1.00 0.00]
+09:13:05.960258 table@compaction L0·1 -> L1·1 S·34KiB Q·202
+09:13:05.961166 table@build created L1@165 N·160 S·33KiB "Pal..d9c,v34":"xFP..234,v200"
+09:13:05.961195 version@stat F·[3 39] S·55KiB[1KiB 53KiB] Sc·[0.75 0.00]
+09:13:05.961666 table@compaction committed F-1 S-348B Ke·0 D·0 T·1.385611ms
+09:13:05.961718 table@remove removed @164
+09:13:05.961769 table@remove removed @161
+09:13:06.000466 memdb@flush N·1 S·386B
+09:13:06.001271 memdb@flush created L0@167 N·1 S·537B "C35..deb,v203":"C35..deb,v203"
+09:13:06.001305 version@stat F·[4 39] S·55KiB[1KiB 53KiB] Sc·[1.00 0.00]
+09:13:06.001733 memdb@flush committed F·1 T·1.242311ms
+09:13:06.001769 journal@remove removed @162
+09:13:06.001880 table@move L0@167 -> L1
+09:13:06.001913 version@stat F·[3 40] S·55KiB[1KiB 54KiB] Sc·[0.75 0.00]
+09:13:06.002965 transaction@flush created L0@168 N·4 S·1KiB "Pam..de0,v204":"xFP..de0,v205"
+09:13:06.002981 version@stat F·[4 40] S·57KiB[2KiB 54KiB] Sc·[1.00 0.00]
+09:13:06.003474 table@compaction L0·1 -> L1·1 S·35KiB Q·207
+09:13:06.004508 table@build created L1@169 N·164 S·34KiB "Pal..d9c,v34":"xFP..234,v200"
+09:13:06.004544 version@stat F·[3 40] S·56KiB[1KiB 55KiB] Sc·[0.75 0.00]
+09:13:06.004960 table@compaction committed F-1 S-423B Ke·0 D·0 T·1.459378ms
+09:13:06.005020 table@remove removed @168
+09:13:06.005085 table@remove removed @165
+09:13:06.038276 memdb@flush N·1 S·386B
+09:13:06.039098 memdb@flush created L0@171 N·1 S·537B "Ccc..deb,v208":"Ccc..deb,v208"
+09:13:06.039130 version@stat F·[4 40] S·57KiB[1KiB 55KiB] Sc·[1.00 0.00]
+09:13:06.039556 memdb@flush committed F·1 T·1.261707ms
+09:13:06.039600 journal@remove removed @166
+09:13:06.039630 table@move L0@171 -> L1
+09:13:06.039653 version@stat F·[3 41] S·57KiB[1KiB 55KiB] Sc·[0.75 0.00]
+09:13:06.040653 transaction@flush created L0@172 N·4 S·1KiB "Par..142,v209":"xFP..142,v210"
+09:13:06.040668 version@stat F·[4 41] S·58KiB[2KiB 55KiB] Sc·[1.00 0.00]
+09:13:06.041085 table@compaction L0·1 -> L1·1 S·36KiB Q·212
+09:13:06.045053 table@build created L1@173 N·168 S·35KiB "Pal..d9c,v34":"xFP..142,v210"
+09:13:06.045080 version@stat F·[3 41] S·58KiB[1KiB 56KiB] Sc·[0.75 0.00]
+09:13:06.046555 table@compaction committed F-1 S-489B Ke·0 D·0 T·5.453684ms
+09:13:06.046608 table@remove removed @172
+09:13:06.046649 table@remove removed @169
+09:13:06.060166 memdb@flush N·1 S·389B
+09:13:06.060903 memdb@flush created L0@175 N·1 S·544B "C07..deb,v213":"C07..deb,v213"
+09:13:06.060924 version@stat F·[4 41] S·58KiB[1KiB 56KiB] Sc·[1.00 0.00]
+09:13:06.061361 memdb@flush committed F·1 T·1.17811ms
+09:13:06.061398 journal@remove removed @170
+09:13:06.061507 table@move L0@175 -> L1
+09:13:06.061540 version@stat F·[3 42] S·58KiB[1KiB 57KiB] Sc·[0.75 0.00]
+09:13:06.062652 transaction@flush created L0@176 N·4 S·1KiB "Pam..ee6,v214":"xFP..ee6,v215"
+09:13:06.062670 version@stat F·[4 42] S·59KiB[2KiB 57KiB] Sc·[1.00 0.00]
+09:13:06.063051 table@compaction L0·1 -> L1·1 S·36KiB Q·217
+09:13:06.064225 table@build created L1@177 N·172 S·36KiB "Pal..d9c,v34":"xFP..142,v210"
+09:13:06.064275 version@stat F·[3 42] S·59KiB[1KiB 58KiB] Sc·[0.75 0.00]
+09:13:06.064972 table@compaction committed F-1 S-289B Ke·0 D·0 T·1.88173ms
+09:13:06.065048 table@remove removed @176
+09:13:06.065109 table@remove removed @173
+09:13:06.080278 memdb@flush N·1 S·389B
+09:13:06.081021 memdb@flush created L0@179 N·1 S·543B "C4e..deb,v218":"C4e..deb,v218"
+09:13:06.081053 version@stat F·[4 42] S·60KiB[1KiB 58KiB] Sc·[1.00 0.00]
+09:13:06.081530 memdb@flush committed F·1 T·1.233274ms
+09:13:06.081580 journal@remove removed @174
+09:13:06.081624 table@move L0@179 -> L1
+09:13:06.081674 version@stat F·[3 43] S·60KiB[1KiB 58KiB] Sc·[0.75 0.00]
+09:13:06.082525 transaction@flush created L0@180 N·4 S·1KiB "Par..20f,v219":"xFP..20f,v220"
+09:13:06.082546 version@stat F·[4 43] S·61KiB[2KiB 58KiB] Sc·[1.00 0.00]
+09:13:06.083038 table@compaction L0·1 -> L1·1 S·37KiB Q·222
+09:13:06.084292 table@build created L1@181 N·176 S·37KiB "Pal..d9c,v34":"xFP..20f,v220"
+09:13:06.084320 version@stat F·[3 43] S·60KiB[1KiB 59KiB] Sc·[0.75 0.00]
+09:13:06.084779 table@compaction committed F-1 S-442B Ke·0 D·0 T·1.725185ms
+09:13:06.084846 table@remove removed @180
+09:13:06.084904 table@remove removed @177
+09:13:06.096168 memdb@flush N·1 S·386B
+09:13:06.096862 memdb@flush created L0@183 N·1 S·535B "Cee..deb,v223":"Cee..deb,v223"
+09:13:06.096901 version@stat F·[4 43] S·61KiB[1KiB 59KiB] Sc·[1.00 0.00]
+09:13:06.097380 memdb@flush committed F·1 T·1.19453ms
+09:13:06.097414 journal@remove removed @178
+09:13:06.097448 table@move L0@183 -> L1
+09:13:06.097470 version@stat F·[3 44] S·61KiB[1KiB 59KiB] Sc·[0.75 0.00]
+09:13:06.098604 transaction@flush created L0@184 N·4 S·1KiB "Pam..1c0,v224":"xFP..1c0,v225"
+09:13:06.098619 version@stat F·[4 44] S·62KiB[2KiB 59KiB] Sc·[1.00 0.00]
+09:13:06.099114 table@compaction L0·1 -> L1·1 S·38KiB Q·227
+09:13:06.101140 table@build created L1@185 N·180 S·38KiB "Pal..d9c,v34":"xFP..20f,v220"
+09:13:06.101183 version@stat F·[3 44] S·62KiB[1KiB 60KiB] Sc·[0.75 0.00]
+09:13:06.101649 table@compaction committed F-1 S-462B Ke·0 D·0 T·2.516641ms
+09:13:06.101700 table@remove removed @184
+09:13:06.101740 table@remove removed @181
+09:13:06.111963 memdb@flush N·1 S·386B
+09:13:06.112708 memdb@flush created L0@187 N·1 S·537B "Ce1..deb,v228":"Ce1..deb,v228"
+09:13:06.112736 version@stat F·[4 44] S·62KiB[1KiB 60KiB] Sc·[1.00 0.00]
+09:13:06.113211 memdb@flush committed F·1 T·1.225231ms
+09:13:06.113267 journal@remove removed @182
+09:13:06.113316 table@move L0@187 -> L1
+09:13:06.113334 version@stat F·[3 45] S·62KiB[1KiB 61KiB] Sc·[0.75 0.00]
+09:13:06.114500 transaction@flush created L0@188 N·4 S·1KiB "Par..086,v229":"xFP..086,v230"
+09:13:06.114515 version@stat F·[4 45] S·63KiB[2KiB 61KiB] Sc·[1.00 0.00]
+09:13:06.114917 table@compaction L0·1 -> L1·1 S·39KiB Q·232
+09:13:06.115856 table@build created L1@189 N·184 S·38KiB "Pal..d9c,v34":"xFP..086,v230"
+09:13:06.115882 version@stat F·[3 45] S·63KiB[1KiB 61KiB] Sc·[0.75 0.00]
+09:13:06.116345 table@compaction committed F-1 S-398B Ke·0 D·0 T·1.409474ms
+09:13:06.116409 table@remove removed @188
+09:13:06.116474 table@remove removed @185
+09:13:06.164593 memdb@flush N·1 S·386B
+09:13:06.165428 memdb@flush created L0@191 N·1 S·535B "C07..deb,v233":"C07..deb,v233"
+09:13:06.165484 version@stat F·[4 45] S·63KiB[1KiB 61KiB] Sc·[1.00 0.00]
+09:13:06.166020 memdb@flush committed F·1 T·1.40726ms
+09:13:06.166069 journal@remove removed @186
+09:13:06.166160 table@move L0@191 -> L1
+09:13:06.166181 version@stat F·[3 46] S·63KiB[1KiB 62KiB] Sc·[0.75 0.00]
+09:13:06.167291 transaction@flush created L0@192 N·4 S·1KiB "Pam..ce3,v234":"xFP..ce3,v235"
+09:13:06.167307 version@stat F·[4 46] S·65KiB[2KiB 62KiB] Sc·[1.00 0.00]
+09:13:06.167790 table@compaction L0·1 -> L1·1 S·40KiB Q·237
+09:13:06.168950 table@build created L1@193 N·188 S·39KiB "Pal..d9c,v34":"xFP..086,v230"
+09:13:06.168986 version@stat F·[3 46] S·64KiB[1KiB 63KiB] Sc·[0.75 0.00]
+09:13:06.169429 table@compaction committed F-1 S-468B Ke·0 D·0 T·1.620068ms
+09:13:06.169501 table@remove removed @192
+09:13:06.169560 table@remove removed @189
+09:13:06.212143 memdb@flush N·1 S·386B
+09:13:06.212846 memdb@flush created L0@195 N·1 S·544B "C47..deb,v238":"C47..deb,v238"
+09:13:06.212885 version@stat F·[4 46] S·65KiB[1KiB 63KiB] Sc·[1.00 0.00]
+09:13:06.213350 memdb@flush committed F·1 T·1.184752ms
+09:13:06.213386 journal@remove removed @190
+09:13:06.213417 table@move L0@195 -> L1
+09:13:06.213447 version@stat F·[3 47] S·65KiB[1KiB 63KiB] Sc·[0.75 0.00]
+09:13:06.214528 transaction@flush created L0@196 N·4 S·1KiB "Par..e96,v239":"xFP..e96,v240"
+09:13:06.214545 version@stat F·[4 47] S·66KiB[2KiB 63KiB] Sc·[1.00 0.00]
+09:13:06.214942 table@compaction L0·1 -> L1·1 S·41KiB Q·242
+09:13:06.215074 db@close closing
+09:13:06.215961 table@build created L1@197 N·192 S·40KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.215971 table@build exiting
+09:13:06.215975 table@build revert @197
+09:13:06.216112 db@close done T·1.036871ms
+=============== Aug 23, 2026 (UTC) ===============
+09:13:06.233491 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:06.233792 version@stat F·[4 47] S·66KiB[2KiB 63KiB] Sc·[1.00 0.00]
+09:13:06.233809 db@open opening
+09:13:06.233900 journal@recovery F·1
+09:13:06.233946 journal@recovery recovering @194
+09:13:06.234801 memdb@flush created L0@197 N·2 S·1KiB "E0a..004,v244":"L0a..004,v243"
+09:13:06.235219 version@stat F·[5 47] S·68KiB[4KiB 63KiB] Sc·[1.25 0.00]
+09:13:06.237694 db@janitor F·54 G·0
+09:13:06.237717 db@open done T·3.901789ms
+09:13:06.237786 table@compaction L0·2 -> L1·0 S·2KiB Q·245
+09:13:06.238022 db@close closing
+09:13:06.238682 table@build created L1@200 N·2 S·1KiB "E0a..004,v244":"L0a..004,v243"
+09:13:06.238693 table@build exiting
+09:13:06.238696 table@build revert @200
+09:13:06.238799 db@close done T·774.927µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:06.254936 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:06.255121 version@stat F·[5 47] S·68KiB[4KiB 63KiB] Sc·[1.25 0.00]
+09:13:06.255155 db@open opening
+09:13:06.255305 journal@recovery F·1
+09:13:06.255348 journal@recovery recovering @198
+09:13:06.255558 version@stat F·[5 47] S·68KiB[4KiB 63KiB] Sc·[1.25 0.00]
+09:13:06.258195 db@janitor F·54 G·0
+09:13:06.258218 db@open done T·3.057357ms
+09:13:06.258288 table@compaction L0·2 -> L1·0 S·2KiB Q·245
+09:13:06.259674 table@build created L1@202 N·2 S·1KiB "E0a..004,v244":"L0a..004,v243"
+09:13:06.259727 version@stat F·[3 48] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.260120 db@close closing
+09:13:06.260216 table@commit exiting
+09:13:06.260303 db@close done T·181.745µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:06.441133 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:06.441381 version@stat F·[3 48] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.441404 db@open opening
+09:13:06.441527 journal@recovery F·1
+09:13:06.441564 journal@recovery recovering @200
+09:13:06.442055 version@stat F·[3 48] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.444873 db@janitor F·55 G·2
+09:13:06.444891 db@janitor removing table-197
+09:13:06.444928 db@janitor removing table-4
+09:13:06.444966 db@open done T·3.557163ms
+09:13:06.445163 db@close closing
+09:13:06.445226 db@close done T·61.746µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:06.459940 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:06.460131 version@stat F·[3 48] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.460149 db@open opening
+09:13:06.460289 journal@recovery F·1
+09:13:06.460329 journal@recovery recovering @203
+09:13:06.460664 version@stat F·[3 48] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.463439 db@janitor F·53 G·0
+09:13:06.463464 db@open done T·3.3014ms
+09:13:06.463772 db@close closing
+09:13:06.463852 db@close done T·78.527µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:06.487589 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:06.487815 version@stat F·[3 48] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.487834 db@open opening
+09:13:06.487942 journal@recovery F·1
+09:13:06.487980 journal@recovery recovering @205
+09:13:06.490939 memdb@flush created L0@207 N·1 S·299B "Lde..d92,v246":"Lde..d92,v246"
+09:13:06.491046 version@stat F·[4 48] S·68KiB[2KiB 65KiB] Sc·[1.00 0.00]
+09:13:06.493528 db@janitor F·54 G·0
+09:13:06.493550 db@open done T·5.710491ms
+09:13:06.493602 table@move L0@207 -> L1
+09:13:06.494033 version@stat F·[3 49] S·68KiB[2KiB 65KiB] Sc·[0.75 0.00]
+09:13:06.525642 memdb@flush N·1 S·385B
+09:13:06.526452 memdb@flush created L0@211 N·1 S·535B "C48..deb,v248":"C48..deb,v248"
+09:13:06.526478 version@stat F·[4 49] S·68KiB[2KiB 65KiB] Sc·[1.00 0.00]
+09:13:06.526924 memdb@flush committed F·1 T·1.26403ms
+09:13:06.526961 journal@remove removed @208
+09:13:06.526996 table@move L0@211 -> L1
+09:13:06.527019 version@stat F·[3 50] S·68KiB[2KiB 66KiB] Sc·[0.75 0.00]
+09:13:06.527901 transaction@flush created L0@212 N·4 S·1KiB "Pam..8fa,v249":"xFP..8fa,v250"
+09:13:06.527917 version@stat F·[4 50] S·70KiB[3KiB 66KiB] Sc·[1.00 0.00]
+09:13:06.528338 table@compaction L0·2 -> L1·1 S·42KiB Q·252
+09:13:06.529478 table@build created L1@213 N·196 S·41KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.529506 version@stat F·[2 50] S·68KiB[1KiB 67KiB] Sc·[0.50 0.00]
+09:13:06.529887 table@compaction committed F-2 S-1KiB Ke·0 D·0 T·1.526136ms
+09:13:06.532270 table@remove removed @212
+09:13:06.532312 table@remove removed @196
+09:13:06.532352 table@remove removed @193
+09:13:06.555232 memdb@flush N·1 S·385B
+09:13:06.555978 memdb@flush created L0@215 N·1 S·535B "Ceb..deb,v253":"Ceb..deb,v253"
+09:13:06.556005 version@stat F·[3 50] S·69KiB[1KiB 67KiB] Sc·[0.75 0.00]
+09:13:06.556485 memdb@flush committed F·1 T·1.213617ms
+09:13:06.556533 journal@remove removed @210
+09:13:06.557784 transaction@flush created L0@216 N·4 S·1KiB "Par..210,v254":"xFP..210,v255"
+09:13:06.557804 version@stat F·[4 50] S·70KiB[2KiB 67KiB] Sc·[1.00 0.00]
+09:13:06.558313 table@compaction L0·1 -> L1·1 S·42KiB Q·257
+09:13:06.559417 table@build created L1@217 N·200 S·42KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.559457 version@stat F·[3 50] S·70KiB[1KiB 68KiB] Sc·[0.75 0.00]
+09:13:06.559875 table@compaction committed F-1 S-304B Ke·0 D·0 T·1.537958ms
+09:13:06.559933 table@remove removed @216
+09:13:06.559994 table@remove removed @213
+09:13:06.568601 memdb@flush N·1 S·392B
+09:13:06.569381 memdb@flush created L0@219 N·1 S·551B "C63..deb,v258":"C63..deb,v258"
+09:13:06.569411 version@stat F·[4 50] S·70KiB[2KiB 68KiB] Sc·[1.00 0.00]
+09:13:06.569871 memdb@flush committed F·1 T·1.250769ms
+09:13:06.569912 journal@remove removed @214
+09:13:06.569943 table@move L0@219 -> L1
+09:13:06.569964 version@stat F·[3 51] S·70KiB[1KiB 69KiB] Sc·[0.75 0.00]
+09:13:06.571031 transaction@flush created L0@220 N·4 S·1KiB "Pam..c31,v259":"xFP..c31,v260"
+09:13:06.571046 version@stat F·[4 51] S·72KiB[2KiB 69KiB] Sc·[1.00 0.00]
+09:13:06.571448 table@compaction L0·1 -> L1·1 S·43KiB Q·262
+09:13:06.572515 table@build created L1@221 N·204 S·42KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.572547 version@stat F·[3 51] S·71KiB[1KiB 69KiB] Sc·[0.75 0.00]
+09:13:06.572953 table@compaction committed F-1 S-998B Ke·0 D·0 T·1.482123ms
+09:13:06.573014 table@remove removed @220
+09:13:06.573063 table@remove removed @217
+09:13:06.580503 memdb@flush N·1 S·392B
+09:13:06.581318 memdb@flush created L0@223 N·1 S·544B "Cfd..deb,v263":"Cfd..deb,v263"
+09:13:06.581346 version@stat F·[4 51] S·71KiB[2KiB 69KiB] Sc·[1.00 0.00]
+09:13:06.581841 memdb@flush committed F·1 T·1.317384ms
+09:13:06.581875 journal@remove removed @218
+09:13:06.581904 table@move L0@223 -> L1
+09:13:06.581922 version@stat F·[3 52] S·71KiB[1KiB 70KiB] Sc·[0.75 0.00]
+09:13:06.582901 transaction@flush created L0@224 N·4 S·1KiB "Par..9d8,v264":"xFP..9d8,v265"
+09:13:06.582917 version@stat F·[4 52] S·72KiB[2KiB 70KiB] Sc·[1.00 0.00]
+09:13:06.583312 table@compaction L0·1 -> L1·1 S·43KiB Q·267
+09:13:06.584331 table@build created L1@225 N·208 S·43KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.584355 version@stat F·[3 52] S·72KiB[1KiB 71KiB] Sc·[0.75 0.00]
+09:13:06.584749 table@compaction committed F-1 S-112B Ke·0 D·0 T·1.417412ms
+09:13:06.584796 table@remove removed @224
+09:13:06.584835 table@remove removed @221
+09:13:06.585201 memdb@flush N·1 S·385B
+09:13:06.585853 memdb@flush created L0@227 N·1 S·533B "C99..deb,v268":"C99..deb,v268"
+09:13:06.585871 version@stat F·[4 52] S·73KiB[2KiB 71KiB] Sc·[1.00 0.00]
+09:13:06.586227 memdb@flush committed F·1 T·1.003051ms
+09:13:06.586286 journal@remove removed @222
+09:13:06.586313 table@move L0@227 -> L1
+09:13:06.586331 version@stat F·[3 53] S·73KiB[1KiB 71KiB] Sc·[0.75 0.00]
+09:13:06.587362 transaction@flush created L0@228 N·4 S·1KiB "Pam..48b,v269":"xFP..48b,v270"
+09:13:06.587378 version@stat F·[4 53] S·74KiB[2KiB 71KiB] Sc·[1.00 0.00]
+09:13:06.587818 table@compaction L0·1 -> L1·1 S·44KiB Q·272
+09:13:06.588967 table@build created L1@229 N·212 S·43KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.589000 version@stat F·[3 53] S·73KiB[1KiB 71KiB] Sc·[0.75 0.00]
+09:13:06.589938 memdb@flush N·1 S·385B
+09:13:06.590015 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·2.179506ms
+09:13:06.590194 table@remove removed @228
+09:13:06.590484 table@remove removed @225
+09:13:06.590622 memdb@flush created L0@231 N·1 S·536B "C45..deb,v273":"C45..deb,v273"
+09:13:06.590647 version@stat F·[4 53] S·73KiB[2KiB 71KiB] Sc·[1.00 0.00]
+09:13:06.591101 memdb@flush committed F·1 T·1.065238ms
+09:13:06.591150 journal@remove removed @226
+09:13:06.591179 table@move L0@231 -> L1
+09:13:06.591197 version@stat F·[3 54] S·73KiB[1KiB 72KiB] Sc·[0.75 0.00]
+09:13:06.592273 transaction@flush created L0@232 N·4 S·1KiB "Par..bc8,v274":"xFP..bc8,v275"
+09:13:06.592317 version@stat F·[4 54] S·75KiB[2KiB 72KiB] Sc·[1.00 0.00]
+09:13:06.592946 table@compaction L0·1 -> L1·1 S·44KiB Q·277
+09:13:06.594171 table@build created L1@233 N·216 S·44KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.594214 version@stat F·[3 54] S·74KiB[1KiB 73KiB] Sc·[0.75 0.00]
+09:13:06.594674 table@compaction committed F-1 S-562B Ke·0 D·0 T·1.708855ms
+09:13:06.594738 table@remove removed @232
+09:13:06.594792 table@remove removed @229
+09:13:06.594891 memdb@flush N·1 S·393B
+09:13:06.595462 memdb@flush created L0@235 N·1 S·551B "C06..deb,v278":"C06..deb,v278"
+09:13:06.595485 version@stat F·[4 54] S·75KiB[2KiB 73KiB] Sc·[1.00 0.00]
+09:13:06.595816 memdb@flush committed F·1 T·907.613µs
+09:13:06.595850 journal@remove removed @230
+09:13:06.595878 table@move L0@235 -> L1
+09:13:06.595902 version@stat F·[3 55] S·75KiB[1KiB 73KiB] Sc·[0.75 0.00]
+09:13:06.599454 transaction@flush created L0@236 N·4 S·1KiB "Pal..9c7,v279":"xFP..9c7,v280"
+09:13:06.599469 version@stat F·[4 55] S·76KiB[3KiB 73KiB] Sc·[1.00 0.00]
+09:13:06.599893 table@compaction L0·1 -> L1·1 S·45KiB Q·282
+09:13:06.601118 table@build created L1@237 N·220 S·44KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.601152 version@stat F·[3 55] S·75KiB[1KiB 74KiB] Sc·[0.75 0.00]
+09:13:06.601559 table@compaction committed F-1 S-835B Ke·0 D·0 T·1.64557ms
+09:13:06.601621 table@remove removed @236
+09:13:06.601669 table@remove removed @233
+09:13:06.615476 memdb@flush N·1 S·386B
+09:13:06.616100 memdb@flush created L0@239 N·1 S·536B "C4c..deb,v283":"C4c..deb,v283"
+09:13:06.616127 version@stat F·[4 55] S·76KiB[2KiB 74KiB] Sc·[1.00 0.00]
+09:13:06.616502 memdb@flush committed F·1 T·1.008913ms
+09:13:06.616546 journal@remove removed @234
+09:13:06.616576 table@move L0@239 -> L1
+09:13:06.616594 version@stat F·[3 56] S·76KiB[1KiB 74KiB] Sc·[0.75 0.00]
+09:13:06.617737 transaction@flush created L0@240 N·4 S·1KiB "Pam..a95,v284":"xFP..a95,v285"
+09:13:06.617753 version@stat F·[4 56] S·77KiB[2KiB 74KiB] Sc·[1.00 0.00]
+09:13:06.618238 table@compaction L0·1 -> L1·1 S·46KiB Q·287
+09:13:06.619309 table@build created L1@241 N·224 S·45KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.619348 version@stat F·[3 56] S·76KiB[1KiB 75KiB] Sc·[0.75 0.00]
+09:13:06.619744 table@compaction committed F-1 S-952B Ke·0 D·0 T·1.458643ms
+09:13:06.619813 table@remove removed @240
+09:13:06.619870 table@remove removed @237
+09:13:06.631801 memdb@flush N·1 S·386B
+09:13:06.632471 memdb@flush created L0@243 N·1 S·537B "Cb9..deb,v288":"Cb9..deb,v288"
+09:13:06.632500 version@stat F·[4 56] S·77KiB[2KiB 75KiB] Sc·[1.00 0.00]
+09:13:06.632961 memdb@flush committed F·1 T·1.135647ms
+09:13:06.632993 journal@remove removed @238
+09:13:06.633022 table@move L0@243 -> L1
+09:13:06.633045 version@stat F·[3 57] S·77KiB[1KiB 75KiB] Sc·[0.75 0.00]
+09:13:06.633981 transaction@flush created L0@244 N·4 S·1KiB "Par..93b,v289":"xFP..93b,v290"
+09:13:06.633997 version@stat F·[4 57] S·78KiB[2KiB 75KiB] Sc·[1.00 0.00]
+09:13:06.634425 table@compaction L0·1 -> L1·1 S·46KiB Q·292
+09:13:06.635822 table@build created L1@245 N·228 S·45KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.635849 version@stat F·[3 57] S·78KiB[1KiB 76KiB] Sc·[0.75 0.00]
+09:13:06.636326 table@compaction committed F-1 S-528B Ke·0 D·0 T·1.880094ms
+09:13:06.636376 table@remove removed @244
+09:13:06.636418 table@remove removed @241
+09:13:06.681419 memdb@flush N·1 S·383B
+09:13:06.682178 memdb@flush created L0@247 N·1 S·531B "C41..deb,v293":"C41..deb,v293"
+09:13:06.682204 version@stat F·[4 57] S·78KiB[2KiB 76KiB] Sc·[1.00 0.00]
+09:13:06.682610 memdb@flush committed F·1 T·1.168431ms
+09:13:06.682657 journal@remove removed @242
+09:13:06.682686 table@move L0@247 -> L1
+09:13:06.682705 version@stat F·[3 58] S·78KiB[1KiB 76KiB] Sc·[0.75 0.00]
+09:13:06.684129 transaction@flush created L0@248 N·4 S·1KiB "Pam..911,v294":"xFP..911,v295"
+09:13:06.684154 version@stat F·[4 58] S·79KiB[2KiB 76KiB] Sc·[1.00 0.00]
+09:13:06.684689 table@compaction L0·1 -> L1·1 S·47KiB Q·297
+09:13:06.685768 table@build created L1@249 N·232 S·46KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.685794 version@stat F·[3 58] S·79KiB[1KiB 77KiB] Sc·[0.75 0.00]
+09:13:06.686205 table@compaction committed F-1 S-484B Ke·0 D·0 T·1.476551ms
+09:13:06.686294 table@remove removed @248
+09:13:06.686345 table@remove removed @245
+09:13:06.726881 memdb@flush N·1 S·383B
+09:13:06.727665 memdb@flush created L0@251 N·1 S·531B "C93..deb,v298":"C93..deb,v298"
+09:13:06.727705 version@stat F·[4 58] S·79KiB[2KiB 77KiB] Sc·[1.00 0.00]
+09:13:06.728225 memdb@flush committed F·1 T·1.326498ms
+09:13:06.728272 journal@remove removed @246
+09:13:06.728311 table@move L0@251 -> L1
+09:13:06.728340 version@stat F·[3 59] S·79KiB[1KiB 78KiB] Sc·[0.75 0.00]
+09:13:06.729431 transaction@flush created L0@252 N·4 S·1KiB "Par..937,v299":"xFP..937,v300"
+09:13:06.729446 version@stat F·[4 59] S·80KiB[2KiB 78KiB] Sc·[1.00 0.00]
+09:13:06.729823 table@compaction L0·1 -> L1·1 S·47KiB Q·302
+09:13:06.731044 table@build created L1@253 N·236 S·47KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.731079 version@stat F·[3 59] S·80KiB[1KiB 78KiB] Sc·[0.75 0.00]
+09:13:06.731475 table@compaction committed F-1 S-613B Ke·0 D·0 T·1.631333ms
+09:13:06.731547 table@remove removed @252
+09:13:06.731594 table@remove removed @249
+09:13:06.762664 memdb@flush N·1 S·392B
+09:13:06.763453 memdb@flush created L0@255 N·1 S·551B "C55..deb,v303":"C55..deb,v303"
+09:13:06.763500 version@stat F·[4 59] S·80KiB[2KiB 78KiB] Sc·[1.00 0.00]
+09:13:06.763908 memdb@flush committed F·1 T·1.227152ms
+09:13:06.763954 journal@remove removed @250
+09:13:06.763992 table@move L0@255 -> L1
+09:13:06.764016 version@stat F·[3 60] S·80KiB[1KiB 79KiB] Sc·[0.75 0.00]
+09:13:06.765186 transaction@flush created L0@256 N·4 S·1KiB "Pam..c9c,v304":"xFP..c9c,v305"
+09:13:06.765201 version@stat F·[4 60] S·82KiB[2KiB 79KiB] Sc·[1.00 0.00]
+09:13:06.765621 table@compaction L0·1 -> L1·1 S·48KiB Q·307
+09:13:06.766799 table@build created L1@257 N·240 S·47KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.766833 version@stat F·[3 60] S·81KiB[1KiB 79KiB] Sc·[0.75 0.00]
+09:13:06.767326 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.683865ms
+09:13:06.767392 table@remove removed @256
+09:13:06.767435 table@remove removed @253
+09:13:06.796695 memdb@flush N·1 S·392B
+09:13:06.797571 memdb@flush created L0@259 N·1 S·544B "C09..deb,v308":"C09..deb,v308"
+09:13:06.797595 version@stat F·[4 60] S·81KiB[2KiB 79KiB] Sc·[1.00 0.00]
+09:13:06.798009 memdb@flush committed F·1 T·1.296571ms
+09:13:06.798041 journal@remove removed @254
+09:13:06.798068 table@move L0@259 -> L1
+09:13:06.798097 version@stat F·[3 61] S·81KiB[1KiB 80KiB] Sc·[0.75 0.00]
+09:13:06.799207 transaction@flush created L0@260 N·4 S·1KiB "Par..72e,v309":"xFP..72e,v310"
+09:13:06.799223 version@stat F·[4 61] S·82KiB[2KiB 80KiB] Sc·[1.00 0.00]
+09:13:06.799764 table@compaction L0·1 -> L1·1 S·48KiB Q·312
+09:13:06.800921 table@build created L1@261 N·244 S·48KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.800956 version@stat F·[3 61] S·82KiB[1KiB 80KiB] Sc·[0.75 0.00]
+09:13:06.801345 table@compaction committed F-1 S-771B Ke·0 D·0 T·1.56019ms
+09:13:06.801397 table@remove removed @260
+09:13:06.801440 table@remove removed @257
+09:13:06.851793 memdb@flush N·1 S·385B
+09:13:06.852683 memdb@flush created L0@263 N·1 S·536B "C54..deb,v313":"C54..deb,v313"
+09:13:06.852732 version@stat F·[4 61] S·82KiB[2KiB 80KiB] Sc·[1.00 0.00]
+09:13:06.853180 memdb@flush committed F·1 T·1.369519ms
+09:13:06.853226 journal@remove removed @258
+09:13:06.853267 table@move L0@263 -> L1
+09:13:06.853291 version@stat F·[3 62] S·82KiB[1KiB 81KiB] Sc·[0.75 0.00]
+09:13:06.854472 transaction@flush created L0@264 N·4 S·1KiB "Pam..113,v314":"xFP..113,v315"
+09:13:06.854488 version@stat F·[4 62] S·84KiB[2KiB 81KiB] Sc·[1.00 0.00]
+09:13:06.854907 table@compaction L0·1 -> L1·1 S·49KiB Q·317
+09:13:06.856153 table@build created L1@265 N·248 S·48KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.856188 version@stat F·[3 62] S·83KiB[1KiB 81KiB] Sc·[0.75 0.00]
+09:13:06.856573 table@compaction committed F-1 S-702B Ke·0 D·0 T·1.648268ms
+09:13:06.856630 table@remove removed @264
+09:13:06.856700 table@remove removed @261
+09:13:06.898865 memdb@flush N·1 S·385B
+09:13:06.899540 memdb@flush created L0@267 N·1 S·536B "C77..deb,v318":"C77..deb,v318"
+09:13:06.899572 version@stat F·[4 62] S·83KiB[2KiB 81KiB] Sc·[1.00 0.00]
+09:13:06.899971 memdb@flush committed F·1 T·1.085875ms
+09:13:06.900009 journal@remove removed @262
+09:13:06.900040 table@move L0@267 -> L1
+09:13:06.900062 version@stat F·[3 63] S·83KiB[1KiB 82KiB] Sc·[0.75 0.00]
+09:13:06.901071 transaction@flush created L0@268 N·4 S·1KiB "Par..c27,v319":"xFP..c27,v320"
+09:13:06.901086 version@stat F·[4 63] S·85KiB[2KiB 82KiB] Sc·[1.00 0.00]
+09:13:06.901556 table@compaction L0·1 -> L1·1 S·50KiB Q·322
+09:13:06.902595 table@build created L1@269 N·252 S·49KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.902623 version@stat F·[3 63] S·84KiB[1KiB 83KiB] Sc·[0.75 0.00]
+09:13:06.903039 table@compaction committed F-1 S-589B Ke·0 D·0 T·1.461141ms
+09:13:06.903094 table@remove removed @268
+09:13:06.903138 table@remove removed @265
+09:13:06.920057 memdb@flush N·1 S·384B
+09:13:06.920882 memdb@flush created L0@271 N·1 S·537B "C2a..deb,v323":"C2a..deb,v323"
+09:13:06.920910 version@stat F·[4 63] S·85KiB[2KiB 83KiB] Sc·[1.00 0.00]
+09:13:06.921338 memdb@flush committed F·1 T·1.258712ms
+09:13:06.921382 journal@remove removed @266
+09:13:06.921772 table@move L0@271 -> L1
+09:13:06.922474 version@stat F·[3 64] S·85KiB[1KiB 83KiB] Sc·[0.75 0.00]
+09:13:06.922685 transaction@flush created L0@272 N·4 S·1KiB "Pam..863,v324":"xFP..863,v325"
+09:13:06.923092 version@stat F·[4 64] S·86KiB[2KiB 83KiB] Sc·[1.00 0.00]
+09:13:06.923499 table@compaction L0·1 -> L1·1 S·50KiB Q·327
+09:13:06.924842 table@build created L1@273 N·256 S·49KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.924871 version@stat F·[3 64] S·85KiB[1KiB 83KiB] Sc·[0.75 0.00]
+09:13:06.925441 table@compaction committed F-1 S-955B Ke·0 D·0 T·1.922718ms
+09:13:06.925491 table@remove removed @272
+09:13:06.925534 table@remove removed @269
+09:13:06.940125 memdb@flush N·1 S·384B
+09:13:06.940821 memdb@flush created L0@275 N·1 S·537B "Cd3..deb,v328":"Cd3..deb,v328"
+09:13:06.940850 version@stat F·[4 64] S·86KiB[2KiB 83KiB] Sc·[1.00 0.00]
+09:13:06.941276 memdb@flush committed F·1 T·1.132313ms
+09:13:06.941310 journal@remove removed @270
+09:13:06.941344 table@move L0@275 -> L1
+09:13:06.941375 version@stat F·[3 65] S·86KiB[1KiB 84KiB] Sc·[0.75 0.00]
+09:13:06.942391 transaction@flush created L0@276 N·4 S·1KiB "Par..697,v329":"xFP..697,v330"
+09:13:06.942406 version@stat F·[4 65] S·87KiB[2KiB 84KiB] Sc·[1.00 0.00]
+09:13:06.942790 table@compaction L0·1 -> L1·1 S·50KiB Q·332
+09:13:06.944035 table@build created L1@277 N·260 S·51KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.944073 version@stat F·[3 65] S·87KiB[1KiB 85KiB] Sc·[0.75 0.00]
+09:13:06.944480 table@compaction committed F-1 S+295B Ke·0 D·0 T·1.669692ms
+09:13:06.944542 table@remove removed @276
+09:13:06.944599 table@remove removed @273
+09:13:06.949077 memdb@flush N·1 S·389B
+09:13:06.949762 memdb@flush created L0@279 N·1 S·537B "Cab..deb,v333":"Cab..deb,v333"
+09:13:06.949800 version@stat F·[4 65] S·87KiB[2KiB 85KiB] Sc·[1.00 0.00]
+09:13:06.950228 memdb@flush committed F·1 T·1.135861ms
+09:13:06.950288 journal@remove removed @274
+09:13:06.950320 table@move L0@279 -> L1
+09:13:06.950339 version@stat F·[3 66] S·87KiB[1KiB 86KiB] Sc·[0.75 0.00]
+09:13:06.951463 transaction@flush created L0@280 N·4 S·1KiB "Pam..b7d,v334":"xFP..b7d,v335"
+09:13:06.951478 version@stat F·[4 66] S·89KiB[2KiB 86KiB] Sc·[1.00 0.00]
+09:13:06.951892 table@compaction L0·1 -> L1·1 S·52KiB Q·337
+09:13:06.953037 table@build created L1@281 N·264 S·51KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.953070 version@stat F·[3 66] S·88KiB[1KiB 86KiB] Sc·[0.75 0.00]
+09:13:06.953485 table@compaction committed F-1 S-867B Ke·0 D·0 T·1.573131ms
+09:13:06.953556 table@remove removed @280
+09:13:06.953614 table@remove removed @277
+09:13:06.957528 memdb@flush N·1 S·389B
+09:13:06.958164 memdb@flush created L0@283 N·1 S·537B "C44..deb,v338":"C44..deb,v338"
+09:13:06.958183 version@stat F·[4 66] S·88KiB[2KiB 86KiB] Sc·[1.00 0.00]
+09:13:06.958602 memdb@flush committed F·1 T·1.046953ms
+09:13:06.958641 journal@remove removed @278
+09:13:06.958665 table@move L0@283 -> L1
+09:13:06.958681 version@stat F·[3 67] S·88KiB[1KiB 87KiB] Sc·[0.75 0.00]
+09:13:06.959683 transaction@flush created L0@284 N·4 S·1KiB "Par..c2a,v339":"xFP..c2a,v340"
+09:13:06.959699 version@stat F·[4 67] S·89KiB[2KiB 87KiB] Sc·[1.00 0.00]
+09:13:06.960042 table@compaction L0·1 -> L1·1 S·52KiB Q·342
+09:13:06.961133 table@build created L1@285 N·268 S·51KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.961167 version@stat F·[3 67] S·89KiB[1KiB 87KiB] Sc·[0.75 0.00]
+09:13:06.961943 table@compaction committed F-1 S-810B Ke·0 D·0 T·1.879684ms
+09:13:06.961997 table@remove removed @284
+09:13:06.962039 table@remove removed @281
+09:13:06.967807 memdb@flush N·1 S·393B
+09:13:06.968490 memdb@flush created L0@287 N·1 S·544B "C76..deb,v343":"C76..deb,v343"
+09:13:06.968519 version@stat F·[4 67] S·89KiB[2KiB 87KiB] Sc·[1.00 0.00]
+09:13:06.968917 memdb@flush committed F·1 T·1.093061ms
+09:13:06.968958 journal@remove removed @282
+09:13:06.968981 table@move L0@287 -> L1
+09:13:06.968997 version@stat F·[3 68] S·89KiB[1KiB 88KiB] Sc·[0.75 0.00]
+09:13:06.970068 transaction@flush created L0@288 N·4 S·1KiB "Pam..490,v344":"xFP..490,v345"
+09:13:06.970083 version@stat F·[4 68] S·90KiB[2KiB 88KiB] Sc·[1.00 0.00]
+09:13:06.970560 table@compaction L0·1 -> L1·1 S·52KiB Q·347
+09:13:06.971696 table@build created L1@289 N·272 S·52KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.971731 version@stat F·[3 68] S·90KiB[1KiB 88KiB] Sc·[0.75 0.00]
+09:13:06.972228 table@compaction committed F-1 S-742B Ke·0 D·0 T·1.646476ms
+09:13:06.972310 table@remove removed @288
+09:13:06.972357 table@remove removed @285
+09:13:06.977606 memdb@flush N·1 S·393B
+09:13:06.978283 memdb@flush created L0@291 N·1 S·544B "Ca5..deb,v348":"Ca5..deb,v348"
+09:13:06.978313 version@stat F·[4 68] S·90KiB[2KiB 88KiB] Sc·[1.00 0.00]
+09:13:06.978750 memdb@flush committed F·1 T·1.124991ms
+09:13:06.978782 journal@remove removed @286
+09:13:06.978960 table@move L0@291 -> L1
+09:13:06.979117 version@stat F·[3 69] S·90KiB[1KiB 89KiB] Sc·[0.75 0.00]
+09:13:06.980345 transaction@flush created L0@292 N·4 S·1KiB "Par..f89,v349":"xFP..f89,v350"
+09:13:06.980761 version@stat F·[4 69] S·91KiB[2KiB 89KiB] Sc·[1.00 0.00]
+09:13:06.981395 table@compaction L0·1 -> L1·1 S·53KiB Q·352
+09:13:06.982647 table@build created L1@293 N·276 S·53KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.982682 version@stat F·[3 69] S·91KiB[1KiB 89KiB] Sc·[0.75 0.00]
+09:13:06.983107 table@compaction committed F-1 S-190B Ke·0 D·0 T·1.690929ms
+09:13:06.983164 table@remove removed @292
+09:13:06.983220 table@remove removed @289
+09:13:06.983355 memdb@flush N·1 S·396B
+09:13:06.984060 memdb@flush created L0@295 N·1 S·544B "C4e..deb,v353":"C4e..deb,v353"
+09:13:06.984075 version@stat F·[4 69] S·92KiB[2KiB 89KiB] Sc·[1.00 0.00]
+09:13:06.984514 memdb@flush committed F·1 T·1.143355ms
+09:13:06.984547 journal@remove removed @290
+09:13:06.984575 table@move L0@295 -> L1
+09:13:06.984595 version@stat F·[3 70] S·92KiB[1KiB 90KiB] Sc·[0.75 0.00]
+09:13:06.985699 transaction@flush created L0@296 N·4 S·1KiB "Pam..689,v354":"xFP..689,v355"
+09:13:06.985714 version@stat F·[4 70] S·93KiB[2KiB 90KiB] Sc·[1.00 0.00]
+09:13:06.986229 table@compaction L0·1 -> L1·1 S·54KiB Q·357
+09:13:06.987596 table@build created L1@297 N·280 S·53KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.987633 version@stat F·[3 70] S·92KiB[1KiB 90KiB] Sc·[0.75 0.00]
+09:13:06.988043 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.766774ms
+09:13:06.988099 table@remove removed @296
+09:13:06.988153 table@remove removed @293
+09:13:06.988423 memdb@flush N·1 S·396B
+09:13:06.988991 memdb@flush created L0@299 N·1 S·544B "C7e..deb,v358":"C7e..deb,v358"
+09:13:06.989017 version@stat F·[4 70] S·92KiB[2KiB 90KiB] Sc·[1.00 0.00]
+09:13:06.989452 memdb@flush committed F·1 T·1.011467ms
+09:13:06.989495 journal@remove removed @294
+09:13:06.989525 table@move L0@299 -> L1
+09:13:06.989545 version@stat F·[3 71] S·92KiB[1KiB 91KiB] Sc·[0.75 0.00]
+09:13:06.990538 transaction@flush created L0@300 N·4 S·1KiB "Par..592,v359":"xFP..592,v360"
+09:13:06.990553 version@stat F·[4 71] S·94KiB[2KiB 91KiB] Sc·[1.00 0.00]
+09:13:06.991010 table@compaction L0·1 -> L1·1 S·54KiB Q·362
+09:13:06.992574 table@build created L1@301 N·284 S·54KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:06.992600 version@stat F·[3 71] S·93KiB[1KiB 92KiB] Sc·[0.75 0.00]
+09:13:06.993021 table@compaction committed F-1 S-590B Ke·0 D·0 T·1.995483ms
+09:13:06.993072 table@remove removed @300
+09:13:06.993116 table@remove removed @297
+09:13:07.015801 memdb@flush N·1 S·388B
+09:13:07.016492 memdb@flush created L0@303 N·1 S·537B "C56..deb,v363":"C56..deb,v363"
+09:13:07.016517 version@stat F·[4 71] S·94KiB[2KiB 92KiB] Sc·[1.00 0.00]
+09:13:07.016980 memdb@flush committed F·1 T·1.164795ms
+09:13:07.017014 journal@remove removed @298
+09:13:07.017045 table@move L0@303 -> L1
+09:13:07.017069 version@stat F·[3 72] S·94KiB[1KiB 92KiB] Sc·[0.75 0.00]
+09:13:07.018279 transaction@flush created L0@304 N·4 S·1KiB "Pam..fb2,v364":"xFP..fb2,v365"
+09:13:07.018295 version@stat F·[4 72] S·95KiB[2KiB 92KiB] Sc·[1.00 0.00]
+09:13:07.018715 table@compaction L0·1 -> L1·1 S·55KiB Q·367
+09:13:07.019874 table@build created L1@305 N·288 S·54KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.019909 version@stat F·[3 72] S·94KiB[1KiB 93KiB] Sc·[0.75 0.00]
+09:13:07.020382 table@compaction committed F-1 S-693B Ke·0 D·0 T·1.648131ms
+09:13:07.020441 table@remove removed @304
+09:13:07.020498 table@remove removed @301
+09:13:07.041042 memdb@flush N·1 S·388B
+09:13:07.042566 memdb@flush created L0@307 N·1 S·537B "C02..deb,v368":"C02..deb,v368"
+09:13:07.042597 version@stat F·[4 72] S·95KiB[2KiB 93KiB] Sc·[1.00 0.00]
+09:13:07.042995 memdb@flush committed F·1 T·1.932184ms
+09:13:07.043037 journal@remove removed @302
+09:13:07.043062 table@move L0@307 -> L1
+09:13:07.043265 version@stat F·[3 73] S·95KiB[1KiB 93KiB] Sc·[0.75 0.00]
+09:13:07.046339 transaction@flush created L0@308 N·4 S·1KiB "Par..a5d,v369":"xFP..a5d,v370"
+09:13:07.046354 version@stat F·[4 73] S·96KiB[2KiB 93KiB] Sc·[1.00 0.00]
+09:13:07.046805 table@compaction L0·1 -> L1·1 S·56KiB Q·372
+09:13:07.048173 table@build created L1@309 N·292 S·55KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.048209 version@stat F·[3 73] S·95KiB[1KiB 94KiB] Sc·[0.75 0.00]
+09:13:07.048950 memdb@flush N·1 S·388B
+09:13:07.049353 table@compaction committed F-1 S-802B Ke·0 D·0 T·2.529908ms
+09:13:07.049597 table@remove removed @308
+09:13:07.049834 table@remove removed @305
+09:13:07.049948 memdb@flush created L0@311 N·1 S·537B "C9a..deb,v373":"C9a..deb,v373"
+09:13:07.049967 version@stat F·[4 73] S·96KiB[2KiB 94KiB] Sc·[1.00 0.00]
+09:13:07.050419 memdb@flush committed F·1 T·1.050901ms
+09:13:07.050463 journal@remove removed @306
+09:13:07.050495 table@move L0@311 -> L1
+09:13:07.050513 version@stat F·[3 74] S·96KiB[1KiB 94KiB] Sc·[0.75 0.00]
+09:13:07.051625 transaction@flush created L0@312 N·4 S·1KiB "Pam..193,v374":"xFP..193,v375"
+09:13:07.051639 version@stat F·[4 74] S·97KiB[2KiB 94KiB] Sc·[1.00 0.00]
+09:13:07.052168 table@compaction L0·1 -> L1·1 S·56KiB Q·377
+09:13:07.053410 table@build created L1@313 N·296 S·56KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.053441 version@stat F·[3 74] S·97KiB[1KiB 96KiB] Sc·[0.75 0.00]
+09:13:07.053989 table@compaction committed F-1 S+308B Ke·0 D·0 T·1.807339ms
+09:13:07.054045 table@remove removed @312
+09:13:07.054115 table@remove removed @309
+09:13:07.054155 memdb@flush N·1 S·390B
+09:13:07.054719 memdb@flush created L0@315 N·1 S·544B "Ce9..deb,v378":"Ce9..deb,v378"
+09:13:07.054743 version@stat F·[4 74] S·98KiB[2KiB 96KiB] Sc·[1.00 0.00]
+09:13:07.055110 memdb@flush committed F·1 T·940.214µs
+09:13:07.055154 journal@remove removed @310
+09:13:07.055244 table@move L0@315 -> L1
+09:13:07.055266 version@stat F·[3 75] S·98KiB[1KiB 96KiB] Sc·[0.75 0.00]
+09:13:07.057533 transaction@flush created L0@316 N·4 S·1KiB "Par..fc2,v379":"xFP..fc2,v380"
+09:13:07.057547 version@stat F·[4 75] S·99KiB[2KiB 96KiB] Sc·[1.00 0.00]
+09:13:07.058246 table@compaction L0·1 -> L1·1 S·58KiB Q·382
+09:13:07.059549 table@build created L1@317 N·300 S·57KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.059594 version@stat F·[3 75] S·99KiB[1KiB 97KiB] Sc·[0.75 0.00]
+09:13:07.059989 table@compaction committed F-1 S-456B Ke·0 D·0 T·1.718904ms
+09:13:07.060051 table@remove removed @316
+09:13:07.060102 table@remove removed @313
+09:13:07.074395 memdb@flush N·1 S·390B
+09:13:07.075077 memdb@flush created L0@319 N·1 S·544B "Cad..deb,v383":"Cad..deb,v383"
+09:13:07.075097 version@stat F·[4 75] S·99KiB[2KiB 97KiB] Sc·[1.00 0.00]
+09:13:07.075625 memdb@flush committed F·1 T·1.212515ms
+09:13:07.075661 journal@remove removed @314
+09:13:07.075693 table@move L0@319 -> L1
+09:13:07.075716 version@stat F·[3 76] S·99KiB[1KiB 98KiB] Sc·[0.75 0.00]
+09:13:07.076820 transaction@flush created L0@320 N·4 S·1KiB "Pam..511,v384":"xFP..511,v385"
+09:13:07.076836 version@stat F·[4 76] S·100KiB[2KiB 98KiB] Sc·[1.00 0.00]
+09:13:07.077289 table@compaction L0·1 -> L1·1 S·58KiB Q·387
+09:13:07.078606 table@build created L1@321 N·304 S·57KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.078642 version@stat F·[3 76] S·99KiB[1KiB 97KiB] Sc·[0.75 0.00]
+09:13:07.079053 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.741189ms
+09:13:07.079109 table@remove removed @320
+09:13:07.079154 table@remove removed @317
+09:13:07.094610 memdb@flush N·1 S·390B
+09:13:07.095357 memdb@flush created L0@323 N·1 S·544B "C0c..deb,v388":"C0c..deb,v388"
+09:13:07.095382 version@stat F·[4 76] S·99KiB[2KiB 97KiB] Sc·[1.00 0.00]
+09:13:07.095738 memdb@flush committed F·1 T·1.107557ms
+09:13:07.095777 journal@remove removed @318
+09:13:07.095891 table@move L0@323 -> L1
+09:13:07.095915 version@stat F·[3 77] S·99KiB[1KiB 98KiB] Sc·[0.75 0.00]
+09:13:07.096962 transaction@flush created L0@324 N·4 S·1KiB "Par..a9a,v389":"xFP..a9a,v390"
+09:13:07.096977 version@stat F·[4 77] S·101KiB[2KiB 98KiB] Sc·[1.00 0.00]
+09:13:07.097454 table@compaction L0·1 -> L1·1 S·58KiB Q·392
+09:13:07.098643 table@build created L1@325 N·308 S·58KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.098679 version@stat F·[3 77] S·100KiB[1KiB 99KiB] Sc·[0.75 0.00]
+09:13:07.099068 table@compaction committed F-1 S-342B Ke·0 D·0 T·1.573412ms
+09:13:07.099124 table@remove removed @324
+09:13:07.099171 table@remove removed @321
+09:13:07.109032 memdb@flush N·1 S·385B
+09:13:07.109682 memdb@flush created L0@327 N·1 S·536B "C8d..deb,v393":"C8d..deb,v393"
+09:13:07.109709 version@stat F·[4 77] S·101KiB[2KiB 99KiB] Sc·[1.00 0.00]
+09:13:07.110083 memdb@flush committed F·1 T·1.034921ms
+09:13:07.110117 journal@remove removed @322
+09:13:07.110147 table@move L0@327 -> L1
+09:13:07.110345 version@stat F·[3 78] S·101KiB[1KiB 99KiB] Sc·[0.75 0.00]
+09:13:07.111609 transaction@flush created L0@328 N·4 S·1KiB "Pam..aea,v394":"xFP..aea,v395"
+09:13:07.111626 version@stat F·[4 78] S·102KiB[2KiB 99KiB] Sc·[1.00 0.00]
+09:13:07.112021 table@compaction L0·1 -> L1·1 S·59KiB Q·397
+09:13:07.113215 table@build created L1@329 N·312 S·57KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.113270 version@stat F·[3 78] S·101KiB[1KiB 99KiB] Sc·[0.75 0.00]
+09:13:07.113686 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.646035ms
+09:13:07.113745 table@remove removed @328
+09:13:07.113791 table@remove removed @325
+09:13:07.122456 memdb@flush N·1 S·385B
+09:13:07.123117 memdb@flush created L0@331 N·1 S·536B "C8a..deb,v398":"C8a..deb,v398"
+09:13:07.123136 version@stat F·[4 78] S·101KiB[2KiB 99KiB] Sc·[1.00 0.00]
+09:13:07.123641 memdb@flush committed F·1 T·1.165437ms
+09:13:07.123684 journal@remove removed @326
+09:13:07.123731 table@move L0@331 -> L1
+09:13:07.123755 version@stat F·[3 79] S·101KiB[1KiB 99KiB] Sc·[0.75 0.00]
+09:13:07.124829 transaction@flush created L0@332 N·4 S·1KiB "Par..c3e,v399":"xFP..c3e,v400"
+09:13:07.124843 version@stat F·[4 79] S·102KiB[2KiB 99KiB] Sc·[1.00 0.00]
+09:13:07.125220 table@compaction L0·1 -> L1·1 S·59KiB Q·402
+09:13:07.126629 table@build created L1@333 N·316 S·58KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.126665 version@stat F·[3 79] S·102KiB[1KiB 100KiB] Sc·[0.75 0.00]
+09:13:07.127375 table@compaction committed F-1 S-637B Ke·0 D·0 T·2.138254ms
+09:13:07.127436 table@remove removed @332
+09:13:07.127481 table@remove removed @329
+09:13:07.127379 memdb@flush N·1 S·403B
+09:13:07.128077 memdb@flush created L0@335 N·1 S·550B "C60..deb,v403":"C60..deb,v403"
+09:13:07.128100 version@stat F·[4 79] S·102KiB[2KiB 100KiB] Sc·[1.00 0.00]
+09:13:07.128620 memdb@flush committed F·1 T·1.109992ms
+09:13:07.128657 journal@remove removed @330
+09:13:07.128680 table@move L0@335 -> L1
+09:13:07.128696 version@stat F·[3 80] S·102KiB[1KiB 101KiB] Sc·[0.75 0.00]
+09:13:07.129709 transaction@flush created L0@336 N·4 S·1KiB "Pal..42d,v404":"xFP..42d,v405"
+09:13:07.129724 version@stat F·[4 80] S·103KiB[2KiB 101KiB] Sc·[1.00 0.00]
+09:13:07.130219 table@compaction L0·1 -> L1·1 S·59KiB Q·407
+09:13:07.131424 table@build created L1@337 N·320 S·59KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.131461 version@stat F·[3 80] S·103KiB[1KiB 101KiB] Sc·[0.75 0.00]
+09:13:07.131874 table@compaction committed F-1 S-316B Ke·0 D·0 T·1.638362ms
+09:13:07.131930 table@remove removed @336
+09:13:07.131987 table@remove removed @333
+09:13:07.137940 memdb@flush N·1 S·388B
+09:13:07.138637 memdb@flush created L0@339 N·1 S·537B "C10..deb,v408":"C10..deb,v408"
+09:13:07.138664 version@stat F·[4 80] S·104KiB[2KiB 101KiB] Sc·[1.00 0.00]
+09:13:07.139090 memdb@flush committed F·1 T·1.128467ms
+09:13:07.139140 journal@remove removed @334
+09:13:07.139178 table@move L0@339 -> L1
+09:13:07.139198 version@stat F·[3 81] S·104KiB[1KiB 102KiB] Sc·[0.75 0.00]
+09:13:07.140100 transaction@flush created L0@340 N·4 S·1KiB "Pam..b69,v409":"xFP..b69,v410"
+09:13:07.140120 version@stat F·[4 81] S·105KiB[2KiB 102KiB] Sc·[1.00 0.00]
+09:13:07.140605 table@compaction L0·1 -> L1·1 S·60KiB Q·412
+09:13:07.141737 table@build created L1@341 N·324 S·60KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.141770 version@stat F·[3 81] S·105KiB[1KiB 103KiB] Sc·[0.75 0.00]
+09:13:07.142309 table@compaction committed F-1 S-376B Ke·0 D·0 T·1.68114ms
+09:13:07.142375 table@remove removed @340
+09:13:07.142432 table@remove removed @337
+09:13:07.147737 memdb@flush N·1 S·388B
+09:13:07.148556 memdb@flush created L0@343 N·1 S·537B "C5b..deb,v413":"C5b..deb,v413"
+09:13:07.148586 version@stat F·[4 81] S·105KiB[2KiB 103KiB] Sc·[1.00 0.00]
+09:13:07.148925 memdb@flush committed F·1 T·1.163402ms
+09:13:07.148956 journal@remove removed @338
+09:13:07.148988 table@move L0@343 -> L1
+09:13:07.149009 version@stat F·[3 82] S·105KiB[1KiB 103KiB] Sc·[0.75 0.00]
+09:13:07.152834 transaction@flush created L0@344 N·4 S·1KiB "Par..fbf,v414":"xFP..fbf,v415"
+09:13:07.152854 version@stat F·[4 82] S·106KiB[2KiB 103KiB] Sc·[1.00 0.00]
+09:13:07.153457 table@compaction L0·1 -> L1·1 S·61KiB Q·417
+09:13:07.154787 table@build created L1@345 N·328 S·60KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.154828 version@stat F·[3 82] S·105KiB[1KiB 104KiB] Sc·[0.75 0.00]
+09:13:07.155284 table@compaction committed F-1 S-872B Ke·0 D·0 T·1.804447ms
+09:13:07.155347 table@remove removed @344
+09:13:07.155396 table@remove removed @341
+09:13:07.190349 memdb@flush N·1 S·388B
+09:13:07.191126 memdb@flush created L0@347 N·1 S·537B "Cf5..deb,v418":"Cf5..deb,v418"
+09:13:07.191181 version@stat F·[4 82] S·106KiB[2KiB 104KiB] Sc·[1.00 0.00]
+09:13:07.191686 memdb@flush committed F·1 T·1.303905ms
+09:13:07.191730 journal@remove removed @342
+09:13:07.191764 table@move L0@347 -> L1
+09:13:07.191788 version@stat F·[3 83] S·106KiB[1KiB 104KiB] Sc·[0.75 0.00]
+09:13:07.192922 transaction@flush created L0@348 N·4 S·1KiB "Pam..528,v419":"xFP..528,v420"
+09:13:07.192938 version@stat F·[4 83] S·107KiB[2KiB 104KiB] Sc·[1.00 0.00]
+09:13:07.193364 table@compaction L0·1 -> L1·1 S·61KiB Q·422
+09:13:07.194624 table@build created L1@349 N·332 S·60KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.194655 version@stat F·[3 83] S·106KiB[1KiB 104KiB] Sc·[0.75 0.00]
+09:13:07.195068 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.683328ms
+09:13:07.195132 table@remove removed @348
+09:13:07.195193 table@remove removed @345
+09:13:07.226378 memdb@flush N·1 S·388B
+09:13:07.227142 memdb@flush created L0@351 N·1 S·537B "C11..deb,v423":"C11..deb,v423"
+09:13:07.227179 version@stat F·[4 83] S·106KiB[2KiB 104KiB] Sc·[1.00 0.00]
+09:13:07.227582 memdb@flush committed F·1 T·1.1832ms
+09:13:07.227636 journal@remove removed @346
+09:13:07.227664 table@move L0@351 -> L1
+09:13:07.227870 version@stat F·[3 84] S·106KiB[1KiB 105KiB] Sc·[0.75 0.00]
+09:13:07.229315 transaction@flush created L0@352 N·4 S·1KiB "Par..db4,v424":"xFP..db4,v425"
+09:13:07.229332 version@stat F·[4 84] S·108KiB[2KiB 105KiB] Sc·[1.00 0.00]
+09:13:07.229955 table@compaction L0·1 -> L1·1 S·61KiB Q·427
+09:13:07.231310 table@build created L1@353 N·336 S·61KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.231350 version@stat F·[3 84] S·107KiB[1KiB 106KiB] Sc·[0.75 0.00]
+09:13:07.231792 table@compaction committed F-1 S-235B Ke·0 D·0 T·1.815986ms
+09:13:07.231853 table@remove removed @352
+09:13:07.231906 table@remove removed @349
+09:13:07.259625 memdb@flush N·1 S·390B
+09:13:07.260387 memdb@flush created L0@355 N·1 S·544B "Ce3..deb,v428":"Ce3..deb,v428"
+09:13:07.260420 version@stat F·[4 84] S·108KiB[2KiB 106KiB] Sc·[1.00 0.00]
+09:13:07.263706 memdb@flush committed F·1 T·4.059815ms
+09:13:07.263769 journal@remove removed @350
+09:13:07.263820 table@move L0@355 -> L1
+09:13:07.263851 version@stat F·[3 85] S·108KiB[1KiB 106KiB] Sc·[0.75 0.00]
+09:13:07.265054 transaction@flush created L0@356 N·4 S·1KiB "Pam..deb,v429":"xFP..deb,v430"
+09:13:07.265069 version@stat F·[4 85] S·109KiB[2KiB 106KiB] Sc·[1.00 0.00]
+09:13:07.265507 table@compaction L0·1 -> L1·1 S·62KiB Q·432
+09:13:07.266916 table@build created L1@357 N·340 S·62KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.266956 version@stat F·[3 85] S·109KiB[1KiB 107KiB] Sc·[0.75 0.00]
+09:13:07.267407 table@compaction committed F-1 S-477B Ke·0 D·0 T·1.874219ms
+09:13:07.267479 table@remove removed @356
+09:13:07.267530 table@remove removed @353
+09:13:07.291734 memdb@flush N·1 S·390B
+09:13:07.292710 memdb@flush created L0@359 N·1 S·544B "Ca2..deb,v433":"Ca2..deb,v433"
+09:13:07.292733 version@stat F·[4 85] S·109KiB[2KiB 107KiB] Sc·[1.00 0.00]
+09:13:07.293080 memdb@flush committed F·1 T·1.331497ms
+09:13:07.293112 journal@remove removed @354
+09:13:07.293142 table@move L0@359 -> L1
+09:13:07.293167 version@stat F·[3 86] S·109KiB[1KiB 107KiB] Sc·[0.75 0.00]
+09:13:07.293963 transaction@flush created L0@360 N·4 S·1KiB "Par..589,v434":"xFP..589,v435"
+09:13:07.293978 version@stat F·[4 86] S·110KiB[2KiB 107KiB] Sc·[1.00 0.00]
+09:13:07.294320 table@compaction L0·1 -> L1·1 S·63KiB Q·437
+09:13:07.295608 table@build created L1@361 N·344 S·63KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.295642 version@stat F·[3 86] S·110KiB[1KiB 108KiB] Sc·[0.75 0.00]
+09:13:07.295985 table@compaction committed F-1 S-212B Ke·0 D·0 T·1.643345ms
+09:13:07.296040 table@remove removed @360
+09:13:07.296110 table@remove removed @357
+09:13:07.367464 memdb@flush N·1 S·387B
+09:13:07.368063 memdb@flush created L0@363 N·1 S·544B "C5b..deb,v438":"C5b..deb,v438"
+09:13:07.368093 version@stat F·[4 86] S·111KiB[2KiB 108KiB] Sc·[1.00 0.00]
+09:13:07.368419 memdb@flush committed F·1 T·936.687µs
+09:13:07.368460 journal@remove removed @358
+09:13:07.368499 table@move L0@363 -> L1
+09:13:07.368527 version@stat F·[3 87] S·111KiB[1KiB 109KiB] Sc·[0.75 0.00]
+09:13:07.369310 transaction@flush created L0@364 N·4 S·1KiB "Pam..206,v439":"xFP..206,v440"
+09:13:07.369328 version@stat F·[4 87] S·112KiB[2KiB 109KiB] Sc·[1.00 0.00]
+09:13:07.369684 table@compaction L0·1 -> L1·1 S·64KiB Q·442
+09:13:07.372966 table@build created L1@365 N·348 S·62KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.373000 version@stat F·[3 87] S·110KiB[1KiB 109KiB] Sc·[0.75 0.00]
+09:13:07.373343 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·3.640718ms
+09:13:07.373409 table@remove removed @364
+09:13:07.373471 table@remove removed @361
+09:13:07.437414 memdb@flush N·1 S·387B
+09:13:07.438085 memdb@flush created L0@367 N·1 S·537B "C58..deb,v443":"C58..deb,v443"
+09:13:07.438112 version@stat F·[4 87] S·111KiB[2KiB 109KiB] Sc·[1.00 0.00]
+09:13:07.438551 memdb@flush committed F·1 T·1.115974ms
+09:13:07.438598 journal@remove removed @362
+09:13:07.438632 table@move L0@367 -> L1
+09:13:07.438917 version@stat F·[3 88] S·111KiB[1KiB 109KiB] Sc·[0.75 0.00]
+09:13:07.440013 transaction@flush created L0@368 N·4 S·1KiB "Par..52c,v444":"xFP..52c,v445"
+09:13:07.440033 version@stat F·[4 88] S·112KiB[2KiB 109KiB] Sc·[1.00 0.00]
+09:13:07.440443 table@compaction L0·1 -> L1·1 S·64KiB Q·447
+09:13:07.441706 table@build created L1@369 N·352 S·63KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.441742 version@stat F·[3 88] S·112KiB[1KiB 110KiB] Sc·[0.75 0.00]
+09:13:07.442111 table@compaction committed F-1 S-565B Ke·0 D·0 T·1.644157ms
+09:13:07.442179 table@remove removed @368
+09:13:07.442271 table@remove removed @365
+09:13:07.479802 memdb@flush N·1 S·386B
+09:13:07.480841 memdb@flush created L0@371 N·1 S·537B "C3b..deb,v448":"C3b..deb,v448"
+09:13:07.480879 version@stat F·[4 88] S·112KiB[2KiB 110KiB] Sc·[1.00 0.00]
+09:13:07.483631 memdb@flush committed F·1 T·3.80646ms
+09:13:07.483693 journal@remove removed @366
+09:13:07.483804 table@move L0@371 -> L1
+09:13:07.483828 version@stat F·[3 89] S·112KiB[1KiB 111KiB] Sc·[0.75 0.00]
+09:13:07.484733 transaction@flush created L0@372 N·4 S·1KiB "Pam..a10,v449":"xFP..a10,v450"
+09:13:07.484751 version@stat F·[4 89] S·113KiB[2KiB 111KiB] Sc·[1.00 0.00]
+09:13:07.485079 table@compaction L0·1 -> L1·1 S·64KiB Q·452
+09:13:07.486406 table@build created L1@373 N·356 S·64KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.486442 version@stat F·[3 89] S·113KiB[1KiB 111KiB] Sc·[0.75 0.00]
+09:13:07.486795 table@compaction committed F-1 S-581B Ke·0 D·0 T·1.695481ms
+09:13:07.486866 table@remove removed @372
+09:13:07.486936 table@remove removed @369
+09:13:07.520534 memdb@flush N·1 S·386B
+09:13:07.521210 memdb@flush created L0@375 N·1 S·537B "Cd9..deb,v453":"Cd9..deb,v453"
+09:13:07.521233 version@stat F·[4 89] S·113KiB[2KiB 111KiB] Sc·[1.00 0.00]
+09:13:07.521610 memdb@flush committed F·1 T·1.065358ms
+09:13:07.521656 journal@remove removed @370
+09:13:07.521695 table@move L0@375 -> L1
+09:13:07.521719 version@stat F·[3 90] S·113KiB[1KiB 112KiB] Sc·[0.75 0.00]
+09:13:07.522689 transaction@flush created L0@376 N·4 S·1KiB "Par..630,v454":"xFP..630,v455"
+09:13:07.522703 version@stat F·[4 90] S·115KiB[2KiB 112KiB] Sc·[1.00 0.00]
+09:13:07.523142 table@compaction L0·1 -> L1·1 S·65KiB Q·457
+09:13:07.524471 table@build created L1@377 N·360 S·65KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.524514 version@stat F·[3 90] S·114KiB[1KiB 113KiB] Sc·[0.75 0.00]
+09:13:07.524916 table@compaction committed F-1 S-231B Ke·0 D·0 T·1.738711ms
+09:13:07.524962 table@remove removed @376
+09:13:07.525008 table@remove removed @373
+09:13:07.542780 memdb@flush N·1 S·389B
+09:13:07.543299 memdb@flush created L0@379 N·1 S·537B "Ca0..deb,v458":"Ca0..deb,v458"
+09:13:07.543329 version@stat F·[4 90] S·115KiB[2KiB 113KiB] Sc·[1.00 0.00]
+09:13:07.543698 memdb@flush committed F·1 T·901.14µs
+09:13:07.543742 journal@remove removed @374
+09:13:07.543775 table@move L0@379 -> L1
+09:13:07.543798 version@stat F·[3 91] S·115KiB[1KiB 113KiB] Sc·[0.75 0.00]
+09:13:07.544805 transaction@flush created L0@380 N·4 S·1KiB "Pam..fe2,v459":"xFP..fe2,v460"
+09:13:07.544821 version@stat F·[4 91] S·116KiB[2KiB 113KiB] Sc·[1.00 0.00]
+09:13:07.545227 table@compaction L0·1 -> L1·1 S·66KiB Q·462
+09:13:07.546534 table@build created L1@381 N·364 S·65KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.546571 version@stat F·[3 91] S·115KiB[1KiB 114KiB] Sc·[0.75 0.00]
+09:13:07.546969 table@compaction committed F-1 S-969B Ke·0 D·0 T·1.722902ms
+09:13:07.547032 table@remove removed @380
+09:13:07.547092 table@remove removed @377
+09:13:07.562358 memdb@flush N·1 S·389B
+09:13:07.562952 memdb@flush created L0@383 N·1 S·537B "C8a..deb,v463":"C8a..deb,v463"
+09:13:07.562976 version@stat F·[4 91] S·116KiB[2KiB 114KiB] Sc·[1.00 0.00]
+09:13:07.563335 memdb@flush committed F·1 T·958.348µs
+09:13:07.563374 journal@remove removed @378
+09:13:07.563405 table@move L0@383 -> L1
+09:13:07.563429 version@stat F·[3 92] S·116KiB[1KiB 114KiB] Sc·[0.75 0.00]
+09:13:07.564338 transaction@flush created L0@384 N·4 S·1KiB "Par..23e,v464":"xFP..23e,v465"
+09:13:07.564354 version@stat F·[4 92] S·117KiB[2KiB 114KiB] Sc·[1.00 0.00]
+09:13:07.564775 table@compaction L0·1 -> L1·1 S·66KiB Q·467
+09:13:07.565942 table@build created L1@385 N·368 S·66KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.565977 version@stat F·[3 92] S·116KiB[1KiB 115KiB] Sc·[0.75 0.00]
+09:13:07.566342 table@compaction committed F-1 S-860B Ke·0 D·0 T·1.546261ms
+09:13:07.566406 table@remove removed @384
+09:13:07.566466 table@remove removed @381
+09:13:07.577796 memdb@flush N·1 S·386B
+09:13:07.578337 memdb@flush created L0@387 N·1 S·537B "C0b..deb,v468":"C0b..deb,v468"
+09:13:07.578362 version@stat F·[4 92] S·117KiB[2KiB 115KiB] Sc·[1.00 0.00]
+09:13:07.578677 memdb@flush committed F·1 T·861.978µs
+09:13:07.578723 journal@remove removed @382
+09:13:07.578750 table@move L0@387 -> L1
+09:13:07.578775 version@stat F·[3 93] S·117KiB[1KiB 115KiB] Sc·[0.75 0.00]
+09:13:07.579650 transaction@flush created L0@388 N·4 S·1KiB "Pam..129,v469":"xFP..129,v470"
+09:13:07.579666 version@stat F·[4 93] S·118KiB[2KiB 115KiB] Sc·[1.00 0.00]
+09:13:07.580025 table@compaction L0·1 -> L1·1 S·67KiB Q·472
+09:13:07.581189 table@build created L1@389 N·372 S·66KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.581223 version@stat F·[3 93] S·117KiB[1KiB 115KiB] Sc·[0.75 0.00]
+09:13:07.581590 table@compaction committed F-1 S-789B Ke·0 D·0 T·1.543549ms
+09:13:07.581668 table@remove removed @388
+09:13:07.581740 table@remove removed @385
+09:13:07.592001 memdb@flush N·1 S·386B
+09:13:07.595601 memdb@flush created L0@391 N·1 S·537B "Ced..deb,v473":"Ced..deb,v473"
+09:13:07.595627 version@stat F·[4 93] S·118KiB[2KiB 115KiB] Sc·[1.00 0.00]
+09:13:07.596007 memdb@flush committed F·1 T·3.991955ms
+09:13:07.596046 journal@remove removed @386
+09:13:07.596081 table@move L0@391 -> L1
+09:13:07.596106 version@stat F·[3 94] S·118KiB[1KiB 116KiB] Sc·[0.75 0.00]
+09:13:07.596956 transaction@flush created L0@392 N·4 S·1KiB "Par..795,v474":"xFP..795,v475"
+09:13:07.596971 version@stat F·[4 94] S·119KiB[2KiB 116KiB] Sc·[1.00 0.00]
+09:13:07.597317 table@compaction L0·1 -> L1·1 S·67KiB Q·477
+09:13:07.600420 table@build created L1@393 N·376 S·67KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.600453 version@stat F·[3 94] S·118KiB[1KiB 116KiB] Sc·[0.75 0.00]
+09:13:07.600813 table@compaction committed F-1 S-618B Ke·0 D·0 T·3.475099ms
+09:13:07.600884 table@remove removed @392
+09:13:07.600946 table@remove removed @389
+09:13:07.647727 memdb@flush N·1 S·386B
+09:13:07.648410 memdb@flush created L0@395 N·1 S·537B "C5d..deb,v478":"C5d..deb,v478"
+09:13:07.648445 version@stat F·[4 94] S·119KiB[2KiB 116KiB] Sc·[1.00 0.00]
+09:13:07.648800 memdb@flush committed F·1 T·1.053616ms
+09:13:07.648842 journal@remove removed @390
+09:13:07.648881 table@move L0@395 -> L1
+09:13:07.648908 version@stat F·[3 95] S·119KiB[1KiB 117KiB] Sc·[0.75 0.00]
+09:13:07.649795 transaction@flush created L0@396 N·4 S·1KiB "Pam..6cc,v479":"xFP..6cc,v480"
+09:13:07.649810 version@stat F·[4 95] S·120KiB[2KiB 117KiB] Sc·[1.00 0.00]
+09:13:07.650272 table@compaction L0·1 -> L1·1 S·68KiB Q·482
+09:13:07.651491 table@build created L1@397 N·380 S·67KiB "Pal..d9c,v34":"xFP..e96,v240"
+09:13:07.651529 version@stat F·[3 95] S·119KiB[1KiB 117KiB] Sc·[0.75 0.00]
+09:13:07.651850 table@compaction committed F-1 S-971B Ke·0 D·0 T·1.555477ms
+09:13:07.651914 table@remove removed @396
+09:13:07.651984 table@remove removed @393
+09:13:07.694344 memdb@flush N·1 S·386B
+09:13:07.694937 memdb@flush created L0@399 N·1 S·544B "C3e..deb,v483":"C3e..deb,v483"
+09:13:07.694966 version@stat F·[4 95] S·120KiB[2KiB 117KiB] Sc·[1.00 0.00]
+09:13:07.695337 memdb@flush committed F·1 T·975.099µs
+09:13:07.695385 journal@remove removed @394
+09:13:07.695477 table@move L0@399 -> L1
+09:13:07.695498 version@stat F·[3 96] S·120KiB[1KiB 118KiB] Sc·[0.75 0.00]
+09:13:07.696307 transaction@flush created L0@400 N·4 S·1KiB "Par..0fd,v484":"xFP..0fd,v485"
+09:13:07.696323 version@stat F·[4 96] S·121KiB[2KiB 118KiB] Sc·[1.00 0.00]
+09:13:07.696666 table@compaction L0·1 -> L1·1 S·68KiB Q·487
+09:13:07.696804 db@close closing
+09:13:07.697802 table@build created L1@401 N·384 S·68KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:07.697811 table@build exiting
+09:13:07.697814 table@build revert @401
+09:13:07.697957 db@close done T·1.152268ms
+=============== Aug 23, 2026 (UTC) ===============
+09:13:07.714543 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:07.714973 version@stat F·[4 96] S·121KiB[2KiB 118KiB] Sc·[1.00 0.00]
+09:13:07.714992 db@open opening
+09:13:07.715168 journal@recovery F·1
+09:13:07.715456 journal@recovery recovering @398
+09:13:07.716424 memdb@flush created L0@401 N·2 S·1KiB "Ede..d92,v489":"Lde..d92,v488"
+09:13:07.716521 version@stat F·[5 96] S·123KiB[4KiB 118KiB] Sc·[1.25 0.00]
+09:13:07.718739 db@janitor F·103 G·0
+09:13:07.718763 db@open done T·3.758478ms
+09:13:07.718814 table@compaction L0·1 -> L1·2 S·3KiB Q·490
+09:13:07.719008 db@close closing
+09:13:07.719069 db@close done T·60.263µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:07.734880 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:07.735132 version@stat F·[5 96] S·123KiB[4KiB 118KiB] Sc·[1.25 0.00]
+09:13:07.735151 db@open opening
+09:13:07.735323 journal@recovery F·1
+09:13:07.735366 journal@recovery recovering @402
+09:13:07.735493 version@stat F·[5 96] S·123KiB[4KiB 118KiB] Sc·[1.25 0.00]
+09:13:07.737476 db@janitor F·103 G·0
+09:13:07.737496 db@open done T·2.333106ms
+09:13:07.737545 table@compaction L0·1 -> L1·2 S·3KiB Q·490
+09:13:07.738938 table@build created L1@406 N·4 S·3KiB "E0a..004,v244":"Lde..d92,v488"
+09:13:07.738963 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.739291 db@close closing
+09:13:07.739527 table@commit exiting
+09:13:07.739594 db@close done T·301.388µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:07.919522 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:07.919769 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.919787 db@open opening
+09:13:07.919938 journal@recovery F·1
+09:13:07.919978 journal@recovery recovering @404
+09:13:07.920255 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.922743 db@janitor F·104 G·3
+09:13:07.922757 db@janitor removing table-202
+09:13:07.922798 db@janitor removing table-207
+09:13:07.922827 db@janitor removing table-401
+09:13:07.922874 db@open done T·3.08157ms
+09:13:07.922943 table@compaction L0·1 -> L1·1 S·68KiB Q·490
+09:13:07.923069 db@close closing
+09:13:07.926444 table@build created L1@409 N·384 S·68KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:07.926454 table@build exiting
+09:13:07.926457 table@build revert @409
+09:13:07.926582 db@close done T·3.510735ms
+=============== Aug 23, 2026 (UTC) ===============
+09:13:07.942988 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:07.943265 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.943287 db@open opening
+09:13:07.943437 journal@recovery F·1
+09:13:07.943473 journal@recovery recovering @407
+09:13:07.943594 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.945869 db@janitor F·101 G·0
+09:13:07.945906 db@open done T·2.599433ms
+09:13:07.945966 table@compaction L0·1 -> L1·1 S·68KiB Q·490
+09:13:07.946740 db@close closing
+09:13:07.948142 table@build created L1@411 N·384 S·68KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:07.948156 table@build exiting
+09:13:07.948159 table@build revert @411
+09:13:07.948297 db@close done T·1.555959ms
+=============== Aug 23, 2026 (UTC) ===============
+09:13:07.971962 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:07.972229 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.972275 db@open opening
+09:13:07.972429 journal@recovery F·1
+09:13:07.972469 journal@recovery recovering @409
+09:13:07.973189 memdb@flush created L0@411 N·1 S·302B "Ld6..441,v491":"Ld6..441,v491"
+09:13:07.973318 version@stat F·[5 95] S·122KiB[3KiB 119KiB] Sc·[1.25 0.00]
+09:13:07.975317 db@janitor F·102 G·0
+09:13:07.975348 db@open done T·3.049891ms
+09:13:07.975393 table@compaction L0·1 -> L1·1 S·3KiB Q·492
+09:13:07.976945 table@build created L1@414 N·5 S·3KiB "E0a..004,v244":"Lde..d92,v488"
+09:13:07.976984 version@stat F·[4 95] S·122KiB[2KiB 119KiB] Sc·[1.00 0.00]
+09:13:07.977331 table@compaction committed F-1 S-227B Ke·0 D·0 T·1.918018ms
+09:13:07.977356 table@compaction L0·1 -> L1·1 S·68KiB Q·492
+09:13:07.977441 table@remove removed @406
+09:13:07.978959 table@build created L1@415 N·384 S·68KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:07.979011 version@stat F·[3 95] S·122KiB[1KiB 120KiB] Sc·[0.75 0.00]
+09:13:07.979375 table@compaction committed F-1 S-470B Ke·0 D·0 T·2.002419ms
+09:13:07.979460 table@remove removed @400
+09:13:07.979524 table@remove removed @397
+09:13:08.008198 memdb@flush N·1 S·376B
+09:13:08.008831 memdb@flush created L0@417 N·1 S·525B "Cf2..deb,v493":"Cf2..deb,v493"
+09:13:08.008853 version@stat F·[4 95] S·122KiB[2KiB 120KiB] Sc·[1.00 0.00]
+09:13:08.009173 memdb@flush committed F·1 T·944µs
+09:13:08.009222 journal@remove removed @412
+09:13:08.009251 table@move L0@417 -> L1
+09:13:08.009276 version@stat F·[3 96] S·122KiB[1KiB 121KiB] Sc·[0.75 0.00]
+09:13:08.010180 transaction@flush created L0@418 N·4 S·1KiB "Pam..6ad,v494":"xFP..6ad,v495"
+09:13:08.010192 version@stat F·[4 96] S·123KiB[2KiB 121KiB] Sc·[1.00 0.00]
+09:13:08.010661 table@compaction L0·1 -> L1·1 S·69KiB Q·497
+09:13:08.011837 table@build created L1@419 N·388 S·70KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:08.011867 version@stat F·[3 96] S·124KiB[1KiB 122KiB] Sc·[0.75 0.00]
+09:13:08.012387 table@compaction committed F-1 S+524B Ke·0 D·0 T·1.70242ms
+09:13:08.012457 table@remove removed @418
+09:13:08.012506 table@remove removed @415
+09:13:08.037488 memdb@flush N·1 S·376B
+09:13:08.038211 memdb@flush created L0@421 N·1 S·525B "Ccf..deb,v498":"Ccf..deb,v498"
+09:13:08.038233 version@stat F·[4 96] S·124KiB[2KiB 122KiB] Sc·[1.00 0.00]
+09:13:08.038610 memdb@flush committed F·1 T·1.106138ms
+09:13:08.038652 journal@remove removed @416
+09:13:08.038681 table@move L0@421 -> L1
+09:13:08.038700 version@stat F·[3 97] S·124KiB[1KiB 123KiB] Sc·[0.75 0.00]
+09:13:08.039438 transaction@flush created L0@422 N·4 S·1KiB "Par..25c,v499":"xFP..25c,v500"
+09:13:08.039453 version@stat F·[4 97] S·126KiB[2KiB 123KiB] Sc·[1.00 0.00]
+09:13:08.039759 table@compaction L0·1 -> L1·1 S·71KiB Q·502
+09:13:08.041030 table@build created L1@423 N·392 S·70KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:08.041079 version@stat F·[3 97] S·125KiB[1KiB 123KiB] Sc·[0.75 0.00]
+09:13:08.041440 table@compaction committed F-1 S-1009B Ke·0 D·0 T·1.644053ms
+09:13:08.041491 table@remove removed @422
+09:13:08.041547 table@remove removed @419
+09:13:08.050172 memdb@flush N·1 S·383B
+09:13:08.050695 memdb@flush created L0@425 N·1 S·531B "C7c..deb,v503":"C7c..deb,v503"
+09:13:08.050715 version@stat F·[4 97] S·125KiB[2KiB 123KiB] Sc·[1.00 0.00]
+09:13:08.051047 memdb@flush committed F·1 T·860.264µs
+09:13:08.051080 journal@remove removed @420
+09:13:08.051108 table@move L0@425 -> L1
+09:13:08.051366 version@stat F·[3 98] S·125KiB[1KiB 123KiB] Sc·[0.75 0.00]
+09:13:08.052657 transaction@flush created L0@426 N·4 S·1KiB "Pam..28c,v504":"xFP..28c,v505"
+09:13:08.052677 version@stat F·[4 98] S·126KiB[2KiB 123KiB] Sc·[1.00 0.00]
+09:13:08.053256 table@compaction L0·1 -> L1·1 S·71KiB Q·507
+09:13:08.054454 table@build created L1@427 N·396 S·70KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:08.054495 version@stat F·[3 98] S·125KiB[1KiB 124KiB] Sc·[0.75 0.00]
+09:13:08.054829 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.552292ms
+09:13:08.054888 table@remove removed @426
+09:13:08.054948 table@remove removed @423
+09:13:08.062356 memdb@flush N·1 S·383B
+09:13:08.062867 memdb@flush created L0@429 N·1 S·531B "Cfc..deb,v508":"Cfc..deb,v508"
+09:13:08.062893 version@stat F·[4 98] S·126KiB[2KiB 124KiB] Sc·[1.00 0.00]
+09:13:08.063262 memdb@flush committed F·1 T·890.413µs
+09:13:08.063311 journal@remove removed @424
+09:13:08.063401 table@move L0@429 -> L1
+09:13:08.063419 version@stat F·[3 99] S·126KiB[1KiB 124KiB] Sc·[0.75 0.00]
+09:13:08.064224 transaction@flush created L0@430 N·4 S·1KiB "Par..f60,v509":"xFP..f60,v510"
+09:13:08.064250 version@stat F·[4 99] S·127KiB[2KiB 124KiB] Sc·[1.00 0.00]
+09:13:08.064600 table@compaction L0·1 -> L1·1 S·71KiB Q·512
+09:13:08.065799 table@build created L1@431 N·400 S·71KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:08.065835 version@stat F·[3 99] S·126KiB[1KiB 125KiB] Sc·[0.75 0.00]
+09:13:08.066233 table@compaction committed F-1 S-445B Ke·0 D·0 T·1.607874ms
+09:13:08.066307 table@remove removed @430
+09:13:08.066357 table@remove removed @427
+09:13:08.066577 memdb@flush N·1 S·376B
+09:13:08.067108 memdb@flush created L0@433 N·1 S·531B "C8b..deb,v513":"C8b..deb,v513"
+09:13:08.067133 version@stat F·[4 99] S·127KiB[2KiB 125KiB] Sc·[1.00 0.00]
+09:13:08.067621 memdb@flush committed F·1 T·1.017298ms
+09:13:08.067667 journal@remove removed @428
+09:13:08.067696 table@move L0@433 -> L1
+09:13:08.067715 version@stat F·[3 100] S·127KiB[1KiB 125KiB] Sc·[0.75 0.00]
+09:13:08.068517 transaction@flush created L0@434 N·4 S·1KiB "Pam..9dc,v514":"xFP..9dc,v515"
+09:13:08.068533 version@stat F·[4 100] S·128KiB[2KiB 125KiB] Sc·[1.00 0.00]
+09:13:08.068916 table@compaction L0·1 -> L1·1 S·72KiB Q·517
+09:13:08.070565 table@build created L1@435 N·404 S·71KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:08.070605 version@stat F·[3 100] S·127KiB[1KiB 125KiB] Sc·[0.75 0.00]
+09:13:08.071144 memdb@flush N·1 S·376B
+09:13:08.071152 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·2.219003ms
+09:13:08.071331 table@remove removed @434
+09:13:08.071393 table@remove removed @431
+09:13:08.071619 memdb@flush created L0@437 N·1 S·523B "C85..deb,v518":"C85..deb,v518"
+09:13:08.071640 version@stat F·[4 100] S·128KiB[2KiB 125KiB] Sc·[1.00 0.00]
+09:13:08.072049 memdb@flush committed F·1 T·877.707µs
+09:13:08.072089 journal@remove removed @432
+09:13:08.072210 table@move L0@437 -> L1
+09:13:08.072233 version@stat F·[3 101] S·128KiB[1KiB 126KiB] Sc·[0.75 0.00]
+09:13:08.072945 transaction@flush created L0@438 N·4 S·1KiB "Par..9e9,v519":"xFP..9e9,v520"
+09:13:08.072961 version@stat F·[4 101] S·129KiB[2KiB 126KiB] Sc·[1.00 0.00]
+09:13:08.073405 table@compaction L0·1 -> L1·1 S·72KiB Q·522
+09:13:08.074584 table@build created L1@439 N·408 S·72KiB "Pal..d9c,v34":"xFP..0fd,v485"
+09:13:08.074623 version@stat F·[3 101] S·128KiB[1KiB 127KiB] Sc·[0.75 0.00]
+09:13:08.074961 table@compaction committed F-1 S-287B Ke·0 D·0 T·1.533359ms
+09:13:08.075010 table@remove removed @438
+09:13:08.075056 table@remove removed @435
+09:13:08.075144 memdb@flush N·1 S·384B
+09:13:08.075605 memdb@flush created L0@441 N·1 S·544B "C43..deb,v523":"C43..deb,v523"
+09:13:08.075628 version@stat F·[4 101] S·129KiB[2KiB 127KiB] Sc·[1.00 0.00]
+09:13:08.075939 memdb@flush committed F·1 T·779.112µs
+09:13:08.075977 journal@remove removed @436
+09:13:08.076003 table@move L0@441 -> L1
+09:13:08.076209 version@stat F·[3 102] S·129KiB[1KiB 127KiB] Sc·[0.75 0.00]
+09:13:08.077399 transaction@flush created L0@442 N·4 S·1KiB "Pal..b79,v524":"xFP..b79,v525"
+09:13:08.077415 version@stat F·[4 102] S·130KiB[2KiB 127KiB] Sc·[1.00 0.00]
+09:13:08.077819 table@compaction L0·1 -> L1·1 S·73KiB Q·527
+09:13:08.079186 table@build created L1@443 N·412 S·72KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.079213 version@stat F·[3 102] S·129KiB[1KiB 127KiB] Sc·[0.75 0.00]
+09:13:08.079532 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.696585ms
+09:13:08.079608 table@remove removed @442
+09:13:08.079668 table@remove removed @439
+09:13:08.093543 memdb@flush N·1 S·377B
+09:13:08.094102 memdb@flush created L0@445 N·1 S·524B "Cc9..deb,v528":"Cc9..deb,v528"
+09:13:08.094124 version@stat F·[4 102] S·130KiB[2KiB 127KiB] Sc·[1.00 0.00]
+09:13:08.094444 memdb@flush committed F·1 T·883.768µs
+09:13:08.094479 journal@remove removed @440
+09:13:08.094510 table@move L0@445 -> L1
+09:13:08.094534 version@stat F·[3 103] S·130KiB[1KiB 128KiB] Sc·[0.75 0.00]
+09:13:08.095362 transaction@flush created L0@446 N·4 S·1KiB "Pam..6eb,v529":"xFP..6eb,v530"
+09:13:08.095378 version@stat F·[4 103] S·131KiB[2KiB 128KiB] Sc·[1.00 0.00]
+09:13:08.095689 table@compaction L0·1 -> L1·1 S·73KiB Q·532
+09:13:08.096847 table@build created L1@447 N·416 S·73KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.096873 version@stat F·[3 103] S·130KiB[1KiB 129KiB] Sc·[0.75 0.00]
+09:13:08.097203 table@compaction committed F-1 S-431B Ke·0 D·0 T·1.496715ms
+09:13:08.097290 table@remove removed @446
+09:13:08.097365 table@remove removed @443
+09:13:08.109509 memdb@flush N·1 S·377B
+09:13:08.110050 memdb@flush created L0@449 N·1 S·525B "C4d..deb,v533":"C4d..deb,v533"
+09:13:08.110075 version@stat F·[4 103] S·131KiB[2KiB 129KiB] Sc·[1.00 0.00]
+09:13:08.110434 memdb@flush committed F·1 T·908.744µs
+09:13:08.110482 journal@remove removed @444
+09:13:08.110576 table@move L0@449 -> L1
+09:13:08.110598 version@stat F·[3 104] S·131KiB[1KiB 129KiB] Sc·[0.75 0.00]
+09:13:08.111363 transaction@flush created L0@450 N·4 S·1KiB "Par..54a,v534":"xFP..54a,v535"
+09:13:08.111379 version@stat F·[4 104] S·132KiB[2KiB 129KiB] Sc·[1.00 0.00]
+09:13:08.111700 table@compaction L0·1 -> L1·1 S·74KiB Q·537
+09:13:08.112884 table@build created L1@451 N·420 S·73KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.112921 version@stat F·[3 104] S·131KiB[1KiB 129KiB] Sc·[0.75 0.00]
+09:13:08.113261 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.516054ms
+09:13:08.113335 table@remove removed @450
+09:13:08.113405 table@remove removed @447
+09:13:08.158802 memdb@flush N·1 S·374B
+09:13:08.159420 memdb@flush created L0@453 N·1 S·523B "C7e..deb,v538":"C7e..deb,v538"
+09:13:08.159461 version@stat F·[4 104] S·132KiB[2KiB 129KiB] Sc·[1.00 0.00]
+09:13:08.159805 memdb@flush committed F·1 T·968.857µs
+09:13:08.159841 journal@remove removed @448
+09:13:08.159885 table@move L0@453 -> L1
+09:13:08.159918 version@stat F·[3 105] S·132KiB[1KiB 130KiB] Sc·[0.75 0.00]
+09:13:08.160783 transaction@flush created L0@454 N·4 S·1KiB "Pam..7a7,v539":"xFP..7a7,v540"
+09:13:08.160799 version@stat F·[4 105] S·133KiB[2KiB 130KiB] Sc·[1.00 0.00]
+09:13:08.161111 table@compaction L0·1 -> L1·1 S·74KiB Q·542
+09:13:08.162588 table@build created L1@455 N·424 S·73KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.162625 version@stat F·[3 105] S·132KiB[1KiB 131KiB] Sc·[0.75 0.00]
+09:13:08.163006 table@compaction committed F-1 S-512B Ke·0 D·0 T·1.875489ms
+09:13:08.163060 table@remove removed @454
+09:13:08.163113 table@remove removed @451
+09:13:08.203165 memdb@flush N·1 S·374B
+09:13:08.203826 memdb@flush created L0@457 N·1 S·531B "Cf0..deb,v543":"Cf0..deb,v543"
+09:13:08.203853 version@stat F·[4 105] S·133KiB[2KiB 131KiB] Sc·[1.00 0.00]
+09:13:08.204208 memdb@flush committed F·1 T·1.025664ms
+09:13:08.204244 journal@remove removed @452
+09:13:08.204275 table@move L0@457 -> L1
+09:13:08.204300 version@stat F·[3 106] S·133KiB[1KiB 131KiB] Sc·[0.75 0.00]
+09:13:08.205168 transaction@flush created L0@458 N·4 S·1KiB "Par..b3b,v544":"xFP..b3b,v545"
+09:13:08.205181 version@stat F·[4 106] S·134KiB[2KiB 131KiB] Sc·[1.00 0.00]
+09:13:08.205523 table@compaction L0·1 -> L1·1 S·74KiB Q·547
+09:13:08.206748 table@build created L1@459 N·428 S·74KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.206785 version@stat F·[3 106] S·134KiB[1KiB 132KiB] Sc·[0.75 0.00]
+09:13:08.207127 table@compaction committed F-1 S-13B Ke·0 D·0 T·1.57922ms
+09:13:08.207192 table@remove removed @458
+09:13:08.207278 table@remove removed @455
+09:13:08.238427 memdb@flush N·1 S·383B
+09:13:08.239093 memdb@flush created L0@461 N·1 S·530B "C81..deb,v548":"C81..deb,v548"
+09:13:08.239130 version@stat F·[4 106] S·134KiB[2KiB 132KiB] Sc·[1.00 0.00]
+09:13:08.239651 memdb@flush committed F·1 T·1.198227ms
+09:13:08.239700 journal@remove removed @456
+09:13:08.239732 table@move L0@461 -> L1
+09:13:08.239754 version@stat F·[3 107] S·134KiB[1KiB 133KiB] Sc·[0.75 0.00]
+09:13:08.240589 transaction@flush created L0@462 N·4 S·1KiB "Pam..31d,v549":"xFP..31d,v550"
+09:13:08.240605 version@stat F·[4 107] S·136KiB[2KiB 133KiB] Sc·[1.00 0.00]
+09:13:08.241121 table@compaction L0·1 -> L1·1 S·76KiB Q·552
+09:13:08.242400 table@build created L1@463 N·432 S·76KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.242437 version@stat F·[3 107] S·136KiB[1KiB 134KiB] Sc·[0.75 0.00]
+09:13:08.242962 table@compaction committed F-1 S-210B Ke·0 D·0 T·1.822848ms
+09:13:08.243016 table@remove removed @462
+09:13:08.243066 table@remove removed @459
+09:13:08.272407 memdb@flush N·1 S·383B
+09:13:08.273031 memdb@flush created L0@465 N·1 S·537B "C7c..deb,v553":"C7c..deb,v553"
+09:13:08.273078 version@stat F·[4 107] S·136KiB[2KiB 134KiB] Sc·[1.00 0.00]
+09:13:08.273444 memdb@flush committed F·1 T·1.01836ms
+09:13:08.273484 journal@remove removed @460
+09:13:08.273775 table@move L0@465 -> L1
+09:13:08.274029 version@stat F·[3 108] S·136KiB[1KiB 134KiB] Sc·[0.75 0.00]
+09:13:08.274754 transaction@flush created L0@466 N·4 S·1KiB "Par..535,v554":"xFP..535,v555"
+09:13:08.274941 version@stat F·[4 108] S·137KiB[2KiB 134KiB] Sc·[1.00 0.00]
+09:13:08.275358 table@compaction L0·1 -> L1·1 S·77KiB Q·557
+09:13:08.276693 table@build created L1@467 N·436 S·76KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.276731 version@stat F·[3 108] S·136KiB[1KiB 134KiB] Sc·[0.75 0.00]
+09:13:08.277102 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.720746ms
+09:13:08.277169 table@remove removed @466
+09:13:08.277226 table@remove removed @463
+09:13:08.327584 memdb@flush N·1 S·376B
+09:13:08.328234 memdb@flush created L0@469 N·1 S·531B "C5a..deb,v558":"C5a..deb,v558"
+09:13:08.328286 version@stat F·[4 108] S·136KiB[2KiB 134KiB] Sc·[1.00 0.00]
+09:13:08.328672 memdb@flush committed F·1 T·1.066306ms
+09:13:08.328708 journal@remove removed @464
+09:13:08.328747 table@move L0@469 -> L1
+09:13:08.328776 version@stat F·[3 109] S·136KiB[1KiB 135KiB] Sc·[0.75 0.00]
+09:13:08.330115 transaction@flush created L0@470 N·4 S·1KiB "Pam..b55,v559":"xFP..b55,v560"
+09:13:08.330132 version@stat F·[4 109] S·138KiB[2KiB 135KiB] Sc·[1.00 0.00]
+09:13:08.330472 table@compaction L0·1 -> L1·1 S·77KiB Q·562
+09:13:08.331851 table@build created L1@471 N·440 S·76KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.331889 version@stat F·[3 109] S·137KiB[1KiB 135KiB] Sc·[0.75 0.00]
+09:13:08.332220 table@compaction committed F-1 S-938B Ke·0 D·0 T·1.7255ms
+09:13:08.332312 table@remove removed @470
+09:13:08.332369 table@remove removed @467
+09:13:08.374611 memdb@flush N·1 S·376B
+09:13:08.375260 memdb@flush created L0@473 N·1 S·525B "C5f..deb,v563":"C5f..deb,v563"
+09:13:08.375286 version@stat F·[4 109] S·137KiB[2KiB 135KiB] Sc·[1.00 0.00]
+09:13:08.375648 memdb@flush committed F·1 T·1.018751ms
+09:13:08.375696 journal@remove removed @468
+09:13:08.375732 table@move L0@473 -> L1
+09:13:08.375758 version@stat F·[3 110] S·137KiB[1KiB 136KiB] Sc·[0.75 0.00]
+09:13:08.376624 transaction@flush created L0@474 N·4 S·1KiB "Par..a09,v564":"xFP..a09,v565"
+09:13:08.376641 version@stat F·[4 110] S·139KiB[2KiB 136KiB] Sc·[1.00 0.00]
+09:13:08.376986 table@compaction L0·1 -> L1·1 S·77KiB Q·567
+09:13:08.378333 table@build created L1@475 N·444 S·77KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.378373 version@stat F·[3 110] S·138KiB[1KiB 137KiB] Sc·[0.75 0.00]
+09:13:08.378719 table@compaction committed F-1 S-316B Ke·0 D·0 T·1.713114ms
+09:13:08.378773 table@remove removed @474
+09:13:08.378844 table@remove removed @471
+09:13:08.395663 memdb@flush N·1 S·375B
+09:13:08.396259 memdb@flush created L0@477 N·1 S·525B "Cbb..deb,v568":"Cbb..deb,v568"
+09:13:08.396295 version@stat F·[4 110] S·139KiB[2KiB 137KiB] Sc·[1.00 0.00]
+09:13:08.396631 memdb@flush committed F·1 T·951.325µs
+09:13:08.396676 journal@remove removed @472
+09:13:08.396713 table@move L0@477 -> L1
+09:13:08.396736 version@stat F·[3 111] S·139KiB[1KiB 137KiB] Sc·[0.75 0.00]
+09:13:08.397559 transaction@flush created L0@478 N·4 S·1KiB "Pam..397,v569":"xFP..397,v570"
+09:13:08.397574 version@stat F·[4 111] S·140KiB[2KiB 137KiB] Sc·[1.00 0.00]
+09:13:08.397956 table@compaction L0·1 -> L1·1 S·78KiB Q·572
+09:13:08.399424 table@build created L1@479 N·448 S·77KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.399459 version@stat F·[3 111] S·139KiB[1KiB 138KiB] Sc·[0.75 0.00]
+09:13:08.399885 table@compaction committed F-1 S-1023B Ke·0 D·0 T·1.910846ms
+09:13:08.399931 table@remove removed @478
+09:13:08.399981 table@remove removed @475
+09:13:08.414156 memdb@flush N·1 S·375B
+09:13:08.414832 memdb@flush created L0@481 N·1 S·525B "C80..deb,v573":"C80..deb,v573"
+09:13:08.414866 version@stat F·[4 111] S·140KiB[2KiB 138KiB] Sc·[1.00 0.00]
+09:13:08.415211 memdb@flush committed F·1 T·1.032367ms
+09:13:08.415279 journal@remove removed @476
+09:13:08.415312 table@move L0@481 -> L1
+09:13:08.415651 version@stat F·[3 112] S·140KiB[1KiB 138KiB] Sc·[0.75 0.00]
+09:13:08.416806 transaction@flush created L0@482 N·4 S·1KiB "Par..f47,v574":"xFP..f47,v575"
+09:13:08.416832 version@stat F·[4 112] S·141KiB[2KiB 138KiB] Sc·[1.00 0.00]
+09:13:08.417273 table@compaction L0·1 -> L1·1 S·78KiB Q·577
+09:13:08.418730 table@build created L1@483 N·452 S·78KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.418766 version@stat F·[3 112] S·141KiB[1KiB 139KiB] Sc·[0.75 0.00]
+09:13:08.419086 table@compaction committed F-1 S-18B Ke·0 D·0 T·1.791595ms
+09:13:08.419141 table@remove removed @482
+09:13:08.419215 table@remove removed @479
+09:13:08.423631 memdb@flush N·1 S·380B
+09:13:08.424144 memdb@flush created L0@485 N·1 S·531B "C2f..deb,v578":"C2f..deb,v578"
+09:13:08.424171 version@stat F·[4 112] S·141KiB[2KiB 139KiB] Sc·[1.00 0.00]
+09:13:08.424638 memdb@flush committed F·1 T·984.306µs
+09:13:08.424681 journal@remove removed @480
+09:13:08.424801 table@move L0@485 -> L1
+09:13:08.424821 version@stat F·[3 113] S·141KiB[1KiB 140KiB] Sc·[0.75 0.00]
+09:13:08.425539 transaction@flush created L0@486 N·4 S·1KiB "Pam..a96,v579":"xFP..a96,v580"
+09:13:08.425554 version@stat F·[4 113] S·142KiB[2KiB 140KiB] Sc·[1.00 0.00]
+09:13:08.425931 table@compaction L0·1 -> L1·1 S·79KiB Q·582
+09:13:08.427144 table@build created L1@487 N·456 S·79KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.427171 version@stat F·[3 113] S·142KiB[1KiB 140KiB] Sc·[0.75 0.00]
+09:13:08.427542 table@compaction committed F-1 S-684B Ke·0 D·0 T·1.594158ms
+09:13:08.427601 table@remove removed @486
+09:13:08.427652 table@remove removed @483
+09:13:08.431406 memdb@flush N·1 S·380B
+09:13:08.431984 memdb@flush created L0@489 N·1 S·531B "Cd3..deb,v583":"Cd3..deb,v583"
+09:13:08.432009 version@stat F·[4 113] S·142KiB[2KiB 140KiB] Sc·[1.00 0.00]
+09:13:08.432313 memdb@flush committed F·1 T·886.434µs
+09:13:08.432359 journal@remove removed @484
+09:13:08.432391 table@move L0@489 -> L1
+09:13:08.432413 version@stat F·[3 114] S·142KiB[1KiB 141KiB] Sc·[0.75 0.00]
+09:13:08.433115 transaction@flush created L0@490 N·4 S·1KiB "Par..2fc,v584":"xFP..2fc,v585"
+09:13:08.433126 version@stat F·[4 114] S·143KiB[2KiB 141KiB] Sc·[1.00 0.00]
+09:13:08.433445 table@compaction L0·1 -> L1·1 S·80KiB Q·587
+09:13:08.434761 table@build created L1@491 N·460 S·80KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.434800 version@stat F·[3 114] S·143KiB[1KiB 141KiB] Sc·[0.75 0.00]
+09:13:08.435148 table@compaction committed F-1 S-298B Ke·0 D·0 T·1.681737ms
+09:13:08.435209 table@remove removed @490
+09:13:08.435312 table@remove removed @487
+09:13:08.441454 memdb@flush N·1 S·384B
+09:13:08.441926 memdb@flush created L0@493 N·1 S·529B "Caf..deb,v588":"Caf..deb,v588"
+09:13:08.441944 version@stat F·[4 114] S·144KiB[2KiB 141KiB] Sc·[1.00 0.00]
+09:13:08.442287 memdb@flush committed F·1 T·811.422µs
+09:13:08.442325 journal@remove removed @488
+09:13:08.442353 table@move L0@493 -> L1
+09:13:08.442371 version@stat F·[3 115] S·144KiB[1KiB 142KiB] Sc·[0.75 0.00]
+09:13:08.443141 transaction@flush created L0@494 N·4 S·1KiB "Pam..54e,v589":"xFP..54e,v590"
+09:13:08.443158 version@stat F·[4 115] S·145KiB[2KiB 142KiB] Sc·[1.00 0.00]
+09:13:08.443592 table@compaction L0·1 -> L1·1 S·81KiB Q·592
+09:13:08.445097 table@build created L1@495 N·464 S·80KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.445133 version@stat F·[3 115] S·144KiB[1KiB 142KiB] Sc·[0.75 0.00]
+09:13:08.445484 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.869025ms
+09:13:08.445542 table@remove removed @494
+09:13:08.445593 table@remove removed @491
+09:13:08.450557 memdb@flush N·1 S·384B
+09:13:08.451069 memdb@flush created L0@497 N·1 S·537B "Cda..deb,v593":"Cda..deb,v593"
+09:13:08.451109 version@stat F·[4 115] S·144KiB[2KiB 142KiB] Sc·[1.00 0.00]
+09:13:08.451440 memdb@flush committed F·1 T·854.23µs
+09:13:08.451476 journal@remove removed @492
+09:13:08.451503 table@move L0@497 -> L1
+09:13:08.451528 version@stat F·[3 116] S·144KiB[1KiB 143KiB] Sc·[0.75 0.00]
+09:13:08.452487 transaction@flush created L0@498 N·4 S·1KiB "Par..171,v594":"xFP..171,v595"
+09:13:08.452502 version@stat F·[4 116] S·145KiB[2KiB 143KiB] Sc·[1.00 0.00]
+09:13:08.452825 table@compaction L0·1 -> L1·1 S·81KiB Q·597
+09:13:08.454049 table@build created L1@499 N·468 S·80KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.454086 version@stat F·[3 116] S·145KiB[1KiB 143KiB] Sc·[0.75 0.00]
+09:13:08.454415 table@compaction committed F-1 S-336B Ke·0 D·0 T·1.570098ms
+09:13:08.454471 table@remove removed @498
+09:13:08.454521 table@remove removed @495
+09:13:08.454786 memdb@flush N·1 S·387B
+09:13:08.455306 memdb@flush created L0@501 N·1 S·551B "C7b..deb,v598":"C7b..deb,v598"
+09:13:08.455333 version@stat F·[4 116] S·146KiB[2KiB 143KiB] Sc·[1.00 0.00]
+09:13:08.455626 memdb@flush committed F·1 T·819.969µs
+09:13:08.455657 journal@remove removed @496
+09:13:08.455683 table@move L0@501 -> L1
+09:13:08.455705 version@stat F·[3 117] S·146KiB[1KiB 144KiB] Sc·[0.75 0.00]
+09:13:08.456496 transaction@flush created L0@502 N·4 S·1KiB "Pam..0e4,v599":"xFP..0e4,v600"
+09:13:08.456512 version@stat F·[4 117] S·147KiB[2KiB 144KiB] Sc·[1.00 0.00]
+09:13:08.456808 table@compaction L0·1 -> L1·1 S·82KiB Q·602
+09:13:08.457981 table@build created L1@503 N·472 S·81KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.458020 version@stat F·[3 117] S·146KiB[1KiB 144KiB] Sc·[0.75 0.00]
+09:13:08.458490 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.659156ms
+09:13:08.458556 table@remove removed @502
+09:13:08.458621 table@remove removed @499
+09:13:08.459076 memdb@flush N·1 S·387B
+09:13:08.459604 memdb@flush created L0@505 N·1 S·537B "C69..deb,v603":"C69..deb,v603"
+09:13:08.459633 version@stat F·[4 117] S·146KiB[2KiB 144KiB] Sc·[1.00 0.00]
+09:13:08.459936 memdb@flush committed F·1 T·836.041µs
+09:13:08.459972 journal@remove removed @500
+09:13:08.460000 table@move L0@505 -> L1
+09:13:08.460019 version@stat F·[3 118] S·146KiB[1KiB 145KiB] Sc·[0.75 0.00]
+09:13:08.460875 transaction@flush created L0@506 N·4 S·1KiB "Par..410,v604":"xFP..410,v605"
+09:13:08.460894 version@stat F·[4 118] S·148KiB[2KiB 145KiB] Sc·[1.00 0.00]
+09:13:08.461336 table@compaction L0·1 -> L1·1 S·82KiB Q·607
+09:13:08.462563 table@build created L1@507 N·476 S·81KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.462599 version@stat F·[3 118] S·147KiB[1KiB 145KiB] Sc·[0.75 0.00]
+09:13:08.463000 table@compaction committed F-1 S-888B Ke·0 D·0 T·1.639353ms
+09:13:08.463059 table@remove removed @506
+09:13:08.463110 table@remove removed @503
+09:13:08.486162 memdb@flush N·1 S·379B
+09:13:08.486749 memdb@flush created L0@509 N·1 S·530B "C2b..deb,v608":"C2b..deb,v608"
+09:13:08.486768 version@stat F·[4 118] S·147KiB[2KiB 145KiB] Sc·[1.00 0.00]
+09:13:08.487135 memdb@flush committed F·1 T·958.949µs
+09:13:08.487169 journal@remove removed @504
+09:13:08.487208 table@move L0@509 -> L1
+09:13:08.487232 version@stat F·[3 119] S·147KiB[1KiB 146KiB] Sc·[0.75 0.00]
+09:13:08.488125 transaction@flush created L0@510 N·4 S·1KiB "Pam..c75,v609":"xFP..c75,v610"
+09:13:08.488141 version@stat F·[4 119] S·149KiB[2KiB 146KiB] Sc·[1.00 0.00]
+09:13:08.488517 table@compaction L0·1 -> L1·1 S·83KiB Q·612
+09:13:08.489799 table@build created L1@511 N·480 S·82KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.489836 version@stat F·[3 119] S·148KiB[1KiB 146KiB] Sc·[0.75 0.00]
+09:13:08.490172 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.633215ms
+09:13:08.490231 table@remove removed @510
+09:13:08.490321 table@remove removed @507
+09:13:08.510863 memdb@flush N·1 S·379B
+09:13:08.511436 memdb@flush created L0@513 N·1 S·530B "C6f..deb,v613":"C6f..deb,v613"
+09:13:08.511474 version@stat F·[4 119] S·148KiB[2KiB 146KiB] Sc·[1.00 0.00]
+09:13:08.511846 memdb@flush committed F·1 T·962.253µs
+09:13:08.511893 journal@remove removed @508
+09:13:08.511981 table@move L0@513 -> L1
+09:13:08.512000 version@stat F·[3 120] S·148KiB[1KiB 147KiB] Sc·[0.75 0.00]
+09:13:08.512860 transaction@flush created L0@514 N·4 S·1KiB "Par..8d5,v614":"xFP..8d5,v615"
+09:13:08.512876 version@stat F·[4 120] S·149KiB[2KiB 147KiB] Sc·[1.00 0.00]
+09:13:08.513352 table@compaction L0·1 -> L1·1 S·83KiB Q·617
+09:13:08.514576 table@build created L1@515 N·484 S·82KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.514615 version@stat F·[3 120] S·149KiB[1KiB 147KiB] Sc·[0.75 0.00]
+09:13:08.514977 table@compaction committed F-1 S-504B Ke·0 D·0 T·1.598308ms
+09:13:08.515032 table@remove removed @514
+09:13:08.515088 table@remove removed @511
+09:13:08.515303 memdb@flush N·1 S·381B
+09:13:08.515795 memdb@flush created L0@517 N·1 S·531B "Cf3..deb,v618":"Cf3..deb,v618"
+09:13:08.515823 version@stat F·[4 120] S·149KiB[2KiB 147KiB] Sc·[1.00 0.00]
+09:13:08.516142 memdb@flush committed F·1 T·818.846µs
+09:13:08.516174 journal@remove removed @512
+09:13:08.516200 table@move L0@517 -> L1
+09:13:08.516217 version@stat F·[3 121] S·149KiB[1KiB 148KiB] Sc·[0.75 0.00]
+09:13:08.517044 transaction@flush created L0@518 N·4 S·1KiB "Pam..54d,v619":"xFP..54d,v620"
+09:13:08.517059 version@stat F·[4 121] S·151KiB[2KiB 148KiB] Sc·[1.00 0.00]
+09:13:08.517398 table@compaction L0·1 -> L1·1 S·83KiB Q·622
+09:13:08.518640 table@build created L1@519 N·488 S·83KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.518667 version@stat F·[3 121] S·150KiB[1KiB 149KiB] Sc·[0.75 0.00]
+09:13:08.518989 table@compaction committed F-1 S-341B Ke·0 D·0 T·1.569243ms
+09:13:08.519049 table@remove removed @518
+09:13:08.519114 table@remove removed @515
+09:13:08.519416 memdb@flush N·1 S·381B
+09:13:08.519879 memdb@flush created L0@521 N·1 S·530B "C91..deb,v623":"C91..deb,v623"
+09:13:08.519904 version@stat F·[4 121] S·151KiB[2KiB 149KiB] Sc·[1.00 0.00]
+09:13:08.520187 memdb@flush committed F·1 T·752.742µs
+09:13:08.520229 journal@remove removed @516
+09:13:08.520273 table@move L0@521 -> L1
+09:13:08.520306 version@stat F·[3 122] S·151KiB[1KiB 149KiB] Sc·[0.75 0.00]
+09:13:08.521123 transaction@flush created L0@522 N·4 S·1KiB "Par..31f,v624":"xFP..31f,v625"
+09:13:08.521135 version@stat F·[4 122] S·152KiB[2KiB 149KiB] Sc·[1.00 0.00]
+09:13:08.521534 table@compaction L0·1 -> L1·1 S·84KiB Q·627
+09:13:08.522945 table@build created L1@523 N·492 S·84KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.522972 version@stat F·[3 122] S·151KiB[1KiB 150KiB] Sc·[0.75 0.00]
+09:13:08.523314 table@compaction committed F-1 S-597B Ke·0 D·0 T·1.763688ms
+09:13:08.523369 table@remove removed @522
+09:13:08.523420 table@remove removed @519
+09:13:08.537878 memdb@flush N·1 S·381B
+09:13:08.538379 memdb@flush created L0@525 N·1 S·531B "C22..deb,v628":"C22..deb,v628"
+09:13:08.538425 version@stat F·[4 122] S·152KiB[2KiB 150KiB] Sc·[1.00 0.00]
+09:13:08.538730 memdb@flush committed F·1 T·832.341µs
+09:13:08.538771 journal@remove removed @520
+09:13:08.538794 table@move L0@525 -> L1
+09:13:08.539032 version@stat F·[3 123] S·152KiB[1KiB 150KiB] Sc·[0.75 0.00]
+09:13:08.540218 transaction@flush created L0@526 N·4 S·1KiB "Pam..1db,v629":"xFP..1db,v630"
+09:13:08.540235 version@stat F·[4 123] S·153KiB[2KiB 150KiB] Sc·[1.00 0.00]
+09:13:08.540693 table@compaction L0·1 -> L1·1 S·85KiB Q·632
+09:13:08.542121 table@build created L1@527 N·496 S·84KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.542149 version@stat F·[3 123] S·152KiB[1KiB 151KiB] Sc·[0.75 0.00]
+09:13:08.542512 table@compaction committed F-1 S-953B Ke·0 D·0 T·1.803259ms
+09:13:08.542560 table@remove removed @526
+09:13:08.542609 table@remove removed @523
+09:13:08.557700 memdb@flush N·1 S·381B
+09:13:08.558221 memdb@flush created L0@529 N·1 S·531B "C73..deb,v633":"C73..deb,v633"
+09:13:08.558270 version@stat F·[4 123] S·153KiB[2KiB 151KiB] Sc·[1.00 0.00]
+09:13:08.558624 memdb@flush committed F·1 T·886.633µs
+09:13:08.558664 journal@remove removed @524
+09:13:08.558775 table@move L0@529 -> L1
+09:13:08.558799 version@stat F·[3 124] S·153KiB[1KiB 151KiB] Sc·[0.75 0.00]
+09:13:08.559660 transaction@flush created L0@530 N·4 S·1KiB "Par..52a,v634":"xFP..52a,v635"
+09:13:08.559677 version@stat F·[4 124] S·154KiB[2KiB 151KiB] Sc·[1.00 0.00]
+09:13:08.560032 table@compaction L0·1 -> L1·1 S·85KiB Q·637
+09:13:08.561432 table@build created L1@531 N·500 S·84KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.561467 version@stat F·[3 124] S·153KiB[1KiB 152KiB] Sc·[0.75 0.00]
+09:13:08.561807 table@compaction committed F-1 S-790B Ke·0 D·0 T·1.760265ms
+09:13:08.561868 table@remove removed @530
+09:13:08.561921 table@remove removed @527
+09:13:08.571574 memdb@flush N·1 S·376B
+09:13:08.572032 memdb@flush created L0@533 N·1 S·525B "Ca4..deb,v638":"Ca4..deb,v638"
+09:13:08.572058 version@stat F·[4 124] S·154KiB[2KiB 152KiB] Sc·[1.00 0.00]
+09:13:08.572372 memdb@flush committed F·1 T·779.733µs
+09:13:08.572406 journal@remove removed @528
+09:13:08.572434 table@move L0@533 -> L1
+09:13:08.572453 version@stat F·[3 125] S·154KiB[1KiB 152KiB] Sc·[0.75 0.00]
+09:13:08.573456 transaction@flush created L0@534 N·4 S·1KiB "Pam..f81,v639":"xFP..f81,v640"
+09:13:08.573473 version@stat F·[4 125] S·155KiB[2KiB 152KiB] Sc·[1.00 0.00]
+09:13:08.573895 table@compaction L0·1 -> L1·1 S·86KiB Q·642
+09:13:08.575209 table@build created L1@535 N·504 S·85KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.575244 version@stat F·[3 125] S·155KiB[1KiB 153KiB] Sc·[0.75 0.00]
+09:13:08.575581 table@compaction committed F-1 S-188B Ke·0 D·0 T·1.669826ms
+09:13:08.575628 table@remove removed @534
+09:13:08.575679 table@remove removed @531
+09:13:08.584125 memdb@flush N·1 S·376B
+09:13:08.584570 memdb@flush created L0@537 N·1 S·531B "Cde..deb,v643":"Cde..deb,v643"
+09:13:08.584593 version@stat F·[4 125] S·155KiB[2KiB 153KiB] Sc·[1.00 0.00]
+09:13:08.584914 memdb@flush committed F·1 T·765.286µs
+09:13:08.584953 journal@remove removed @532
+09:13:08.585060 table@move L0@537 -> L1
+09:13:08.585080 version@stat F·[3 126] S·155KiB[1KiB 154KiB] Sc·[0.75 0.00]
+09:13:08.585808 transaction@flush created L0@538 N·4 S·1KiB "Par..998,v644":"xFP..998,v645"
+09:13:08.585823 version@stat F·[4 126] S·156KiB[2KiB 154KiB] Sc·[1.00 0.00]
+09:13:08.586116 table@compaction L0·1 -> L1·1 S·87KiB Q·647
+09:13:08.587384 table@build created L1@539 N·508 S·86KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.587421 version@stat F·[3 126] S·155KiB[1KiB 154KiB] Sc·[0.75 0.00]
+09:13:08.587762 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.625828ms
+09:13:08.587817 table@remove removed @538
+09:13:08.587868 table@remove removed @535
+09:13:08.587924 memdb@flush N·1 S·394B
+09:13:08.591167 memdb@flush created L0@541 N·1 S·544B "C95..deb,v648":"C95..deb,v648"
+09:13:08.591193 version@stat F·[4 126] S·156KiB[2KiB 154KiB] Sc·[1.00 0.00]
+09:13:08.591611 memdb@flush committed F·1 T·3.672428ms
+09:13:08.591645 journal@remove removed @536
+09:13:08.591750 table@move L0@541 -> L1
+09:13:08.591772 version@stat F·[3 127] S·156KiB[1KiB 154KiB] Sc·[0.75 0.00]
+09:13:08.592722 transaction@flush created L0@542 N·4 S·1KiB "Pal..4ff,v649":"xFP..4ff,v650"
+09:13:08.592741 version@stat F·[4 127] S·157KiB[2KiB 154KiB] Sc·[1.00 0.00]
+09:13:08.593128 table@compaction L0·1 -> L1·1 S·87KiB Q·652
+09:13:08.594542 table@build created L1@543 N·512 S·86KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.594573 version@stat F·[3 127] S·156KiB[1KiB 154KiB] Sc·[0.75 0.00]
+09:13:08.594908 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.76372ms
+09:13:08.594959 table@remove removed @542
+09:13:08.595010 table@remove removed @539
+09:13:08.600934 memdb@flush N·1 S·379B
+09:13:08.601428 memdb@flush created L0@545 N·1 S·530B "C5c..deb,v653":"C5c..deb,v653"
+09:13:08.601450 version@stat F·[4 127] S·157KiB[2KiB 154KiB] Sc·[1.00 0.00]
+09:13:08.601761 memdb@flush committed F·1 T·802.765µs
+09:13:08.601801 journal@remove removed @540
+09:13:08.602009 table@move L0@545 -> L1
+09:13:08.602139 version@stat F·[3 128] S·157KiB[1KiB 155KiB] Sc·[0.75 0.00]
+09:13:08.603231 transaction@flush created L0@546 N·4 S·1KiB "Pam..6e2,v654":"xFP..6e2,v655"
+09:13:08.603272 version@stat F·[4 128] S·158KiB[2KiB 155KiB] Sc·[1.00 0.00]
+09:13:08.603594 table@compaction L0·1 -> L1·1 S·87KiB Q·657
+09:13:08.604915 table@build created L1@547 N·516 S·87KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.604956 version@stat F·[3 128] S·158KiB[1KiB 156KiB] Sc·[0.75 0.00]
+09:13:08.605338 table@compaction committed F-1 S-5B Ke·0 D·0 T·1.726939ms
+09:13:08.605403 table@remove removed @546
+09:13:08.605470 table@remove removed @543
+09:13:08.610698 memdb@flush N·1 S·379B
+09:13:08.611223 memdb@flush created L0@549 N·1 S·530B "C4a..deb,v658":"C4a..deb,v658"
+09:13:08.611270 version@stat F·[4 128] S·158KiB[2KiB 156KiB] Sc·[1.00 0.00]
+09:13:08.611623 memdb@flush committed F·1 T·901.902µs
+09:13:08.611661 journal@remove removed @544
+09:13:08.611777 table@move L0@549 -> L1
+09:13:08.611798 version@stat F·[3 129] S·158KiB[1KiB 157KiB] Sc·[0.75 0.00]
+09:13:08.612541 transaction@flush created L0@550 N·4 S·1KiB "Par..fa0,v659":"xFP..fa0,v660"
+09:13:08.612556 version@stat F·[4 129] S·160KiB[2KiB 157KiB] Sc·[1.00 0.00]
+09:13:08.612898 table@compaction L0·1 -> L1·1 S·88KiB Q·662
+09:13:08.614221 table@build created L1@551 N·520 S·87KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.614275 version@stat F·[3 129] S·159KiB[1KiB 157KiB] Sc·[0.75 0.00]
+09:13:08.614595 table@compaction committed F-1 S-991B Ke·0 D·0 T·1.659575ms
+09:13:08.614649 table@remove removed @550
+09:13:08.614699 table@remove removed @547
+09:13:08.649762 memdb@flush N·1 S·379B
+09:13:08.650253 memdb@flush created L0@553 N·1 S·536B "Ccb..deb,v663":"Ccb..deb,v663"
+09:13:08.650287 version@stat F·[4 129] S·159KiB[2KiB 157KiB] Sc·[1.00 0.00]
+09:13:08.651532 memdb@flush committed F·1 T·1.739423ms
+09:13:08.651575 journal@remove removed @548
+09:13:08.651603 table@move L0@553 -> L1
+09:13:08.651623 version@stat F·[3 130] S·159KiB[1KiB 158KiB] Sc·[0.75 0.00]
+09:13:08.652669 transaction@flush created L0@554 N·4 S·1KiB "Pam..dc3,v664":"xFP..dc3,v665"
+09:13:08.652685 version@stat F·[4 130] S·160KiB[2KiB 158KiB] Sc·[1.00 0.00]
+09:13:08.653029 table@compaction L0·1 -> L1·1 S·89KiB Q·667
+09:13:08.654412 table@build created L1@555 N·524 S·88KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.654439 version@stat F·[3 130] S·160KiB[1KiB 158KiB] Sc·[0.75 0.00]
+09:13:08.654835 table@compaction committed F-1 S-472B Ke·0 D·0 T·1.788664ms
+09:13:08.654891 table@remove removed @554
+09:13:08.654945 table@remove removed @551
+09:13:08.685878 memdb@flush N·1 S·379B
+09:13:08.686490 memdb@flush created L0@557 N·1 S·531B "C4e..deb,v668":"C4e..deb,v668"
+09:13:08.686539 version@stat F·[4 130] S·160KiB[2KiB 158KiB] Sc·[1.00 0.00]
+09:13:08.686870 memdb@flush committed F·1 T·974.179µs
+09:13:08.686914 journal@remove removed @552
+09:13:08.686949 table@move L0@557 -> L1
+09:13:08.686968 version@stat F·[3 131] S·160KiB[1KiB 159KiB] Sc·[0.75 0.00]
+09:13:08.687775 transaction@flush created L0@558 N·4 S·1KiB "Par..8fb,v669":"xFP..8fb,v670"
+09:13:08.687796 version@stat F·[4 131] S·162KiB[2KiB 159KiB] Sc·[1.00 0.00]
+09:13:08.688156 table@compaction L0·1 -> L1·1 S·89KiB Q·672
+09:13:08.689581 table@build created L1@559 N·528 S·89KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.689625 version@stat F·[3 131] S·161KiB[1KiB 159KiB] Sc·[0.75 0.00]
+09:13:08.690089 table@compaction committed F-1 S-719B Ke·0 D·0 T·1.91277ms
+09:13:08.690148 table@remove removed @558
+09:13:08.690218 table@remove removed @555
+09:13:08.717710 memdb@flush N·1 S·381B
+09:13:08.718364 memdb@flush created L0@561 N·1 S·531B "C86..deb,v673":"C86..deb,v673"
+09:13:08.718387 version@stat F·[4 131] S·162KiB[2KiB 159KiB] Sc·[1.00 0.00]
+09:13:08.718753 memdb@flush committed F·1 T·1.024893ms
+09:13:08.718797 journal@remove removed @556
+09:13:08.718825 table@move L0@561 -> L1
+09:13:08.718845 version@stat F·[3 132] S·162KiB[1KiB 160KiB] Sc·[0.75 0.00]
+09:13:08.719618 transaction@flush created L0@562 N·4 S·1KiB "Pam..1b1,v674":"xFP..1b1,v675"
+09:13:08.719634 version@stat F·[4 132] S·163KiB[2KiB 160KiB] Sc·[1.00 0.00]
+09:13:08.719964 table@compaction L0·1 -> L1·1 S·90KiB Q·677
+09:13:08.721390 table@build created L1@563 N·532 S·89KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.721419 version@stat F·[3 132] S·162KiB[1KiB 161KiB] Sc·[0.75 0.00]
+09:13:08.721757 table@compaction committed F-1 S-578B Ke·0 D·0 T·1.775992ms
+09:13:08.721818 table@remove removed @562
+09:13:08.721887 table@remove removed @559
+09:13:08.745546 memdb@flush N·1 S·381B
+09:13:08.746160 memdb@flush created L0@565 N·1 S·537B "Ca5..deb,v678":"Ca5..deb,v678"
+09:13:08.746179 version@stat F·[4 132] S·163KiB[2KiB 161KiB] Sc·[1.00 0.00]
+09:13:08.746534 memdb@flush committed F·1 T·968.987µs
+09:13:08.746578 journal@remove removed @560
+09:13:08.746606 table@move L0@565 -> L1
+09:13:08.746628 version@stat F·[3 133] S·163KiB[1KiB 161KiB] Sc·[0.75 0.00]
+09:13:08.747543 transaction@flush created L0@566 N·4 S·1KiB "Par..cbb,v679":"xFP..cbb,v680"
+09:13:08.747559 version@stat F·[4 133] S·164KiB[2KiB 161KiB] Sc·[1.00 0.00]
+09:13:08.747877 table@compaction L0·1 -> L1·1 S·90KiB Q·682
+09:13:08.749297 table@build created L1@567 N·536 S·90KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.749325 version@stat F·[3 133] S·163KiB[1KiB 162KiB] Sc·[0.75 0.00]
+09:13:08.749671 table@compaction committed F-1 S-431B Ke·0 D·0 T·1.77688ms
+09:13:08.749724 table@remove removed @566
+09:13:08.749782 table@remove removed @563
+09:13:08.820992 memdb@flush N·1 S·378B
+09:13:08.821622 memdb@flush created L0@569 N·1 S·531B "C37..deb,v683":"C37..deb,v683"
+09:13:08.821661 version@stat F·[4 133] S·164KiB[2KiB 162KiB] Sc·[1.00 0.00]
+09:13:08.822023 memdb@flush committed F·1 T·1.009122ms
+09:13:08.822071 journal@remove removed @564
+09:13:08.822101 table@move L0@569 -> L1
+09:13:08.822402 version@stat F·[3 134] S·164KiB[1KiB 162KiB] Sc·[0.75 0.00]
+09:13:08.823498 transaction@flush created L0@570 N·4 S·1KiB "Pam..91e,v684":"xFP..91e,v685"
+09:13:08.823519 version@stat F·[4 134] S·165KiB[2KiB 162KiB] Sc·[1.00 0.00]
+09:13:08.823991 table@compaction L0·1 -> L1·1 S·91KiB Q·687
+09:13:08.825396 table@build created L1@571 N·540 S·90KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.825435 version@stat F·[3 134] S·164KiB[1KiB 163KiB] Sc·[0.75 0.00]
+09:13:08.825792 table@compaction committed F-1 S-937B Ke·0 D·0 T·1.764157ms
+09:13:08.825849 table@remove removed @570
+09:13:08.825917 table@remove removed @567
+09:13:08.891254 memdb@flush N·1 S·378B
+09:13:08.891921 memdb@flush created L0@573 N·1 S·531B "C29..deb,v688":"C29..deb,v688"
+09:13:08.891959 version@stat F·[4 134] S·165KiB[2KiB 163KiB] Sc·[1.00 0.00]
+09:13:08.892353 memdb@flush committed F·1 T·1.067966ms
+09:13:08.892413 journal@remove removed @568
+09:13:08.892459 table@move L0@573 -> L1
+09:13:08.892484 version@stat F·[3 135] S·165KiB[1KiB 163KiB] Sc·[0.75 0.00]
+09:13:08.893306 transaction@flush created L0@574 N·4 S·1KiB "Par..ac8,v689":"xFP..ac8,v690"
+09:13:08.893323 version@stat F·[4 135] S·166KiB[2KiB 163KiB] Sc·[1.00 0.00]
+09:13:08.893668 table@compaction L0·1 -> L1·1 S·92KiB Q·692
+09:13:08.895001 table@build created L1@575 N·544 S·90KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.895043 version@stat F·[3 135] S·165KiB[1KiB 163KiB] Sc·[0.75 0.00]
+09:13:08.895530 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.84358ms
+09:13:08.895595 table@remove removed @574
+09:13:08.895666 table@remove removed @571
+09:13:08.932836 memdb@flush N·1 S·377B
+09:13:08.933470 memdb@flush created L0@577 N·1 S·525B "C16..deb,v693":"C16..deb,v693"
+09:13:08.933491 version@stat F·[4 135] S·165KiB[2KiB 163KiB] Sc·[1.00 0.00]
+09:13:08.933868 memdb@flush committed F·1 T·1.014583ms
+09:13:08.933913 journal@remove removed @572
+09:13:08.933948 table@move L0@577 -> L1
+09:13:08.933971 version@stat F·[3 136] S·165KiB[1KiB 164KiB] Sc·[0.75 0.00]
+09:13:08.934905 transaction@flush created L0@578 N·4 S·1KiB "Pam..ba7,v694":"xFP..ba7,v695"
+09:13:08.934920 version@stat F·[4 136] S·167KiB[2KiB 164KiB] Sc·[1.00 0.00]
+09:13:08.935313 table@compaction L0·1 -> L1·1 S·92KiB Q·697
+09:13:08.936709 table@build created L1@579 N·548 S·91KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.936738 version@stat F·[3 136] S·166KiB[1KiB 165KiB] Sc·[0.75 0.00]
+09:13:08.937092 table@compaction committed F-1 S-172B Ke·0 D·0 T·1.760319ms
+09:13:08.937162 table@remove removed @578
+09:13:08.937267 table@remove removed @575
+09:13:08.970451 memdb@flush N·1 S·377B
+09:13:08.971179 memdb@flush created L0@581 N·1 S·525B "C88..deb,v698":"C88..deb,v698"
+09:13:08.971207 version@stat F·[4 136] S·167KiB[2KiB 165KiB] Sc·[1.00 0.00]
+09:13:08.971612 memdb@flush committed F·1 T·1.13692ms
+09:13:08.971655 journal@remove removed @576
+09:13:08.971680 table@move L0@581 -> L1
+09:13:08.971702 version@stat F·[3 137] S·167KiB[1KiB 165KiB] Sc·[0.75 0.00]
+09:13:08.972510 transaction@flush created L0@582 N·4 S·1KiB "Par..5d5,v699":"xFP..5d5,v700"
+09:13:08.972526 version@stat F·[4 137] S·168KiB[2KiB 165KiB] Sc·[1.00 0.00]
+09:13:08.972878 table@compaction L0·1 -> L1·1 S·93KiB Q·702
+09:13:08.974210 table@build created L1@583 N·552 S·91KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.974262 version@stat F·[3 137] S·166KiB[1KiB 165KiB] Sc·[0.75 0.00]
+09:13:08.974628 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.732988ms
+09:13:08.974681 table@remove removed @582
+09:13:08.974743 table@remove removed @579
+09:13:08.992393 memdb@flush N·1 S·380B
+09:13:08.992940 memdb@flush created L0@585 N·1 S·537B "C99..deb,v703":"C99..deb,v703"
+09:13:08.992971 version@stat F·[4 137] S·167KiB[2KiB 165KiB] Sc·[1.00 0.00]
+09:13:08.993321 memdb@flush committed F·1 T·908.928µs
+09:13:08.993364 journal@remove removed @580
+09:13:08.993391 table@move L0@585 -> L1
+09:13:08.993414 version@stat F·[3 138] S·167KiB[1KiB 165KiB] Sc·[0.75 0.00]
+09:13:08.994327 transaction@flush created L0@586 N·4 S·1KiB "Pam..642,v704":"xFP..642,v705"
+09:13:08.994344 version@stat F·[4 138] S·168KiB[2KiB 165KiB] Sc·[1.00 0.00]
+09:13:08.994680 table@compaction L0·1 -> L1·1 S·92KiB Q·707
+09:13:08.996083 table@build created L1@587 N·556 S·93KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:08.996140 version@stat F·[3 138] S·169KiB[1KiB 167KiB] Sc·[0.75 0.00]
+09:13:08.996501 table@compaction committed F-1 S+513B Ke·0 D·0 T·1.802338ms
+09:13:08.996565 table@remove removed @586
+09:13:08.996633 table@remove removed @583
+09:13:09.011839 memdb@flush N·1 S·380B
+09:13:09.012394 memdb@flush created L0@589 N·1 S·531B "Cb9..deb,v708":"Cb9..deb,v708"
+09:13:09.012418 version@stat F·[4 138] S·169KiB[2KiB 167KiB] Sc·[1.00 0.00]
+09:13:09.012772 memdb@flush committed F·1 T·910.698µs
+09:13:09.012810 journal@remove removed @584
+09:13:09.012922 table@move L0@589 -> L1
+09:13:09.012942 version@stat F·[3 139] S·169KiB[1KiB 168KiB] Sc·[0.75 0.00]
+09:13:09.014033 transaction@flush created L0@590 N·4 S·1KiB "Par..874,v709":"xFP..874,v710"
+09:13:09.014048 version@stat F·[4 139] S·170KiB[2KiB 168KiB] Sc·[1.00 0.00]
+09:13:09.014457 table@compaction L0·1 -> L1·1 S·94KiB Q·712
+09:13:09.015849 table@build created L1@591 N·560 S·93KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:09.015889 version@stat F·[3 139] S·170KiB[1KiB 168KiB] Sc·[0.75 0.00]
+09:13:09.016232 table@compaction committed F-1 S-909B Ke·0 D·0 T·1.750276ms
+09:13:09.016301 table@remove removed @590
+09:13:09.016373 table@remove removed @587
+09:13:09.027617 memdb@flush N·1 S·377B
+09:13:09.028087 memdb@flush created L0@593 N·1 S·531B "Cf6..deb,v713":"Cf6..deb,v713"
+09:13:09.028111 version@stat F·[4 139] S·170KiB[2KiB 168KiB] Sc·[1.00 0.00]
+09:13:09.028438 memdb@flush committed F·1 T·801.976µs
+09:13:09.028479 journal@remove removed @588
+09:13:09.028505 table@move L0@593 -> L1
+09:13:09.028724 version@stat F·[3 140] S·170KiB[1KiB 168KiB] Sc·[0.75 0.00]
+09:13:09.029716 transaction@flush created L0@594 N·4 S·1KiB "Pam..022,v714":"xFP..022,v715"
+09:13:09.029737 version@stat F·[4 140] S·171KiB[2KiB 168KiB] Sc·[1.00 0.00]
+09:13:09.032174 table@compaction L0·1 -> L1·1 S·94KiB Q·717
+09:13:09.033640 table@build created L1@595 N·564 S·93KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:09.033681 version@stat F·[3 140] S·170KiB[1KiB 169KiB] Sc·[0.75 0.00]
+09:13:09.034035 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·1.830233ms
+09:13:09.034092 table@remove removed @594
+09:13:09.034156 table@remove removed @591
+09:13:09.044006 memdb@flush N·1 S·377B
+09:13:09.044559 memdb@flush created L0@597 N·1 S·525B "C14..deb,v718":"C14..deb,v718"
+09:13:09.044588 version@stat F·[4 140] S·171KiB[2KiB 169KiB] Sc·[1.00 0.00]
+09:13:09.044892 memdb@flush committed F·1 T·866.675µs
+09:13:09.044923 journal@remove removed @592
+09:13:09.044955 table@move L0@597 -> L1
+09:13:09.044975 version@stat F·[3 141] S·171KiB[1KiB 169KiB] Sc·[0.75 0.00]
+09:13:09.046418 transaction@flush created L0@598 N·4 S·1KiB "Par..ab6,v719":"xFP..ab6,v720"
+09:13:09.046434 version@stat F·[4 141] S·172KiB[2KiB 169KiB] Sc·[1.00 0.00]
+09:13:09.046777 table@compaction L0·1 -> L1·1 S·94KiB Q·722
+09:13:09.048450 table@build created L1@599 N·568 S·94KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:09.048479 version@stat F·[3 141] S·171KiB[1KiB 170KiB] Sc·[0.75 0.00]
+09:13:09.049027 table@compaction committed F-1 S-671B Ke·0 D·0 T·2.2348ms
+09:13:09.049073 table@remove removed @598
+09:13:09.049125 table@remove removed @595
+09:13:09.096464 memdb@flush N·1 S·377B
+09:13:09.097028 memdb@flush created L0@601 N·1 S·531B "C91..deb,v723":"C91..deb,v723"
+09:13:09.097058 version@stat F·[4 141] S·172KiB[2KiB 170KiB] Sc·[1.00 0.00]
+09:13:09.097381 memdb@flush committed F·1 T·894.258µs
+09:13:09.097430 journal@remove removed @596
+09:13:09.097463 table@move L0@601 -> L1
+09:13:09.097496 version@stat F·[3 142] S·172KiB[1KiB 170KiB] Sc·[0.75 0.00]
+09:13:09.098290 transaction@flush created L0@602 N·4 S·1KiB "Pam..a40,v724":"xFP..a40,v725"
+09:13:09.098307 version@stat F·[4 142] S·173KiB[2KiB 170KiB] Sc·[1.00 0.00]
+09:13:09.098795 table@compaction L0·1 -> L1·1 S·95KiB Q·727
+09:13:09.100349 table@build created L1@603 N·572 S·94KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:09.100387 version@stat F·[3 142] S·172KiB[1KiB 171KiB] Sc·[0.75 0.00]
+09:13:09.100746 table@compaction committed F-1 S-937B Ke·0 D·0 T·1.927774ms
+09:13:09.100795 table@remove removed @602
+09:13:09.100849 table@remove removed @599
+09:13:09.142729 memdb@flush N·1 S·377B
+09:13:09.143455 memdb@flush created L0@605 N·1 S·525B "C2a..deb,v728":"C2a..deb,v728"
+09:13:09.143489 version@stat F·[4 142] S·173KiB[2KiB 171KiB] Sc·[1.00 0.00]
+09:13:09.143853 memdb@flush committed F·1 T·1.099161ms
+09:13:09.143898 journal@remove removed @600
+09:13:09.143926 table@move L0@605 -> L1
+09:13:09.143946 version@stat F·[3 143] S·173KiB[1KiB 171KiB] Sc·[0.75 0.00]
+09:13:09.144877 transaction@flush created L0@606 N·4 S·1KiB "Par..d72,v729":"xFP..d72,v730"
+09:13:09.144894 version@stat F·[4 143] S·174KiB[2KiB 171KiB] Sc·[1.00 0.00]
+09:13:09.145237 table@compaction L0·1 -> L1·1 S·95KiB Q·732
+09:13:09.145388 db@close closing
+09:13:09.146598 table@build created L1@607 N·576 S·97KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:09.146607 table@build exiting
+09:13:09.146611 table@build revert @607
+09:13:09.146754 db@close done T·1.365257ms
+=============== Aug 23, 2026 (UTC) ===============
+09:13:09.164136 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:09.164574 version@stat F·[4 143] S·174KiB[2KiB 171KiB] Sc·[1.00 0.00]
+09:13:09.164595 db@open opening
+09:13:09.164834 journal@recovery F·1
+09:13:09.164872 journal@recovery recovering @604
+09:13:09.165609 memdb@flush created L0@607 N·2 S·1KiB "Ed6..441,v734":"Ld6..441,v733"
+09:13:09.166055 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.168127 db@janitor F·151 G·1
+09:13:09.168137 db@janitor removing table-411
+09:13:09.168184 db@open done T·3.585578ms
+09:13:09.168261 table@compaction L0·1 -> L1·1 S·4KiB Q·735
+09:13:09.168460 db@close closing
+09:13:09.168531 db@close done T·69.588µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:09.184722 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:09.185052 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.185071 db@open opening
+09:13:09.185313 journal@recovery F·1
+09:13:09.185363 journal@recovery recovering @608
+09:13:09.186166 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.188676 db@janitor F·150 G·0
+09:13:09.188695 db@open done T·3.61858ms
+09:13:09.188757 table@compaction L0·1 -> L1·1 S·4KiB Q·735
+09:13:09.189514 db@close closing
+09:13:09.189673 table@build created L1@612 N·6 S·4KiB "E0a..004,v244":"Lde..d92,v488"
+09:13:09.189679 table@build exiting
+09:13:09.189682 table@build revert @612
+09:13:09.189817 db@close done T·301.606µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:09.208028 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:09.208380 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.208408 db@open opening
+09:13:09.208654 journal@recovery F·1
+09:13:09.208696 journal@recovery recovering @610
+09:13:09.209022 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.211405 db@janitor F·150 G·0
+09:13:09.211433 db@open done T·3.008123ms
+09:13:09.211673 db@close closing
+09:13:09.211489 table@compaction L0·1 -> L1·1 S·4KiB Q·735
+09:13:09.211692 table@build exiting
+09:13:09.211737 db@close done T·63.058µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:09.228187 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:09.228566 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.228589 db@open opening
+09:13:09.228845 journal@recovery F·1
+09:13:09.228893 journal@recovery recovering @612
+09:13:09.229348 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.231856 db@janitor F·150 G·0
+09:13:09.231891 db@open done T·3.28512ms
+09:13:09.231961 table@compaction L0·1 -> L1·1 S·4KiB Q·735
+09:13:09.232688 db@close closing
+09:13:09.233052 table@build created L1@616 N·6 S·4KiB "E0a..004,v244":"Lde..d92,v488"
+09:13:09.233061 table@build exiting
+09:13:09.233065 table@build revert @616
+09:13:09.233176 db@close done T·486.874µs
+=============== Aug 23, 2026 (UTC) ===============
+09:13:09.250954 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:09.251328 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.251353 db@open opening
+09:13:09.251605 journal@recovery F·1
+09:13:09.251659 journal@recovery recovering @614
+09:13:09.251822 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.255310 db@janitor F·150 G·0
+09:13:09.255338 db@open done T·3.970798ms
+09:13:09.255403 table@compaction L0·1 -> L1·1 S·4KiB Q·735
+09:13:09.256171 db@close closing
+09:13:09.257145 table@build created L1@618 N·6 S·4KiB "E0a..004,v244":"Lde..d92,v488"
+09:13:09.257158 table@build exiting
+09:13:09.257162 table@build revert @618
+09:13:09.257292 db@close done T·1.11982ms
+=============== Aug 23, 2026 (UTC) ===============
+09:13:09.273720 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:13:09.274060 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.274079 db@open opening
+09:13:09.274304 journal@recovery F·1
+09:13:09.274342 journal@recovery recovering @616
+09:13:09.274453 version@stat F·[5 143] S·176KiB[4KiB 171KiB] Sc·[1.25 0.00]
+09:13:09.277138 db@janitor F·150 G·0
+09:13:09.277172 db@open done T·3.077333ms
+09:13:09.277257 table@compaction L0·1 -> L1·1 S·4KiB Q·735
+09:13:09.278078 table@build created L1@620 N·6 S·4KiB "E0a..004,v244":"Lde..d92,v488"
+09:13:09.278110 version@stat F·[4 143] S·175KiB[2KiB 173KiB] Sc·[1.00 0.00]
+09:13:09.278463 table@compaction committed F-1 S-283B Ke·0 D·1 T·1.180685ms
+09:13:09.278480 table@compaction L0·1 -> L1·1 S·95KiB Q·735
+09:13:09.278757 table@remove removed @607
+09:13:09.278808 table@remove removed @414
+09:13:09.280097 table@build created L1@621 N·576 S·97KiB "Pal..b79,v524":"xFP..0fd,v485"
+09:13:09.280134 version@stat F·[3 143] S·177KiB[1KiB 175KiB] Sc·[0.75 0.00]
+09:13:09.280468 table@compaction committed F-1 S+1KiB Ke·0 D·0 T·1.971458ms
+09:13:09.280528 table@remove removed @606
+09:13:09.280600 table@remove removed @603
+09:14:17.899688 db@close closing
+09:14:17.899791 db@close done T·102.663µs
+=============== Aug 23, 2026 (UTC) ===============
+09:14:17.917964 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:14:17.918326 version@stat F·[3 143] S·177KiB[1KiB 175KiB] Sc·[0.75 0.00]
+09:14:17.918350 db@open opening
+09:14:17.918562 journal@recovery F·1
+09:14:17.918605 journal@recovery recovering @618
+09:14:17.919583 memdb@flush created L0@622 N·50 S·7KiB "E2e..ain,v785":"xCP..e96,v783"
+09:14:17.920052 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.922461 db@janitor F·149 G·0
+09:14:17.922510 db@open done T·4.14812ms
+09:14:17.922695 table@compaction L0·1 -> L1·2 S·109KiB Q·786
+09:14:17.922771 db@close closing
+09:14:17.924581 table@build created L1@625 N·632 S·106KiB "E0a..004,v244":"xFP..0fd,v485"
+09:14:17.924596 table@build exiting
+09:14:17.924603 table@build revert @625
+09:14:17.924763 db@close done T·1.989742ms
+=============== Aug 23, 2026 (UTC) ===============
+09:14:17.941095 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:14:17.941481 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.941505 db@open opening
+09:14:17.941771 journal@recovery F·1
+09:14:17.941824 journal@recovery recovering @623
+09:14:17.942209 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.944709 db@janitor F·149 G·0
+09:14:17.944737 db@open done T·3.210424ms
+09:14:17.944789 table@compaction L0·1 -> L1·2 S·109KiB Q·786
+09:14:17.945635 db@close closing
+09:14:17.946666 table@build created L1@627 N·632 S·106KiB "E0a..004,v244":"xFP..0fd,v485"
+09:14:17.946677 table@build exiting
+09:14:17.946682 table@build revert @627
+09:14:17.946806 db@close done T·1.169523ms
+=============== Aug 23, 2026 (UTC) ===============
+09:14:17.964394 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:14:17.964732 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.964760 db@open opening
+09:14:17.964999 journal@recovery F·1
+09:14:17.965041 journal@recovery recovering @625
+09:14:17.965357 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.967712 db@janitor F·149 G·0
+09:14:17.967748 db@open done T·2.965856ms
+09:14:17.967799 table@compaction L0·1 -> L1·2 S·109KiB Q·786
+09:14:17.968096 db@close closing
+09:14:17.969494 table@build created L1@629 N·632 S·106KiB "E0a..004,v244":"xFP..0fd,v485"
+09:14:17.969513 table@build exiting
+09:14:17.969520 table@build revert @629
+09:14:17.969672 db@close done T·1.574833ms
+=============== Aug 23, 2026 (UTC) ===============
+09:14:17.984884 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:14:17.985223 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.985271 db@open opening
+09:14:17.985529 journal@recovery F·1
+09:14:17.985759 journal@recovery recovering @627
+09:14:17.986398 version@stat F·[4 143] S·185KiB[9KiB 175KiB] Sc·[1.00 0.00]
+09:14:17.988681 db@janitor F·149 G·0
+09:14:17.988716 db@open done T·3.421674ms
+09:14:17.988768 table@compaction L0·1 -> L1·2 S·109KiB Q·786
+09:14:17.990563 table@build created L1@631 N·632 S·106KiB "E0a..004,v244":"xFP..0fd,v485"
+09:14:17.990605 version@stat F·[3 142] S·181KiB[1KiB 180KiB] Sc·[0.75 0.00]
+09:14:17.990939 table@compaction committed F-2 S-3KiB Ke·0 D·0 T·2.120861ms
+09:14:17.991012 table@remove removed @622
+09:14:17.991052 table@remove removed @620
+09:14:17.991108 table@remove removed @621
+09:15:24.096915 db@close closing
+09:15:24.097028 db@close done T·111.82µs
+=============== Aug 23, 2026 (UTC) ===============
+09:15:24.113937 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:15:24.114284 version@stat F·[3 142] S·181KiB[1KiB 180KiB] Sc·[0.75 0.00]
+09:15:24.114307 db@open opening
+09:15:24.114527 journal@recovery F·1
+09:15:24.114566 journal@recovery recovering @629
+09:15:24.115481 memdb@flush created L0@632 N·50 S·7KiB "E16..ain,v836":"xCP..0fd,v834"
+09:15:24.115913 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.118028 db@janitor F·148 G·0
+09:15:24.118056 db@open done T·3.726949ms
+09:15:24.118103 table@compaction L0·1 -> L1·1 S·114KiB Q·837
+09:15:24.118754 db@close closing
+09:15:24.119755 table@build created L1@635 N·682 S·112KiB "E0a..004,v244":"xFP..0fd,v485"
+09:15:24.119771 table@build exiting
+09:15:24.119779 table@build revert @635
+09:15:24.119931 db@close done T·1.175334ms
+=============== Aug 23, 2026 (UTC) ===============
+09:15:24.135780 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:15:24.136089 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.136110 db@open opening
+09:15:24.136345 journal@recovery F·1
+09:15:24.136389 journal@recovery recovering @633
+09:15:24.136976 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.142355 db@janitor F·148 G·0
+09:15:24.142402 db@open done T·6.273949ms
+09:15:24.142453 table@compaction L0·1 -> L1·1 S·114KiB Q·837
+09:15:24.143295 db@close closing
+09:15:24.144390 table@build created L1@637 N·682 S·112KiB "E0a..004,v244":"xFP..0fd,v485"
+09:15:24.144405 table@build exiting
+09:15:24.144411 table@build revert @637
+09:15:24.144534 db@close done T·1.237391ms
+=============== Aug 23, 2026 (UTC) ===============
+09:15:24.161625 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:15:24.161952 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.161973 db@open opening
+09:15:24.162186 journal@recovery F·1
+09:15:24.162225 journal@recovery recovering @635
+09:15:24.162840 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.165373 db@janitor F·148 G·0
+09:15:24.165402 db@open done T·3.413892ms
+09:15:24.165475 table@compaction L0·1 -> L1·1 S·114KiB Q·837
+09:15:24.165726 db@close closing
+09:15:24.167402 table@build created L1@639 N·682 S·112KiB "E0a..004,v244":"xFP..0fd,v485"
+09:15:24.167417 table@build exiting
+09:15:24.167422 table@build revert @639
+09:15:24.167546 db@close done T·1.819042ms
+=============== Aug 23, 2026 (UTC) ===============
+09:15:24.182517 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:15:24.182843 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.182872 db@open opening
+09:15:24.183097 journal@recovery F·1
+09:15:24.183198 journal@recovery recovering @637
+09:15:24.184134 version@stat F·[4 142] S·189KiB[9KiB 180KiB] Sc·[1.00 0.00]
+09:15:24.186105 db@janitor F·148 G·0
+09:15:24.186130 db@open done T·3.236443ms
+09:15:24.186213 table@compaction L0·1 -> L1·1 S·114KiB Q·837
+09:15:24.188048 table@build created L1@641 N·682 S·112KiB "E0a..004,v244":"xFP..0fd,v485"
+09:15:24.188085 version@stat F·[3 142] S·187KiB[1KiB 186KiB] Sc·[0.75 0.00]
+09:15:24.188411 table@compaction committed F-1 S-1KiB Ke·0 D·0 T·2.179717ms
+09:15:24.188496 table@remove removed @632
+09:15:24.188567 table@remove removed @631
+09:16:32.123418 db@close closing
+09:16:32.123538 db@close done T·119.143µs
