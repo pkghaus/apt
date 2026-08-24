@@ -3,7 +3,12 @@
 # Commit a working tree to a branch through GitHub's API, so the commit is
 # signed.
 #
-#   commit-branch.sh <workdir> <branch> <message>
+#   commit-branch.sh <workdir> <branch> <message> [pathspec ...]
+#
+# A pathspec limits the commit to part of the tree. Without one the whole
+# working tree is committed, which is what a state branch wants; with one, only
+# what a build step is supposed to have produced, so a stray file written
+# elsewhere cannot ride along unnoticed.
 #
 # A `git commit` in CI is unsigned unless a private key sits on the runner,
 # which is not a trade worth making for a state branch. createCommitOnBranch
@@ -25,7 +30,9 @@ set -euo pipefail
 
 WORKDIR="${1:?usage: commit-branch.sh <workdir> <branch> <message>}"
 BRANCH="${2:?usage: commit-branch.sh <workdir> <branch> <message>}"
-MESSAGE="${3:?usage: commit-branch.sh <workdir> <branch> <message>}"
+MESSAGE="${3:?usage: commit-branch.sh <workdir> <branch> <message> [pathspec ...]}"
+shift 3
+PATHSPEC=("$@")
 
 : "${GITHUB_TOKEN:?a token with contents:write}"
 : "${GITHUB_REPOSITORY:?owner/repo}"
@@ -47,9 +54,13 @@ if ! git rev-parse --git-dir >/dev/null 2>&1; then
     exit 1
 fi
 
-# Stage everything so git decides what changed, not a directory walk.
-git add -A
-if git diff --cached --quiet HEAD 2>/dev/null; then
+# Stage so git decides what changed, not a directory walk.
+if [ "${#PATHSPEC[@]}" -gt 0 ]; then
+    git add -A -- "${PATHSPEC[@]}"
+else
+    git add -A
+fi
+if git diff --cached --quiet HEAD -- "${PATHSPEC[@]}" 2>/dev/null; then
     log "nothing changed on $BRANCH"
     exit 0
 fi
@@ -69,7 +80,7 @@ trap 'rm -f "$payload" "$response"' EXIT
 # The Python below is quoted so the shell leaves it alone; it reads what it
 # needs from the environment.
 # shellcheck disable=SC2016
-git diff --cached -z --no-renames --name-status HEAD | python3 -c '
+git diff --cached -z --no-renames --name-status HEAD -- "${PATHSPEC[@]}" | python3 -c '
 import base64, json, os, sys
 
 raw = sys.stdin.buffer.read().split(b"\0")

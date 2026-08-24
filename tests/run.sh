@@ -223,6 +223,41 @@ print(a['change.txt'].strip())")
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+echo "a pathspec keeps everything outside it out of the commit"
+(
+    work="$(mktemp -d)"; export GITHUB_TOKEN=fake GITHUB_REPOSITORY=pkghaus/brand
+    repo="$work/repo"; mkdir -p "$repo/png" "$repo/src"; cd "$repo"
+    git init -q -b master .
+    printf 'svg\n' > src/mark.svg; printf 'old\n' > png/mark-16.png
+    git add -A; git -c user.name=t -c user.email=t@example.invalid commit -qm base
+    # A build touches png/, and something strays outside it.
+    printf 'new\n' > png/mark-16.png
+    printf 'regenerated\n' > png/mark-32.png
+    printf 'STRAY\n' > oops.txt
+    printf 'edited\n' > src/mark.svg
+
+    mkdir -p "$work/bin"
+    cat > "$work/bin/curl" <<FAKE
+#!/bin/sh
+prev=""
+for a in "\$@"; do
+  case "\$prev" in --data) cp "\${a#@}" "$work/payload.json" ;; esac
+  prev="\$a"
+done
+echo '{"data":{"createCommitOnBranch":{"commit":{"oid":"cafebabecafebabe","signature":{"isValid":true,"state":"VALID"}}}}}'
+FAKE
+    chmod +x "$work/bin/curl"
+    PATH="$work/bin:$PATH" "$ROOT/scripts/commit-branch.sh" "$repo" master "cuts" png/ >/dev/null 2>&1 || true
+
+    if [ ! -f "$work/payload.json" ]; then
+        no "a pathspec-scoped commit is built" "no payload captured"
+    else
+        paths=$(python3 -c "import json;d=json.load(open('$work/payload.json'));c=d['variables']['input']['fileChanges'];print(' '.join(sorted([a['path'] for a in c['additions']] + [x['path'] for x in c['deletions']])))")
+        eq "only the pathspec is committed" "png/mark-16.png png/mark-32.png" "$paths"
+    fi
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo "a tree with no changes makes no commit"
 (
     work="$(mktemp -d)"; export GITHUB_TOKEN=fake GITHUB_REPOSITORY=pkghaus/apt
