@@ -1,0 +1,94 @@
+name: Set Acquire-By-Hash
+
+# Turns Acquire-By-Hash on or off for published suites. Re-signs each suite it
+# touches, which is why it runs here rather than on a laptop.
+#
+# Run once per suite you want changed. The flag persists in aptly's database,
+# and ordinary ingests keep it, so this is not part of the publish path.
+
+on:
+  workflow_dispatch:
+    inputs:
+      state:
+        description: Turn Acquire-By-Hash on or off
+        required: true
+        default: 'on'
+        type: choice
+        options: ['on', 'off']
+      suites:
+        description: Space-separated suites, or blank for all three
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  set:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Fetch aptly state
+        env:
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: |
+          if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
+              git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
+          else
+              echo "FATAL: no aptly branch"; exit 1
+          fi
+
+      - name: Install aptly
+        uses: ./.github/actions/install-aptly
+
+      - name: Import the archive signing key
+        env:
+          ARCHIVE_SIGNING_KEY: ${{ secrets.ARCHIVE_SIGNING_KEY }}
+        run: |
+          printf '%s' "$ARCHIVE_SIGNING_KEY" | gpg --batch --import
+          gpg --list-secret-keys
+
+      - name: Set the flag
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+          STATE: ${{ inputs.state }}
+          SUITES_IN: ${{ inputs.suites }}
+        run: |
+          # Deliberate word splitting: SUITES_IN is a space-separated list, and
+          # empty means all three.
+          # shellcheck disable=SC2086
+          scripts/acquire-by-hash.sh "$STATE" $SUITES_IN
+
+      - name: Commit aptly state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          STATE: ${{ inputs.state }}
+        run: |
+          rm -f aptly-state/aptly.conf
+          rm -rf aptly-state/pool
+          scripts/commit-branch.sh aptly-state aptly "Acquire-By-Hash $STATE"
+
+      - name: Purge the metadata from the edge
+        env:
+          CLOUDFLARE_PURGE_TOKEN: ${{ secrets.PKGHAUS_APT_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+        # dists/ is served no-cache, so this is belt to that brace.
+        run: scripts/purge-cache.sh
