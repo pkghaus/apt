@@ -225,6 +225,19 @@ jobs:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/ingest.sh include build
 
+      # After the publish, which is the only moment new pool objects exist.
+      # Skipped when the plan was empty: nothing was published, so nothing is
+      # missing from the mirror.
+      - name: Mirror the pool to the backup bucket
+        if: needs.build.result == 'success'
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+          R2_BACKUP_BUCKET: ${{ vars.R2_BACKUP_BUCKET }}
+        run: scripts/backup-pool.sh
+
       - name: Export the public keyring alongside the archive
         run: gpg --export > public/pkghaus-archive-keyring.gpg
 
