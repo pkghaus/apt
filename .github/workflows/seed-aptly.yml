@@ -43,8 +43,10 @@ jobs:
           if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
               git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
           else
-              echo "no aptly branch yet -- starting empty"
-              mkdir -p aptly-state
+              echo "FATAL: no aptly branch. It has to exist before the run can"
+              echo "       commit to it -- commits are made through the API now,"
+              echo "       which cannot create a branch."
+              exit 1
           fi
 
       - name: Install aptly
@@ -83,14 +85,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           SOURCE_URL: ${{ inputs.source_url }}
         run: |
-          cd aptly-state
-          rm -f aptly.conf
-          rm -rf pool
-          git init -q -b aptly 2>/dev/null || true
-          git add -A
-          git -c user.name=pkghaus-ingest -c user.email=github@pkg.haus \
-              commit -qm "Seed from ${SOURCE_URL:-the published archive}" || {
-                  echo "nothing changed"; exit 0; }
-          git push \
-              "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" \
-              aptly
+          rm -f aptly-state/aptly.conf
+          rm -rf aptly-state/pool
+          scripts/commit-branch.sh aptly-state aptly "Seed from ${SOURCE_URL:-the published archive}"

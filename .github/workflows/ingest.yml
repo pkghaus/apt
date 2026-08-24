@@ -74,8 +74,10 @@ jobs:
           if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
               git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
           else
-              echo "no aptly branch yet -- starting empty"
-              mkdir -p aptly-state
+              echo "FATAL: no aptly branch. It has to exist before the run can"
+              echo "       commit to it -- commits are made through the API now,"
+              echo "       which cannot create a branch."
+              exit 1
           fi
 
       - name: Install aptly
@@ -176,8 +178,10 @@ jobs:
           if git ls-remote --exit-code "$REPO_URL" refs/heads/archive >/dev/null; then
               git clone --branch archive --single-branch --depth 1 "$REPO_URL" public
           else
-              echo "no archive branch yet -- starting empty"
-              mkdir -p public
+              echo "FATAL: no archive branch. It has to exist before the run can"
+              echo "       commit to it -- commits are made through the API now,"
+              echo "       which cannot create a branch."
+              exit 1
           fi
 
       - name: Fetch aptly state
@@ -255,37 +259,21 @@ jobs:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/render-index.sh
 
+      # Committed through the API rather than with git push, so GitHub signs
+      # it. The author becomes github-actions[bot]; nothing here invents an
+      # identity, and no signing key has to reach the runner.
       - name: Commit archive state
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          cd public
-          git init -q -b archive 2>/dev/null || true
-          git add -A
-          git -c user.name=pkghaus-ingest -c user.email=github@pkg.haus \
-              commit -qm "Ingest $(date -u '+%Y-%m-%d %H:%M:%S UTC')" || {
-                  echo "nothing changed"; exit 0; }
-          # Plain push: the concurrency group serialises ingests, so a non-ff
-          # here means something unexpected happened and should fail loudly.
-          git push \
-              "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" \
-              archive
+        run: scripts/commit-branch.sh public archive "Ingest $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Commit aptly state
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          cd aptly-state
-          rm -f aptly.conf          # written per run, carries the R2 credentials
-          rm -rf pool               # this run's .debs; the bucket has them now
-          git init -q -b aptly 2>/dev/null || true
-          git add -A
-          git -c user.name=pkghaus-ingest -c user.email=github@pkg.haus \
-              commit -qm "Ingest $(date -u '+%Y-%m-%d %H:%M:%S UTC')" || {
-                  echo "nothing changed"; exit 0; }
-          git push \
-              "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" \
-              aptly
+          rm -f aptly-state/aptly.conf   # written per run, carries the R2 credentials
+          rm -rf aptly-state/pool        # this run's .debs; the bucket has them now
+          scripts/commit-branch.sh aptly-state aptly "Ingest $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

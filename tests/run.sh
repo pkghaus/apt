@@ -174,6 +174,70 @@ FAKE
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+echo "the signed-commit payload describes every change, deletions included"
+(
+    work="$(mktemp -d)"
+    export GITHUB_TOKEN=fake GITHUB_REPOSITORY=pkghaus/apt
+
+    # A branch with three files, committed, then one of each kind of change.
+    repo="$work/repo"; mkdir -p "$repo"; cd "$repo"
+    git init -q -b archive .
+    printf 'one\n' > keep.txt; printf 'two\n' > change.txt; printf 'three\n' > gone.txt
+    git add -A
+    git -c user.name=t -c user.email=t@example.invalid commit -qm base
+    printf 'changed\n' > change.txt
+    rm gone.txt
+    printf 'new\n' > added.txt
+
+    # A curl that captures the payload instead of sending it, and answers with
+    # what a successful mutation looks like.
+    mkdir -p "$work/bin"
+    cat > "$work/bin/curl" <<FAKE
+#!/bin/sh
+for a in "\$@"; do case "\$a" in --data@*) ;; esac; done
+prev=""
+for a in "\$@"; do
+  case "\$prev" in --data) cp "\${a#@}" "$work/payload.json" ;; esac
+  prev="\$a"
+done
+echo '{"data":{"createCommitOnBranch":{"commit":{"oid":"deadbeefdeadbeef","signature":{"isValid":true,"state":"VALID"}}}}}'
+FAKE
+    chmod +x "$work/bin/curl"
+
+    PATH="$work/bin:$PATH" "$ROOT/scripts/commit-branch.sh" "$repo" archive "test" >/dev/null 2>&1 || true
+
+    if [ ! -f "$work/payload.json" ]; then
+        no "the payload is built" "no payload captured"
+    else
+        adds=$(python3 -c "import json;d=json.load(open('$work/payload.json'));print(' '.join(sorted(a['path'] for a in d['variables']['input']['fileChanges']['additions'])))")
+        dels=$(python3 -c "import json;d=json.load(open('$work/payload.json'));print(' '.join(sorted(x['path'] for x in d['variables']['input']['fileChanges']['deletions'])))")
+        eq "additions are the new and changed files only" "added.txt change.txt" "$adds"
+        eq "the deleted file is listed as a deletion"     "gone.txt"            "$dels"
+        body=$(python3 -c "
+import json,base64
+d=json.load(open('$work/payload.json'))
+a={x['path']: base64.b64decode(x['contents']).decode() for x in d['variables']['input']['fileChanges']['additions']}
+print(a['change.txt'].strip())")
+        eq "the addition carries the NEW contents" "changed" "$body"
+    fi
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "a tree with no changes makes no commit"
+(
+    work="$(mktemp -d)"; export GITHUB_TOKEN=fake GITHUB_REPOSITORY=pkghaus/apt
+    repo="$work/repo"; mkdir -p "$repo"; cd "$repo"
+    git init -q -b archive .
+    printf 'x\n' > f.txt; git add -A
+    git -c user.name=t -c user.email=t@example.invalid commit -qm base
+    mkdir -p "$work/bin"
+    printf '#!/bin/sh\ntouch %s/called\n' "$work" > "$work/bin/curl"; chmod +x "$work/bin/curl"
+    PATH="$work/bin:$PATH" "$ROOT/scripts/commit-branch.sh" "$repo" archive "test" >/dev/null 2>&1
+    if [ -f "$work/called" ]; then no "an unchanged tree must not call the API" "curl was called"
+    else ok "an unchanged tree must not call the API"; fi
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
 if [ "$fail" -eq 0 ]; then
     echo "all tests passed"
