@@ -60,8 +60,8 @@ jobs:
       - name: Seed and publish
         env:
           SOURCE_URL: ${{ inputs.source_url }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/seed-aptly.sh
@@ -69,8 +69,8 @@ jobs:
       - name: Compare the result against the source archive
         env:
           SOURCE_URL: ${{ inputs.source_url }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         # Every package the source serves must be in the new indices at the

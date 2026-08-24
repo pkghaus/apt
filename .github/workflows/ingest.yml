@@ -219,8 +219,8 @@ jobs:
       - name: Include and publish to R2
         if: needs.build.result == 'success'
         env:
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/ingest.sh include build
@@ -231,8 +231,8 @@ jobs:
       - name: Mirror the pool to the backup bucket
         if: needs.build.result == 'success'
         env:
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
           R2_BACKUP_BUCKET: ${{ vars.R2_BACKUP_BUCKET }}
@@ -249,8 +249,8 @@ jobs:
 
       - name: Render the pool index
         env:
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/render-index.sh
@@ -305,10 +305,10 @@ jobs:
       # edge refill with the previous render for a full day.
       - name: Purge listing pages from the edge cache
         env:
-          CLOUDFLARE_PURGE_TOKEN: ${{ secrets.CLOUDFLARE_PURGE_TOKEN }}
+          CLOUDFLARE_PURGE_TOKEN: ${{ secrets.PKGHAUS_APT_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/purge-cache.sh
