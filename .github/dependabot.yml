@@ -1,0 +1,13 @@
+version: 2
+
+updates:
+  # Actions are pinned to commit SHAs and the linters this repo runs are
+  # pinned by image digest, which is what stops a moved tag changing what
+  # publishes the archive. It is also what stops any of them updating on
+  # their own.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"
