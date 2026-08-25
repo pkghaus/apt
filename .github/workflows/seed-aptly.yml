@@ -80,11 +80,15 @@ jobs:
         # URL an apt client or a CDN edge already holds.
         run: scripts/compare-archives.sh
 
-      - name: Commit aptly state
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          SOURCE_URL: ${{ inputs.source_url }}
+      - name: Discard what the aptly branch must not carry
         run: |
           rm -f aptly-state/aptly.conf
           rm -rf aptly-state/pool
-          scripts/commit-branch.sh aptly-state aptly "Seed from ${SOURCE_URL:-the published archive}"
+
+      - name: Commit aptly state
+        uses: pkghaus/signed-commit@v1
+        with:
+          workdir: aptly-state
+          branch: aptly
+          message: Seed from ${{ inputs.source_url || 'the published archive' }}
+          token: ${{ github.token }}

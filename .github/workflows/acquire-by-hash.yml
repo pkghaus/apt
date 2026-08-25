@@ -73,14 +73,18 @@ jobs:
           # shellcheck disable=SC2086
           scripts/acquire-by-hash.sh "$STATE" $SUITES_IN
 
-      - name: Commit aptly state
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          STATE: ${{ inputs.state }}
+      - name: Discard what the aptly branch must not carry
         run: |
           rm -f aptly-state/aptly.conf
           rm -rf aptly-state/pool
-          scripts/commit-branch.sh aptly-state aptly "Acquire-By-Hash $STATE"
+
+      - name: Commit aptly state
+        uses: pkghaus/signed-commit@v1
+        with:
+          workdir: aptly-state
+          branch: aptly
+          message: Acquire-By-Hash ${{ inputs.state }}
+          token: ${{ github.token }}
 
       - name: Purge the metadata from the edge
         env:

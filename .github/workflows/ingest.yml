@@ -264,21 +264,35 @@ jobs:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/render-index.sh
 
+      # One stamp for both state commits. They record a single publish, and
+      # two date(1) calls a second apart would claim otherwise.
+      - name: Stamp this publish
+        id: stamp
+        run: echo "at=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"
+
       # Committed through the API rather than with git push, so GitHub signs
       # it. The author becomes github-actions[bot]; nothing here invents an
       # identity, and no signing key has to reach the runner.
       - name: Commit archive state
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: scripts/commit-branch.sh public archive "Ingest $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+        uses: pkghaus/signed-commit@v1
+        with:
+          workdir: public
+          branch: archive
+          message: Ingest ${{ steps.stamp.outputs.at }}
+          token: ${{ github.token }}
 
-      - name: Commit aptly state
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Discard what the aptly branch must not carry
         run: |
           rm -f aptly-state/aptly.conf   # written per run, carries the R2 credentials
           rm -rf aptly-state/pool        # this run's .debs; the bucket has them now
-          scripts/commit-branch.sh aptly-state aptly "Ingest $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+      - name: Commit aptly state
+        uses: pkghaus/signed-commit@v1
+        with:
+          workdir: aptly-state
+          branch: aptly
+          message: Ingest ${{ steps.stamp.outputs.at }}
+          token: ${{ github.token }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
