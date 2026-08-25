@@ -273,6 +273,54 @@ echo "a tree with no changes makes no commit"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# check-key-expiry: the daily watcher reads the PUBLISHED keyring, which is
+# binary, and fails rather than warns. Both differ from the ingest's path and
+# both are silent when wrong -- a binary key read into a shell variable loses
+# its null bytes and gpg reports no keys, which looks exactly like "this key
+# never expires".
+echo "== check-key-expiry =="
+(
+    fail=0
+    work="$(mktemp -d)"
+    export GNUPGHOME="$work/gnupg"; mkdir -p "$GNUPGHOME"; chmod 700 "$GNUPGHOME"
+
+    gpg --batch --quiet --passphrase '' --quick-generate-key \
+        'expiry test <t@example.invalid>' ed25519 sign 2d >/dev/null 2>&1
+    gpg --export > "$work/key.gpg"                 # binary, as published
+    gpg --armor --export > "$work/key.asc"         # armored, as the secret is
+
+    out="$(FAIL_ON_WARN=0 "$ROOT/scripts/check-key-expiry.sh" "$work/key.gpg" 2>&1)"; rc=$?
+    if [ "$rc" -eq 0 ] && printf '%s' "$out" | grep -q '::warning'; then
+        ok "a binary keyring is parsed, not silently emptied by null stripping"
+    else
+        no "a binary keyring is parsed" "rc=$rc out=[$out]"
+    fi
+
+    out="$(FAIL_ON_WARN=1 "$ROOT/scripts/check-key-expiry.sh" "$work/key.gpg" 2>&1)"; rc=$?
+    if [ "$rc" -eq 1 ] && printf '%s' "$out" | grep -q '::error'; then
+        ok "FAIL_ON_WARN turns the watcher's warning into a failure"
+    else
+        no "FAIL_ON_WARN fails the run" "rc=$rc out=[$out]"
+    fi
+
+    out="$(ARCHIVE_SIGNING_KEY="$(cat "$work/key.asc")" "$ROOT/scripts/check-key-expiry.sh" 2>&1)"; rc=$?
+    if [ "$rc" -eq 0 ] && printf '%s' "$out" | grep -q '::warning'; then
+        ok "the ingest's env-var path still warns without failing"
+    else
+        no "the ingest's env-var path warns" "rc=$rc out=[$out]"
+    fi
+
+    out="$("$ROOT/scripts/check-key-expiry.sh" "$work/absent.gpg" 2>&1)"; rc=$?
+    if [ "$rc" -ne 0 ]; then
+        ok "a missing key file fails instead of reporting no expiry"
+    else
+        no "a missing key file fails" "rc=$rc out=[$out]"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
 if [ "$fail" -eq 0 ]; then
     echo "all tests passed"

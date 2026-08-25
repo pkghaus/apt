@@ -95,3 +95,22 @@ jobs:
           else
               gh issue create --repo "$REPO" --title "$title" --body "$body"
           fi
+
+      # The ingest checks this too, but the ingest is event-driven: a fleet
+      # with no new tags for a quarter can pass through the entire 90-day
+      # warning window without ever running it, and the first signal would be
+      # every apt client rejecting the archive. This is the daily job that
+      # exists whether or not anything was released, so it carries the check
+      # that must not depend on activity, and it fails rather than warns --
+      # an annotation on a cron run nobody opens is not a signal.
+      #
+      # Reads the PUBLISHED keyring, so no secret is needed in a second
+      # workflow, and the fetch doubles as the only recurring check that the
+      # archive is reachable at all.
+      - name: Check signing-key expiry
+        if: ${{ !cancelled() }}
+        run: |
+          curl --fail-with-body -sS --max-time 30 \
+            -o published-keyring.gpg \
+            https://apt.pkg.haus/pkghaus-archive-keyring.gpg
+          FAIL_ON_WARN=1 scripts/check-key-expiry.sh published-keyring.gpg
