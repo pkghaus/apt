@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.3.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-25-updated-croc-11.3.0-1</guid>
+<pubDate>Tue, 25 Aug 2026 08:45:02 +0000</pubDate>
+<description>Updated from 11.2.5-1. (croc 11.3.0-1)</description>
+</item>
+<item>
 <title>updated: croc 11.2.5-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-23-updated-croc-11.2.5-1</guid>
