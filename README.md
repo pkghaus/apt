@@ -73,6 +73,26 @@ retained.
   pool does not: at the bucket's root prefix aptly only reads a package file it
   cannot already find published, so each run keeps just what it built.
 
+## The archive Worker
+
+`worker/` is `pkghaus-archive`: `pool/` and `dists/` are objects in an R2
+bucket that only it can read, so it is what makes apt.pkg.haus an archive
+rather than a bucket. It also writes the download counters, because it is the
+one point every download passes through.
+
+It lives here rather than alongside the page that displays those counters
+because this is the repository that owns the archive: the same pipeline that
+publishes objects to the bucket deploys the thing that serves them.
+
+The `/stats` page is a separate Worker in
+[pkghaus/stats](https://github.com/pkghaus/stats), reading the same database
+on a more specific route. Writer here, reader there, so a bad deploy of a page
+cannot take the archive down.
+
+```sh
+cd worker && npm ci && npm test
+```
+
 ## License
 
 ```

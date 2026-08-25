@@ -1,0 +1,46 @@
+name = "pkghaus-archive"
+main = "src/worker.js"
+compatibility_date = "2026-08-01"
+
+# pool/ and dists/ only. /stats* is a more specific pattern held by
+# pkghaus-stats, and Cloudflare resolves overlapping routes by specificity, so
+# the page keeps working whatever this Worker's patterns grow to cover.
+#
+# Both routes are set to "Fail open" (dashboard: Workers & Pages ->
+# pkghaus-archive -> Settings). That is the least bad option rather than a
+# save: a bypassed request reaches an origin that does not carry these paths,
+# so apt gets a 404 instead of a 500. What actually keeps the archive up is
+# staying under the Workers Free daily limit of 100,000 requests; the archive
+# serves three orders of magnitude less than that.
+#
+# Cloudflare route patterns only allow wildcards at the end of the path (API
+# error 10022 rejects dists/*/InRelease), so the dists route is broader than
+# we count: only dists/<suite>/InRelease is recorded, every other metadata
+# request is served and not counted.
+routes = [
+  { pattern = "apt.pkg.haus/pool/*", zone_name = "pkg.haus" },
+  { pattern = "apt.pkg.haus/dists/*", zone_name = "pkg.haus" },
+]
+
+# The archive itself. Anything under those prefixes that is not an object --
+# the listing pages that share the pool/ path space -- falls through to the
+# origin, which still serves the human-facing tree.
+[[r2_buckets]]
+binding = "ARCHIVE"
+bucket_name = "pkghaus-apt"
+
+# The counters. This Worker writes; pkghaus-stats reads the same database and
+# renders the page. The database keeps its original name.
+[[d1_databases]]
+binding = "DB"
+database_name = "pkghaus-stats"
+# Resolved by CI at deploy time (see .github/workflows/deploy-worker.yml),
+# which fails if the database is absent rather than creating an empty one.
+database_id = "PLACEHOLDER_RESOLVED_IN_CI"
+
+# Workers Logs. Every failure path here is caught so that serving survives it,
+# which without this makes a broken counter and a quiet week indistinguishable:
+# the console.error calls had nowhere to go.
+[observability]
+enabled = true
+head_sampling_rate = 1

@@ -38,6 +38,18 @@ jobs:
       - name: Test
         run: tests/run.sh
 
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # The archive worker ships from this repo now. Its deploy workflow tests
+      # before deploying, but that only runs on master; a pull request needs
+      # its own gate.
+      - name: Test the archive worker
+        working-directory: worker
+        run: npm ci && npm test
+
       - name: actionlint
         # Pinned by digest; go-yaml inside it also rejects duplicate mapping
         # keys, which GitHub's parser rejects but many local checks accept.
