@@ -229,11 +229,16 @@ jobs:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/ingest.sh include build
 
-      # After the publish, which is the only moment new pool objects exist.
-      # Skipped when the plan was empty: nothing was published, so nothing is
-      # missing from the mirror.
+      # Unconditional, including on an empty plan. Gating this on "did we
+      # publish anything" made a failed mirror unrepairable: the step runs
+      # after the publish, so a failure leaves the archive published, the run
+      # red, and the mirror behind -- and re-running then finds nothing to
+      # build, skips the build job, and skips this step on the same
+      # condition. The next real publish was the earliest repair, which could
+      # be weeks. `aws s3 sync` is additive and idempotent, so running it
+      # every time costs two LIST calls over ~150 objects and makes the
+      # mirror self-healing instead.
       - name: Mirror the pool to the backup bucket
-        if: needs.build.result == 'success'
         env:
           R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
