@@ -20,6 +20,10 @@
 # Runs after a publish, which is the only moment new pool objects exist.
 
 set -euo pipefail
+# Without this, set -e does not reach inside a command substitution, so a
+# function called as x="$(f)" runs to completion after a failure instead of
+# aborting. count_debs below is called exactly that way.
+shopt -s inherit_errexit
 
 # The AWS CLI switches to a multipart copy above 8 MB, and its multipart path
 # calls GetObjectTagging, which R2 does not implement -- so every .deb over
@@ -47,14 +51,25 @@ if [ "$R2_BACKUP_BUCKET" = "$R2_BUCKET" ]; then
     exit 1
 fi
 
-before="$(aws_ s3 ls "s3://$R2_BACKUP_BUCKET/pool/" --recursive 2>/dev/null | grep -c '\.deb$' || true)"
+# Two steps on purpose. `grep -c` exits 1 when it matches nothing, so the count
+# needs `|| true`; run as one pipeline that also discarded stderr, a listing that
+# could not be read was indistinguishable from an empty bucket, and the safety
+# check below compares two numbers that both quietly meant "no idea". The
+# listing is its own command so set -e still sees it fail.
+count_debs() {
+    local listing
+    listing="$(aws_ s3 ls "$1" --recursive)"
+    printf '%s' "$listing" | grep -c '\.deb$' || true
+}
+
+before="$(count_debs "s3://$R2_BACKUP_BUCKET/pool/")"
 
 # Server-side copy: both buckets are in the same account, so no bytes traverse
 # the runner and nothing is billed for egress.
 aws_ s3 sync "s3://$R2_BUCKET/pool/" "s3://$R2_BACKUP_BUCKET/pool/" --only-show-errors
 
-after="$(aws_ s3 ls "s3://$R2_BACKUP_BUCKET/pool/" --recursive 2>/dev/null | grep -c '\.deb$' || true)"
-live="$(aws_ s3 ls "s3://$R2_BUCKET/pool/" --recursive 2>/dev/null | grep -c '\.deb$' || true)"
+after="$(count_debs "s3://$R2_BACKUP_BUCKET/pool/")"
+live="$(count_debs "s3://$R2_BUCKET/pool/")"
 
 printf 'pool backup: %s debs live, %s in the mirror (+%s this run)\n' \
     "$live" "$after" "$((after - before))" >&2

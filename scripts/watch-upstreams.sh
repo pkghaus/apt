@@ -16,6 +16,9 @@
 # 2026.08.15, which no ordering scheme survives intact.
 
 set -euo pipefail
+# Without this, set -e stops at the edge of a command substitution: a function
+# called as x="$(f)" keeps running after a failure instead of aborting.
+shopt -s inherit_errexit
 
 REPOS_FILE="${REPOS_FILE:-repos.txt}"
 RAW_BASE="${RAW_BASE:-https://raw.githubusercontent.com}"

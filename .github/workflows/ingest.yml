@@ -99,7 +99,7 @@ jobs:
           fi
 
           jq -Rnc '[inputs | split("\t")
-                    | {repo: .[0], pkg: .[2], suite: .[3], arch: .[4], version: .[5],
+                    | {repo: .[0], tag: .[1], pkg: .[2], suite: .[3], arch: .[4], version: .[5],
                        runner: (if .[4] == "arm64" then "ubuntu-24.04-arm" else "ubuntu-24.04" end)}]' \
               < plan.tsv > matrix.json
           echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
@@ -122,28 +122,35 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
-      - name: Checkout
+      - name: Check out the packaging repository at its tag
+        # The matrix row already names the repository and the tag, so the leg
+        # checks out its own subject instead of a script cloning it.
         uses: actions/checkout@v7
         with:
+          repository: ${{ matrix.repo }}
+          ref: ${{ matrix.tag }}
+          path: pkg
           persist-credentials: false
 
-      - name: Download plan
-        uses: actions/download-artifact@v8
+      - name: Build and test this leg's package
+        # The same action a packaging repository runs on its own tags, so a
+        # package is built and DEP-8 tested identically in both places. It
+        # matters that this one runs too: the archive rebuilds a tag whenever it
+        # first needs it, sometimes weeks later, against whatever testing and
+        # unstable have become since. That drift is invisible to the tag build.
+        uses: pkghaus/action-debian-build@v1
         with:
-          name: plan
-
-      - name: Build this leg's package
-        env:
           SUITE: ${{ matrix.suite }}
-          REPO: ${{ matrix.repo }}
-        run: scripts/ingest.sh build plan.tsv "$SUITE" "$REPO"
+          WORKING_DIRECTORY: pkg
 
       - name: Upload packages
         uses: actions/upload-artifact@v7
         with:
           # The real Debian filename: one leg builds exactly one plan row.
           name: ${{ matrix.pkg }}_${{ matrix.version }}_${{ matrix.arch }}.deb
-          path: build/*
+          # .deb only. The builder collects a .buildinfo beside it, which the
+          # publish job has never received and aptly has no use for.
+          path: pkg/debs/*.deb
           if-no-files-found: error
           retention-days: 7
 

@@ -20,6 +20,9 @@
 # so it has to persist. The published tree goes to R2, not to disk.
 
 set -euo pipefail
+# Without this, set -e stops at the edge of a command substitution: a function
+# called as x="$(f)" keeps running after a failure instead of aborting.
+shopt -s inherit_errexit
 
 REPOS_FILE="${REPOS_FILE:-repos.txt}"
 # Prefix a repo slug resolves against. Tests point it at a local directory of
@@ -27,7 +30,6 @@ REPOS_FILE="${REPOS_FILE:-repos.txt}"
 GIT_BASE="${GIT_BASE:-https://github.com/}"
 IMAGE="${IMAGE:-ghcr.io/pkghaus/deb-builder}"
 ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
-BUILD_DIR="${BUILD_DIR:-build}"
 SUITES="${SUITES:-trixie testing unstable}"
 
 # shellcheck source=scripts/aptly-lib.sh
@@ -68,10 +70,18 @@ qualifier() {
     esac
 }
 
+# Non-zero when the repository could not be read, empty output when it has no
+# tags. Those are different answers and the caller treats them differently: the
+# listing used to be the head of a pipeline, so a failed ls-remote produced no
+# output, exited 0 through tail, and was reported as "no tags" -- a network blip
+# silently dropping a package from the plan under a message saying the upstream
+# had never tagged anything.
 newest_tag() {
-    local repo="$1"
+    local repo="$1" refs
 
-    git ls-remote --tags "${GIT_BASE}${repo}" \
+    refs="$(git ls-remote --tags "${GIT_BASE}${repo}")" || return 1
+
+    printf '%s\n' "$refs" \
         | awk -F/ '{print $NF}' \
         | grep -v '\^{}$' \
         | sort -V \
@@ -109,7 +119,7 @@ plan() {
     while read -r repo; do
         case "$repo" in ''|\#*) continue ;; esac
 
-        tag="$(newest_tag "$repo")"
+        tag="$(newest_tag "$repo")" || die "cannot read tags from $repo"
         [ -n "$tag" ] || { log "SKIP $repo: no tags"; continue; }
 
         clone="$(mktemp -d)"
@@ -158,50 +168,6 @@ plan() {
             done
         done
     done < "$REPOS_FILE"
-}
-
-build() {
-    local plan_file="${1:?usage: ingest.sh build <plan.tsv> [suite] [repo]}"
-    local only_suite="${2:-}"
-    local only_repo="${3:-}"
-    local host_arch repo tag suite clone built
-    host_arch="$(dpkg --print-architecture)"
-
-    mkdir -p "$BUILD_DIR"
-
-    # One build covers one (repo, tag, suite) on this host's architecture; the
-    # plan's arch column just decides whether this host owes it. Rows planned
-    # as "all" build on whichever host picks them up (in CI that is the row's
-    # single leg). Optional suite and repo arguments narrow the share further,
-    # so CI can fan the plan out across a package x suite x arch matrix;
-    # without them, all suites build serially.
-    awk -F'\t' -v arch="$host_arch" -v only="$only_suite" -v ronly="$only_repo" \
-        '($5 == arch || $5 == "all") && (only == "" || $4 == only) && (ronly == "" || $1 == ronly) {print $1 "\t" $2 "\t" $4}' \
-        "$plan_file" | sort -u \
-        | while IFS="$(printf '\t')" read -r repo tag suite; do
-            log "BUILD $repo@$tag for $suite/$host_arch"
-
-            clone="$(mktemp -d)"
-            git clone -q --depth 1 --branch "$tag" -- "${GIT_BASE}${repo}" "$clone"
-
-            docker run --rm \
-                --volume "$clone:/target" \
-                --workdir /target \
-                "$IMAGE:$suite"
-
-            built=0
-            for deb in "$clone"/debs/*.deb; do
-                [ -e "$deb" ] || break
-                install -m 0644 "$deb" "$BUILD_DIR/"
-                built=$((built + 1))
-            done
-            [ "$built" -gt 0 ] || die "$repo@$tag produced no packages for $suite"
-
-            rm -rf "$clone"
-        done
-
-    log "built artifacts:"
-    ls -l "$BUILD_DIR" >&2
 }
 
 # The suite a package belongs to is recoverable from its version qualifier,
@@ -269,10 +235,9 @@ prune_older() {
 
 case "${1:-}" in
     plan)    shift; plan "$@" ;;
-    build)   shift; build "$@" ;;
     include) shift; include "$@" ;;
     *)
-        log "usage: $0 plan [arches] | build <plan.tsv> [suite] [repo] | include <dir>"
+        log "usage: $0 plan [arches] | include <dir>"
         exit 2
         ;;
 esac

@@ -11,6 +11,9 @@
 # favicon.svg hide themselves from the listings.
 
 set -euo pipefail
+# Without this, set -e stops at the edge of a command substitution: a function
+# called as x="$(f)" keeps running after a failure instead of aborting.
+shopt -s inherit_errexit
 
 ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
 BASE_URL="${BASE_URL:-https://apt.pkg.haus}"
@@ -154,10 +157,10 @@ logo() {
 
     if [ "$size" -gt 48 ]; then
         width=2.4
-        tape='M17 15.5 L25 11.5 L47 22.5 L47 28.5 L45.7 27.2 L44.3 29.8 L43 28.5 L41.7 31.2 L40.3 29.8 L39 32.5 L39 26.5 Z'
+        tape='M15.658 14.829 L23.658 10.829 L47 22.5 L47 28.5 L45.7 27.2 L44.3 29.8 L43 28.5 L41.7 31.2 L40.3 29.8 L39 32.5 L39 26.5 Z'
     else
         width=4.5
-        tape='M17 15.5 L25 11.5 L47 22.5 L47 28.5 L39 32.5 L39 26.5 Z'
+        tape='M14.484 14.242 L22.484 10.242 L47 22.5 L47 28.5 L39 32.5 L39 26.5 Z'
     fi
 
     cat <<EOF
@@ -245,7 +248,7 @@ render_favicon() {
     <path d="M32 30 V58"/>
     <path d="M32 6 L56 18 V46 L32 58 L8 46 V18 Z"/>
   </g>
-  <path d="M15 14.5 L25 9.5 L49 21.5 L49 28.5 L39 33.5 L39 26.5 Z" fill="#E0421B"/>
+  <path d="M11.087 12.543 L21.087 7.543 L49 21.5 L49 28.5 L39 33.5 L39 26.5 Z" fill="#E0421B"/>
 </svg>
 EOF_ICON
 }
@@ -490,8 +493,35 @@ EOF
 # One event field out of a news.jsonl line. Fields are written in fixed
 # order with no embedded double quotes (scripts/news.sh documents the
 # contract), so a plain extraction is exact.
-news_field() {
-    printf '%s' "$1" | sed -n 's/.*"'"$2"'":"\([^"]*\)".*/\1/p'
+# One parse for the whole file, emitted as TSV, rather than a regex per field.
+# The regex stopped at the first quote, so any value containing an escaped quote
+# was silently truncated, and news-notices.jsonl is hand-authored JSON where
+# writing one is an ordinary thing to do. A line that is not JSON fails the
+# render rather than becoming a broken row: the archive refuses to publish
+# nonsense elsewhere too.
+#
+# Unit separator, not tab: tab is an IFS whitespace character, so `read` folds a
+# run of them into one and an empty field silently shifts every field after it.
+# A live entry with an empty detail rendered its package list as the detail and
+# lost its package links. Separators and newlines are stripped from values for
+# the same reason.
+news_tsv() {
+    python3 - "$1" <<'PY'
+import json
+import sys
+
+for number, line in enumerate(open(sys.argv[1], encoding="utf-8"), 1):
+    line = line.strip()
+    if not line:
+        continue
+    try:
+        entry = json.loads(line)
+    except ValueError as exc:
+        sys.exit(f"FATAL: {sys.argv[1]} line {number} is not JSON: {exc}")
+    print("\x1f".join(
+        str(entry.get(key, "")).replace("\x1f", " ").replace("\n", " ")
+        for key in ("ts", "type", "title", "detail", "pkgs")))
+PY
 }
 
 # name=version pairs -> linked package tokens. The name links into its
@@ -513,13 +543,9 @@ pkg_tokens() {
 }
 
 news_rows() {
-    local line ts type title detail pkgs cls names
-    LC_ALL=C sort -r "$1" | while IFS= read -r line; do
-        [ -n "$line" ] || continue
-        ts="$(news_field "$line" ts)"
-        type="$(news_field "$line" type)"
-        detail="$(news_field "$line" detail)"
-        pkgs="$(news_field "$line" pkgs)"
+    local ts type title detail pkgs cls names
+    news_tsv "$1" | LC_ALL=C sort -r | while IFS="$(printf '\037')" read -r ts type title detail pkgs; do
+        [ -n "$ts" ] || continue
         case "$type" in
             added|updated|security|notice) cls="chip $type" ;;
             *) cls="chip" ;;
@@ -528,7 +554,8 @@ news_rows() {
         # plus the row text.
         names="$(printf '%s' "$pkgs" | tr ' ' '\n' | sed 's/=.*//' | tr '\n' ' ')"
         printf '        <tr data-type="%s" data-pkg="%s"><td class="date">%s</td><td><span class="%s">%s</span></td><td>%s%s</td></tr>\n' \
-            "$type" "${names% }" "${ts%%T*}" "$cls" "$type" "$detail" "$(pkg_tokens "$pkgs")"
+            "$(esc "$type")" "$(esc "${names% }")" "${ts%%T*}" \
+            "$cls" "$(esc "$type")" "$detail" "$(pkg_tokens "$pkgs")"
     done
 }
 
@@ -536,8 +563,15 @@ xml_escape() {
     sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'
 }
 
+# For values that land in an attribute or are pure data: type, the package-name
+# list, the date. NOT for detail, which a notice writes as markup on purpose --
+# the feed strips tags precisely because the page renders them.
+esc() {
+    printf '%s' "$1" | xml_escape | sed 's/"/\&quot;/g'
+}
+
 news_feed() {
-    local line ts type title detail pkgs pair pkglist guid
+    local ts type title detail pkgs pair pkglist guid
     cat <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -548,13 +582,9 @@ news_feed() {
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 EOF
-    LC_ALL=C sort -r "$1" | while IFS= read -r line; do
-        [ -n "$line" ] || continue
-        ts="$(news_field "$line" ts)"
-        type="$(news_field "$line" type)"
-        title="$(news_field "$line" title)"
-        detail="$(news_field "$line" detail | sed 's/<[^>]*>//g')"
-        pkgs="$(news_field "$line" pkgs)"
+    news_tsv "$1" | LC_ALL=C sort -r | while IFS="$(printf '\037')" read -r ts type title detail pkgs; do
+        [ -n "$ts" ] || continue
+        detail="$(printf '%s' "$detail" | sed 's/<[^>]*>//g')"
         [ -n "$detail" ] || detail="$title"
         if [ -n "$pkgs" ]; then
             pkglist=""

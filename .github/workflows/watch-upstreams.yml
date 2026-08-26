@@ -14,7 +14,7 @@ name: Watch upstream releases
 
 on:
   schedule:
-    - cron: '17 6 * * *'
+    - cron: '17 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -68,6 +68,11 @@ jobs:
           STATUS: ${{ steps.check.outputs.status }}
           REPORT: ${{ steps.check.outputs.report }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # A mention notifies only in newly created content, so it belongs in
+          # the opening body and in the change comment, and nowhere else. Being
+          # mentioned also subscribes the team to the issue, which is what makes
+          # the closing comment reach them without mentioning them again.
+          MENTION: '@pkghaus/maintainers'
         run: |
           title='Upstream release drift'
           # Exact title match, not a search query: search is fuzzy and
@@ -87,19 +92,39 @@ jobs:
               exit 0
           fi
 
-          body="$(printf '%s\n\nChecked by %s. Reproduce by running scripts/watch-upstreams.sh\n\nBumps are deliberately manual: the ingest fires on a signed tag, and a version bump often needs packaging changes that only a build and a functional smoke test reveal.\n' "$REPORT" "$RUN_URL")"
+          # Markers, so the report can be compared across runs without the run
+          # URL below it counting as a change: that URL differs every run and
+          # would otherwise comment on every one.
+          body="$(printf '%s\n<!-- report -->\n%s\n<!-- /report -->\n\nChecked by %s. Reproduce by running scripts/watch-upstreams.sh\n\nBumps are deliberately manual: the ingest fires on a signed tag, and a version bump often needs packaging changes that only a build and a functional smoke test reveal.\n' \
+              "$MENTION" "$REPORT" "$RUN_URL")"
 
-          if [ -n "$number" ]; then
-              gh issue edit "$number" --repo "$REPO" --body "$body"
-              echo "updated #$number"
-          else
+          if [ -z "$number" ]; then
               gh issue create --repo "$REPO" --title "$title" --body "$body"
+              echo "opened the drift issue"
+              exit 0
+          fi
+
+          # An issue is already open. Editing its body is silent: GitHub only
+          # notifies for a mention in newly created content, so a package
+          # joining the list while another is outstanding would reach nobody.
+          # Comment when the list actually changes, and only then.
+          previous="$(gh issue view "$number" --repo "$REPO" --json body --jq .body \
+              | sed -n '/<!-- report -->/,/<!-- \/report -->/p' | sed '1d;$d')"
+
+          gh issue edit "$number" --repo "$REPO" --body "$body"
+
+          if [ "$previous" = "$REPORT" ]; then
+              echo "updated #$number, list unchanged"
+          else
+              gh issue comment "$number" --repo "$REPO" \
+                  --body "$(printf 'The drift list changed. %s\n\n%s\n\nChecked by %s\n' "$MENTION" "$REPORT" "$RUN_URL")"
+              echo "updated #$number and commented: the list changed"
           fi
 
       # The ingest checks this too, but the ingest is event-driven: a fleet
       # with no new tags for a quarter can pass through the entire 90-day
       # warning window without ever running it, and the first signal would be
-      # every apt client rejecting the archive. This is the daily job that
+      # every apt client rejecting the archive. This is the scheduled job that
       # exists whether or not anything was released, so it carries the check
       # that must not depend on activity, and it fails rather than warns --
       # an annotation on a cron run nobody opens is not a signal.

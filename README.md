@@ -62,7 +62,12 @@ retained.
   [ingest](.github/workflows/ingest.yml), which compares the repository's
   newest tag against the archive, builds only what is missing (natively per
   architecture, no emulation), and includes it into an
-  [aptly](https://www.aptly.info/) repository.
+  [aptly](https://www.aptly.info/) repository. Each build leg checks the
+  packaging repository out at its tag and runs the same action a packaging
+  repository runs on its own tags, so a package that ships `debian/tests/` has
+  those tests run here too. That matters: the archive builds a tag whenever it
+  first needs it, sometimes weeks later, against whatever testing and unstable
+  have become since.
 - Published pool files are immutable: the plan only ever adds missing
   versions, and a version already in the archive is never rebuilt.
 - `dists/` and `pool/` are objects in an R2 bucket, served through a Cloudflare

@@ -25,6 +25,9 @@
 #                 the side benefit of checking the key clients actually get.
 
 set -euo pipefail
+# Without this, set -e stops at the edge of a command substitution: a function
+# called as x="$(f)" keeps running after a failure instead of aborting.
+shopt -s inherit_errexit
 
 WARN_DAYS="${WARN_DAYS:-90}"
 FAIL_ON_WARN="${FAIL_ON_WARN:-0}"

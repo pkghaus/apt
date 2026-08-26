@@ -127,6 +127,128 @@ echo "render refuses to replace pool listings with nothing"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+echo "the plan tells an unreachable repo apart from an untagged one"
+(
+    work="$(mktemp -d)"
+    mkdir -p "$work/bin"
+    # git that cannot reach the remote: a blip, an outage, a revoked token.
+    cat > "$work/bin/git" <<'FAKE'
+#!/bin/sh
+case "$1 $2" in "ls-remote --tags") echo "fatal: could not read from remote" >&2; exit 128 ;; esac
+exec /usr/bin/git "$@"
+FAKE
+    chmod +x "$work/bin/git"
+    printf 'pkghaus/croc-debian\n' > "$work/repos.txt"
+
+    # ls-remote used to head a pipeline, so its failure produced no output,
+    # exited 0 through tail, and was reported as "no tags": the package left the
+    # plan silently under a message blaming the upstream.
+    out="$(PATH="$work/bin:$PATH" REPOS_FILE="$work/repos.txt" \
+        "$ROOT/scripts/ingest.sh" plan 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -eq 0 ]; then
+        no "an unreadable repo must not be reported as untagged" "exited 0"
+    elif grep -q 'no tags' <<<"${out:-}"; then
+        no "an unreadable repo must not be reported as untagged" "blamed the upstream: ${out:-}"
+    elif ! grep -q 'cannot read tags' <<<"${out:-}"; then
+        no "an unreadable repo must not be reported as untagged" "wrong message: ${out:-}"
+    else
+        ok "an unreadable repo must not be reported as untagged"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "the news reader parses JSON and keeps its fields aligned"
+(
+    work="$(mktemp -d)"
+    export ARCHIVE_DIR="$work/public" SUITES="trixie" ARCHES="amd64"
+    export BASE_URL="http://127.0.0.1:1"
+    unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
+    mkdir -p "$ARCHIVE_DIR/news"
+
+    # Three things this file has got wrong. An escaped quote is ordinary JSON
+    # and the old regex reader stopped at it, truncating the sentence. An empty
+    # field is ordinary too, and reading the parsed record back over a tab
+    # delimiter folded it away, shifting the package list into the detail column
+    # and dropping the package links. And a notice writes markup on purpose --
+    # the feed strips tags precisely because the page renders them -- so
+    # escaping the detail broke a link that had been live for weeks.
+    cat > "$ARCHIVE_DIR/news/news.jsonl" <<'NEWS'
+{"ts":"2026-08-20T10:00:00Z","type":"notice","title":"T","detail":"He said \"run it\" and <a href='/stats'>linked</a>","pkgs":""}
+{"ts":"2026-08-19T10:00:00Z","type":"added","title":"added: vale","detail":"","pkgs":"vale=3.17.1-1"}
+NEWS
+
+    "$ROOT/scripts/render-index.sh" >/dev/null 2>&1
+    page="$ARCHIVE_DIR/news/index.html"
+
+    eq "an escaped quote does not truncate the sentence" "1" \
+        "$(grep -c 'He said "run it" and' "$page")"
+    eq "markup in a notice renders as markup" "1" \
+        "$(grep -c "<a href='/stats'>linked</a>" "$page")"
+    # The row with an empty detail: its packages must still be linked tokens and
+    # must still populate the filter attribute.
+    eq "an empty field does not shift the ones after it" "1" \
+        "$(grep -c 'data-pkg="vale"' "$page")"
+    eq "the shifted row still links its package" "1" \
+        "$(grep -c '<a href="/pool/main/v/vale/"><code>vale</code></a>' "$page")"
+    eq "the raw pkgs string never reaches the detail column" "0" \
+        "$(grep -c '<td>vale=3.17.1-1' "$page")"
+    # The feed is plain text: tags stripped, then escaped.
+    eq "the feed strips the tag rather than rendering it" "1" \
+        "$(grep -c '<description>He said "run it" and linked</description>' "$ARCHIVE_DIR/news/feed.xml")"
+
+    # A line that is not JSON is a broken row today and a wrong page tomorrow.
+    printf 'not json at all\n' >> "$ARCHIVE_DIR/news/news.jsonl"
+    out="$("$ROOT/scripts/render-index.sh" 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -eq 0 ]; then
+        no "a line that is not JSON must fail the render" "exited 0"
+    elif ! grep -q 'is not JSON' <<<"${out:-}"; then
+        no "a line that is not JSON must fail the render" "wrong message: ${out:-}"
+    else
+        ok "a line that is not JSON must fail the render"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "the pool mirror will not read a failed listing as an empty bucket"
+(
+    work="$(mktemp -d)"
+    export R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_ENDPOINT=https://example.invalid
+    export R2_BUCKET=pkghaus-apt R2_BACKUP_BUCKET=pkghaus-apt-backup
+
+    # An aws that fails every listing: expired credentials, a bad endpoint, R2
+    # down. The counts used to come back 0 because the pipeline swallowed it,
+    # and 0 is also what a genuinely empty bucket returns, so the safety check
+    # compared two meaningless numbers and passed.
+    mkdir -p "$work/bin"
+    cat > "$work/bin/aws" <<'FAKE'
+#!/bin/sh
+for a in "$@"; do
+  case "$a" in
+    ls) echo "fatal error: Unable to locate credentials" >&2; exit 255 ;;
+  esac
+done
+exit 0
+FAKE
+    chmod +x "$work/bin/aws"
+    PATH="$work/bin:$PATH"
+
+    out="$("$ROOT/scripts/backup-pool.sh" 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -eq 0 ]; then
+        no "a failed listing must not be counted as zero" "exited 0: ${out:-}"
+    else
+        ok "a failed listing must not be counted as zero"
+    fi
+    eq "no bogus count is reported" "0" \
+        "$(grep -c 'debs live' <<<"${out:-}")"
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo "the pool mirror refuses the two ways it could lose data"
 (
     work="$(mktemp -d)"

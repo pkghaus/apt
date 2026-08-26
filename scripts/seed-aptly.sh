@@ -17,6 +17,9 @@
 # version is already in the database.
 
 set -euo pipefail
+# Without this, set -e stops at the edge of a command substitution: a function
+# called as x="$(f)" keeps running after a failure instead of aborting.
+shopt -s inherit_errexit
 
 SOURCE_URL="${SOURCE_URL:-https://apt.pkg.haus}"
 SUITES="${SUITES:-trixie testing unstable}"
