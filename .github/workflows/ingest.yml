@@ -14,12 +14,13 @@ run-name: >-
 # Published pool files are immutable: the plan only ever adds missing versions.
 # A run with nothing missing publishes nothing and touches nothing.
 #
-# State model, two branches, neither served:
-#   `archive` -- the human-facing tree (listings, news, keyring) that Pages
-#                serves; cloned into public/, committed back, deployed.
+# State model, two branches, neither served directly:
+#   `archive` -- the human-facing tree (listings, news, keyring); cloned into
+#                public/, committed back, and uploaded as the Worker's static
+#                assets, which is how apt.pkg.haus serves it.
 #   `aptly`   -- aptly's leveldb and its local pool; cloned into aptly-state/,
-#                committed back. Off the archive branch because Pages serves
-#                that branch whole and would double the site.
+#                committed back. Kept off the archive branch because that whole
+#                branch becomes the published asset set.
 #
 # Runs when a fleet repository reports a validated tag (repository_dispatch
 # from action-debian-build's notify job), on manual dispatch, and on pushes
@@ -166,11 +167,6 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -202,7 +198,8 @@ jobs:
         # objects are missing from the bucket, which is none of them except the
         # ones this run just built.
         #
-        # Kept off the archive branch because Pages serves that branch whole.
+        # Kept off the archive branch because that whole branch is uploaded as
+        # the Worker's asset set, and this is a leveldb, not a web page.
         run: |
           if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
               git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
@@ -303,31 +300,16 @@ jobs:
           message: Ingest ${{ steps.stamp.outputs.at }}
           token: ${{ github.token }}
 
-      # public/ is a clone, so it carries .git, and both publish paths below
-      # take the whole directory: upload-pages-artifact with
-      # include-hidden-files, and wrangler as static assets. A served .git
-      # reconstructs the working tree. Placed here because the commit steps
-      # above need that .git to compute their diffs and nothing after them does.
+      # public/ is a clone, so it carries .git, and wrangler publishes the
+      # whole directory as static assets. A served .git reconstructs the
+      # working tree. Placed here because the commit steps above need that
+      # .git to compute their diffs and nothing after them does.
       - name: Drop the clone's git metadata before publishing it
         run: rm -rf public/.git
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: public
-          # The action's tar excludes .[^/]* by default, which dropped
-          # .well-known/security.txt from every deployment ever made: the
-          # renderer wrote it, the branch carried it, and the published site
-          # 404'd it.
-          include-hidden-files: true
-
-      - name: Deploy to Pages
-        id: deploy
-        uses: actions/deploy-pages@v5
-
-      # Beside the Pages deploy, not instead of it. Pages stays deployed as the
-      # origin behind the route, which is what the Worker's fetch(request)
-      # fallback reaches and what a rollback returns to.
+      # The only publish step now. apt.pkg.haus is this Worker: the tree above
+      # as static assets, pool objects and indices from R2, and the archive's
+      # own 404.html for everything else. Nothing sits behind the route.
       - name: Set up Node
         uses: actions/setup-node@v7
         with:
@@ -361,7 +343,7 @@ jobs:
 
       # Ordered after the deployment on purpose: purging first would let the
       # edge refill with the previous render for a full day.
-      - name: Purge listing pages from the edge cache
+      - name: Purge the rebuilt pool objects from the edge cache
         env:
           CLOUDFLARE_PURGE_TOKEN: ${{ secrets.PKGHAUS_APT_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
