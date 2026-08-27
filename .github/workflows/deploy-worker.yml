@@ -16,8 +16,10 @@ on:
 permissions:
   contents: read
 
+# Shared with the ingest's publish job, which deploys the same Worker.
+# Group names are global across workflows, so the string is the coupling.
 concurrency:
-  group: deploy-worker
+  group: deploy-archive-worker
   cancel-in-progress: false
 
 jobs:
@@ -32,6 +34,18 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+
+      - name: Fetch the archive tree
+        working-directory: .
+        env:
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        # The Worker serves this tree as static assets. Deploying without it
+        # uploads zero assets. While the routes are narrow that degrades to
+        # Pages, but once they are broad it empties the site, so the test
+        # below fails the job rather than publishing an empty asset set.
+        run: |
+          git clone --branch archive --single-branch --depth 1 "$REPO_URL" public
+          test -f public/index.html
 
       - name: Set up Node
         uses: actions/setup-node@v7

@@ -22,6 +22,17 @@ routes = [
   { pattern = "apt.pkg.haus/dists/*", zone_name = "pkg.haus" },
 ]
 
+# The human-facing tree: listing pages, /news/, the keyring, index.html. It
+# lives on the `archive` branch and is cloned into public/ by whichever
+# workflow is about to deploy, which is why every one of them must do that
+# clone. Deploying without it uploads zero assets and empties the site.
+#
+# Asset-first: a request matching a file here is served from the asset layer
+# and the script never runs. A pool object is not a file here, so it still
+# reaches the script and R2.
+[assets]
+directory = "../public"
+
 # The archive itself. Anything under those prefixes that is not an object --
 # the listing pages that share the pool/ path space -- falls through to the
 # origin, which still serves the human-facing tree.

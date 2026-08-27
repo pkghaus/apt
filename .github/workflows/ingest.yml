@@ -41,8 +41,10 @@ permissions:
 
 # Two ingests interleaving would race on the archive branch; one at a time,
 # never cancelled mid-publish.
+# Shared with deploy-worker.yml: the publish job below deploys the same
+# Worker that workflow does, and two concurrent deploys would race.
 concurrency:
-  group: ingest
+  group: deploy-archive-worker
   cancel-in-progress: false
 
 jobs:
@@ -314,6 +316,40 @@ jobs:
       - name: Deploy to Pages
         id: deploy
         uses: actions/deploy-pages@v5
+
+      # Beside the Pages deploy, not instead of it. Pages stays deployed as the
+      # origin behind the route, which is what the Worker's fetch(request)
+      # fallback reaches and what a rollback returns to.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Install wrangler
+        working-directory: worker
+        run: npm ci
+
+      - name: Resolve the D1 database
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.PKGHAUS_APT_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          id="$(npx wrangler d1 list --json | jq -r '.[] | select(.name == "pkghaus-stats") | .uuid')"
+          if [ -z "$id" ]; then
+            echo "::error title=D1 database missing::pkghaus-stats does not exist in this account."
+            exit 1
+          fi
+          sed -i "s/PLACEHOLDER_RESOLVED_IN_CI/$id/" wrangler.toml
+
+      - name: Deploy the Worker and its assets
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.PKGHAUS_APT_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        # public/ is the tree rendered and committed above, so the assets match
+        # the archive branch this run just wrote.
+        run: npx wrangler deploy
 
       # Ordered after the deployment on purpose: purging first would let the
       # edge refill with the previous render for a full day.
