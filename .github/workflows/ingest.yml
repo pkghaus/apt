@@ -342,6 +342,13 @@ jobs:
           fi
           sed -i "s/PLACEHOLDER_RESOLVED_IN_CI/$id/" wrangler.toml
 
+      # public/ is a clone, so it carries .git. Everything in the asset
+      # directory is published, and a served .git directory reconstructs the
+      # working tree. This runs after every commit step above, which need that
+      # .git to compute their diffs.
+      - name: Drop the clone's git metadata before publishing it
+        run: rm -rf public/.git
+
       - name: Deploy the Worker and its assets
         working-directory: worker
         env:

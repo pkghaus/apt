@@ -46,6 +46,9 @@ jobs:
         run: |
           git clone --branch archive --single-branch --depth 1 "$REPO_URL" public
           test -f public/index.html
+          # Everything under public/ is published as an asset. Nothing in this
+          # workflow commits, so the clone's metadata goes immediately.
+          rm -rf public/.git
 
       - name: Set up Node
         uses: actions/setup-node@v7
