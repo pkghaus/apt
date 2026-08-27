@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 #
-# Purge the archive's listing pages from the Cloudflare edge cache. Runs
-# after the Pages deployment, so the edge refills with the fresh render.
-# The listing cache rule holds pages for a day (pkghaus/infrastructure,
-# waf/pkg.haus.yaml); this purge is what keeps them current the moment a
-# publish lands.
+# Purge the pool objects this run rebuilt from the Cloudflare edge cache.
 #
-# Free-plan purging is by exact URL, 30 per call. Every directory page is
-# purged in both request forms (trailing slash and explicit index.html).
-# dists/ pages are never edge-cached, so they are not purged.
+# Only the pool. A rebuild replaces the bytes under a URL that is already
+# published and already cached as immutable, and a POP still holding the old
+# bytes breaks apt with a hash mismatch. Nothing else here needs purging: the
+# listing pages, /news/ and the keyring are Worker static assets, and a Worker
+# deployment swaps them atomically, so there is no window in which the edge can
+# serve a previous render.
+#
+# Free-plan purging is by exact URL, 30 per call.
 
 set -euo pipefail
 # Without this, set -e stops at the edge of a command substitution: a function
@@ -64,29 +65,6 @@ pool_paths() {
     rm -f "$built"
 }
 
-# The Pages deployment reports success before every origin node serves
-# it. Purging inside that window lets the edge re-cache the PREVIOUS
-# render for the listings' full TTL (observed live 2026-08-16: a green
-# publish left a stale root listing until the next purge). Every render
-# stamps the footer with a fresh <time datetime>; wait until the origin
-# serves this render's stamp before purging. Cache-busting query strings
-# read through our edge straight to the origin.
-verify_origin_fresh() {
-    local stamp attempt
-    stamp="$(grep -o 'datetime="[^"]*"' "$ARCHIVE_DIR/index.html" 2>/dev/null | head -n1 || true)"
-    if [ -z "$stamp" ]; then
-        echo "no render stamp found; skipping origin verification" >&2
-        return 0
-    fi
-    for attempt in $(seq 1 24); do
-        if curl -fsS "$BASE_URL/?verify=${attempt}-$$" 2>/dev/null | grep -q "$stamp"; then
-            echo "origin serves this render (attempt $attempt)" >&2
-            return 0
-        fi
-        sleep 5
-    done
-    echo "WARNING: origin still serving a previous render after 120s; purging anyway" >&2
-}
 
 # Sourced rather than run: the tests exercise the URL selection above without
 # purging anything, and without needing a token.
@@ -97,17 +75,8 @@ fi
 : "${CLOUDFLARE_PURGE_TOKEN:?token with Zone - Cache Purge - Edit on pkg.haus}"
 : "${CLOUDFLARE_ZONE_ID:?the pkg.haus zone id}"
 
-verify_origin_fresh
-
 mapfile -t urls < <(
     {
-        find "$ARCHIVE_DIR" -name index.html \
-            -not -path "$ARCHIVE_DIR/dists/*" -not -path '*/.git/*' \
-            | while read -r page; do
-                rel="${page#"$ARCHIVE_DIR"}"
-                printf '%s%s\n' "$BASE_URL" "$rel"
-                printf '%s%s\n' "$BASE_URL" "${rel%index.html}"
-            done
         # A POP still holding the pre-rebuild bytes breaks apt with hash
         # mismatches against the fresh, never-cached dists metadata. apt
         # requests these URLs with '~' and '+' percent-encoded (observed
@@ -120,10 +89,6 @@ mapfile -t urls < <(
                 printf '%s/%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7e/g; s/+/%2b/g')"
                 printf '%s/%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7E/g; s/+/%2B/g')"
             done
-        # The news feed rides the same publish cadence as the listings.
-        if [ -f "$ARCHIVE_DIR/news/feed.xml" ]; then
-            printf '%s/news/feed.xml\n' "$BASE_URL"
-        fi
     } | LC_ALL=C sort -u
 )
 
