@@ -303,6 +303,14 @@ jobs:
           message: Ingest ${{ steps.stamp.outputs.at }}
           token: ${{ github.token }}
 
+      # public/ is a clone, so it carries .git, and both publish paths below
+      # take the whole directory: upload-pages-artifact with
+      # include-hidden-files, and wrangler as static assets. A served .git
+      # reconstructs the working tree. Placed here because the commit steps
+      # above need that .git to compute their diffs and nothing after them does.
+      - name: Drop the clone's git metadata before publishing it
+        run: rm -rf public/.git
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
@@ -341,13 +349,6 @@ jobs:
             exit 1
           fi
           sed -i "s/PLACEHOLDER_RESOLVED_IN_CI/$id/" wrangler.toml
-
-      # public/ is a clone, so it carries .git. Everything in the asset
-      # directory is published, and a served .git directory reconstructs the
-      # working tree. This runs after every commit step above, which need that
-      # .git to compute their diffs.
-      - name: Drop the clone's git metadata before publishing it
-        run: rm -rf public/.git
 
       - name: Deploy the Worker and its assets
         working-directory: worker
