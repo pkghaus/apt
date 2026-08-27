@@ -34,6 +34,11 @@ routes = [
 [assets]
 directory = "../public"
 
+# Named so the script can hand a miss to the asset layer instead of an origin,
+# and so that layer answers with the archive's own 404.html.
+binding = "ASSETS"
+not_found_handling = "404-page"
+
 # The archive itself. Anything under those prefixes that is not an object --
 # the listing pages that share the pool/ path space -- falls through to the
 # origin, which still serves the human-facing tree.

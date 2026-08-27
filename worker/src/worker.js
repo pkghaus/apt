@@ -50,7 +50,16 @@ export default {
       console.error("archive path failed, falling through:", e?.message ?? e);
     }
 
-    return fetch(request);
+    // The asset layer, not the origin. It holds the listing tree, /news/ and
+    // the keyring, and answers everything else from the archive's own 404.html
+    // through not_found_handling. This host therefore has no origin at all: no
+    // request reaches past this Worker, which is what lets its DNS record stop
+    // naming a GitHub Pages site that serves none of it.
+    //
+    // Guarded because the binding exists only where [assets] is configured. A
+    // Worker deployed without them keeps serving whatever is behind its route
+    // instead of throwing on every miss.
+    return env.ASSETS ? env.ASSETS.fetch(request) : fetch(request);
   },
 };
 

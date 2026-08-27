@@ -32,6 +32,10 @@ function harness({ object = r2Object(), throwOnGet = false, d1Throws = false } =
   globalThis.caches = { default: { match: async () => undefined, put: async () => {} } };
   globalThis.fetch = async () => new Response("origin", { status: 418 });
   const env = {
+    // A distinct sentinel from the origin's 418. These tests have to tell
+    // "handed to the asset layer" apart from "handed to whatever is behind the
+    // route", and until this binding existed those were one path.
+    ASSETS: { fetch: async () => new Response("asset-404", { status: 404 }) },
     ARCHIVE: {
       async get(key, opts) {
         if (throwOnGet) throw new Error("bucket unreachable");
@@ -128,19 +132,29 @@ test("HEAD reports the size without a body and without counting", async () => {
   assert.equal(h.writes.length, 0);
 });
 
-test("an object the bucket does not have falls through to the origin", async () => {
+test("an object the bucket does not have goes to the asset layer", async () => {
   const h = harness({ object: null });
   const res = await worker.fetch(new Request("https://apt.pkg.haus" + DEB), h.env, h.ctx);
   await h.settle();
-  assert.equal(res.status, 418, "the origin answered, not this Worker");
+  assert.equal(res.status, 404, "the asset layer answered, not an origin");
+  assert.equal(await res.text(), "asset-404");
   assert.equal(h.writes.length, 0);
 });
 
-test("a path outside pool/ and dists/ is left to the origin", async () => {
+test("without an ASSETS binding it still falls through to the origin", async () => {
+  const h = harness({ object: null });
+  delete h.env.ASSETS;
+  const res = await worker.fetch(new Request("https://apt.pkg.haus" + DEB), h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 418, "a Worker without assets keeps whatever is behind its route");
+});
+
+test("a path outside pool/ and dists/ is left to the asset layer", async () => {
   const h = harness();
   const res = await worker.fetch(new Request("https://apt.pkg.haus/news/"), h.env, h.ctx);
   await h.settle();
-  assert.equal(res.status, 418);
+  assert.equal(res.status, 404);
+  assert.equal(await res.text(), "asset-404");
   assert.equal(h.writes.length, 0);
 });
 
@@ -148,14 +162,14 @@ test("a malformed percent-escape falls through instead of throwing", async () =>
   const h = harness();
   const res = await worker.fetch(new Request("https://apt.pkg.haus/pool/%zz"), h.env, h.ctx);
   await h.settle();
-  assert.equal(res.status, 418);
+  assert.equal(res.status, 404);
 });
 
 test("an unreachable bucket falls through rather than erroring", async () => {
   const h = harness({ throwOnGet: true });
   const res = await worker.fetch(new Request("https://apt.pkg.haus" + DEB), h.env, h.ctx);
   await h.settle();
-  assert.equal(res.status, 418, "serving must not turn a bucket failure into a 500");
+  assert.equal(res.status, 404, "serving must not turn a bucket failure into a 500");
 });
 
 test("a database that will not accept the write does not break serving", async () => {
