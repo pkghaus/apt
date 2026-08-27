@@ -34,12 +34,6 @@ routes = [
 [assets]
 directory = "../public"
 
-# A miss is answered from the archive's own 404.html rather than by falling
-# through to the origin. Without this the script's fetch(request) reaches
-# GitHub Pages for every miss, which is the last thing on this host that still
-# needs an origin at all.
-not_found_handling = "404-page"
-
 # The archive itself. Anything under those prefixes that is not an object --
 # the listing pages that share the pool/ path space -- falls through to the
 # origin, which still serves the human-facing tree.
