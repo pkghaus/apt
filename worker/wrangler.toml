@@ -2,9 +2,11 @@ name = "pkghaus-archive"
 main = "src/worker.js"
 compatibility_date = "2026-08-01"
 
-# pool/ and dists/ only. /stats* is a more specific pattern held by
-# pkghaus-stats, and Cloudflare resolves overlapping routes by specificity, so
-# the page keeps working whatever this Worker's patterns grow to cover.
+# The whole host. Two finer patterns are held by other scripts and keep winning
+# on specificity: apt.pkg.haus/stats* (pkghaus-stats) and apt.pkg.haus/zk/*
+# (plausible-worker). That second one is pinned explicitly rather than left to
+# *pkg.haus/zk/*, whose wildcard host against this pattern's exact host is a
+# precedence case Cloudflare does not document.
 #
 # Both routes are set to "Fail open" (dashboard: Workers & Pages ->
 # pkghaus-archive -> Settings). That is the least bad option rather than a
@@ -18,8 +20,7 @@ compatibility_date = "2026-08-01"
 # we count: only dists/<suite>/InRelease is recorded, every other metadata
 # request is served and not counted.
 routes = [
-  { pattern = "apt.pkg.haus/pool/*", zone_name = "pkg.haus" },
-  { pattern = "apt.pkg.haus/dists/*", zone_name = "pkg.haus" },
+  { pattern = "apt.pkg.haus/*", zone_name = "pkg.haus" },
 ]
 
 # The human-facing tree: listing pages, /news/, the keyring, index.html. It
