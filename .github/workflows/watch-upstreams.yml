@@ -130,8 +130,10 @@ jobs:
       # an annotation on a cron run nobody opens is not a signal.
       #
       # Reads the PUBLISHED keyring, so no secret is needed in a second
-      # workflow, and the fetch doubles as the only recurring check that the
-      # archive is reachable at all.
+      # workflow. Its fetch proves the keyring is reachable, which is NOT the
+      # same as the archive working: the keyring is served from the asset layer
+      # and pool/ and dists/ come from R2, so a broken R2 binding leaves this
+      # green. The archive-health step below is what covers that.
       - name: Check signing-key expiry
         if: ${{ !cancelled() }}
         run: |
@@ -139,3 +141,14 @@ jobs:
             -o published-keyring.gpg \
             https://apt.pkg.haus/pkghaus-archive-keyring.gpg
           FAIL_ON_WARN=1 scripts/check-key-expiry.sh published-keyring.gpg
+
+      # The archive's critical path, which nothing else checks on a schedule.
+      # The ingest is event driven, so weeks can pass with no publish and no
+      # other signal; a broken R2 binding would otherwise surface as a user
+      # reporting that apt cannot find a package. Verifies each suite's
+      # InRelease against the published keyring, that every index matches the
+      # hash Release gives for it, and that a real .deb downloads from the pool
+      # and matches. Costs four small requests per suite.
+      - name: Check the archive serves what it claims
+        if: ${{ !cancelled() }}
+        run: scripts/check-archive-health.sh

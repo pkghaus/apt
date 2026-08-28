@@ -344,6 +344,81 @@ echo "== check-key-expiry =="
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# --- check-archive-health.sh: the two parsers ---------------------------------
+#
+# The health check itself needs a network, so what is tested here is the text
+# handling, which is where its bugs would be. A Release lists every index four
+# times, once per hash algorithm, so reading the wrong section yields a
+# plausible-looking hash that never matches.
+(
+    # shellcheck source=scripts/check-archive-health.sh
+    . "$ROOT/scripts/check-archive-health.sh"
+
+    work="$(mktemp -d)"
+    cat > "$work/Release" <<'REL'
+Origin: pkg.haus
+Suite: trixie
+MD5Sum:
+ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa      100 main/binary-amd64/Packages
+SHA1:
+ bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb      100 main/binary-amd64/Packages
+SHA256:
+ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc      100 main/binary-amd64/Packages
+ dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd      200 main/binary-arm64/Packages
+SHA512:
+ eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee      100 main/binary-amd64/Packages
+Components: main
+REL
+
+    eq "release_record reads the SHA256 section, not MD5Sum above it" \
+       "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc 100" \
+       "$(release_record "$work/Release" main/binary-amd64/Packages)"
+
+    eq "release_record does not bleed into SHA512 below it" \
+       "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd 200" \
+       "$(release_record "$work/Release" main/binary-arm64/Packages)"
+
+    eq "release_record is empty for a path Release does not list" \
+       "" "$(release_record "$work/Release" main/binary-i386/Packages)"
+
+    cat > "$work/Packages" <<'PKG'
+Package: big
+Version: 1.0-1
+Size: 900000
+SHA256: 1111111111111111111111111111111111111111111111111111111111111111
+Filename: pool/main/b/big/big_1.0-1_amd64.deb
+
+Package: small
+Version: 2.0-1
+Size: 2600
+SHA256: 2222222222222222222222222222222222222222222222222222222222222222
+Filename: pool/main/s/small/small_2.0-1_all.deb
+
+Package: middle
+Version: 3.0-1
+Size: 50000
+SHA256: 3333333333333333333333333333333333333333333333333333333333333333
+Filename: pool/main/m/middle/middle_3.0-1_amd64.deb
+PKG
+
+    eq "smallest_package picks the smallest by Size, not by order" \
+       "2600 2222222222222222222222222222222222222222222222222222222222222222 pool/main/s/small/small_2.0-1_all.deb" \
+       "$(smallest_package "$work/Packages")"
+
+    # Numeric sort, not lexicographic: "900000" sorts before "2600" as text.
+    eq "smallest_package sorts numerically" \
+       "2600" "$(smallest_package "$work/Packages" | cut -d' ' -f1)"
+
+    # A trailing stanza with no blank line after it must still be considered.
+    printf 'Package: last\nVersion: 4.0-1\nSize: 10\nSHA256: 4444\nFilename: pool/main/l/last/last.deb\n' \
+        >> "$work/Packages"
+    eq "smallest_package sees a final stanza with no trailing blank line" \
+       "pool/main/l/last/last.deb" "$(smallest_package "$work/Packages" | cut -d' ' -f3)"
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
 if [ "$fail" -eq 0 ]; then
     echo "all tests passed"
