@@ -75,7 +75,11 @@ export function shouldCount(hit, status) {
 // Anything under these prefixes is the archive proper and is answered from the
 // bucket. Everything else on the routes -- the listing pages that share the
 // pool/ path space -- is left to Pages.
-const ARCHIVE_PREFIXES = ["/pool/", "/dists/"];
+// /buildinfo/ holds the .buildinfo for each published package, written by
+// scripts/publish-buildinfo.sh rather than by aptly, which cannot ingest one.
+// Served like the rest of the archive; treated as immutable the same way pool
+// objects are, since it describes bytes that never change.
+const ARCHIVE_PREFIXES = ["/pool/", "/dists/", "/buildinfo/"];
 
 // A pool file is immutable by the archive's own rule -- a version, once
 // published, is never rebuilt -- so it is cached at the edge for a month. The
@@ -110,14 +114,18 @@ async function archive(request, env, ctx, path) {
 
   const key = path.slice(1);
   const range = request.headers.get("range");
-  const pool = path.startsWith("/pool/");
+  // Both pool objects and buildinfos are immutable: a published version is
+  // never rebuilt, and a .buildinfo describes bytes that therefore cannot
+  // change. dists/ is the opposite and must never be cached.
+  const immutable =
+    path.startsWith("/pool/") || path.startsWith("/buildinfo/");
 
   // A response the worker builds itself never reaches the CDN cache the zone's
   // cache rules configure -- those govern origin fetches, and there is no
   // origin here any more. Without this the 30-day pool cache silently became
   // "read R2 on every download". Only plain full GETs are cached: a 206 is a
   // fragment and a conditional answer is not the object.
-  const cacheable = pool && request.method === "GET" && !range;
+  const cacheable = immutable && request.method === "GET" && !range;
   const cacheKey = new Request(`https://apt.pkg.haus${path}`);
   const cache = caches.default;
   if (cacheable) {
@@ -142,7 +150,7 @@ async function archive(request, env, ctx, path) {
   headers.set("accept-ranges", "bytes");
   headers.set(
     "cache-control",
-    pool ? `public, max-age=${POOL_MAX_AGE}, immutable` : "no-cache",
+    immutable ? `public, max-age=${POOL_MAX_AGE}, immutable` : "no-cache",
   );
 
   // A conditional that did not match comes back as an object with no body.

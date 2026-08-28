@@ -151,9 +151,12 @@ jobs:
         with:
           # The real Debian filename: one leg builds exactly one plan row.
           name: ${{ matrix.pkg }}_${{ matrix.version }}_${{ matrix.arch }}.deb
-          # .deb only. The builder collects a .buildinfo beside it, which the
-          # publish job has never received and aptly has no use for.
-          path: pkg/debs/*.deb
+          # Everything the builder collected, not just the .deb. The
+          # .buildinfo beside it records the exact environment the package was
+          # built in, which is what makes "built from source" checkable by
+          # someone else. aptly has no use for it -- it is published to its own
+          # R2 prefix below -- but it has to survive the artifact boundary first.
+          path: pkg/debs/*
           if-no-files-found: error
           retention-days: 7
 
@@ -234,6 +237,18 @@ jobs:
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/ingest.sh include build
+
+      # Beside aptly, not through it: aptly cannot ingest a .buildinfo, and one
+      # placed in pool/ by hand is deleted by its next cleanup. Same condition
+      # as the include above, because it publishes what that build produced.
+      - name: Publish the buildinfos
+        if: needs.build.result == 'success'
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+        run: scripts/publish-buildinfo.sh build
 
       # Unconditional, including on an empty plan. Gating this on "did we
       # publish anything" made a failed mirror unrepairable: the step runs

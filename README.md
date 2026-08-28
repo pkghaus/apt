@@ -70,18 +70,26 @@ retained.
   have become since.
 - Published pool files are immutable: the plan only ever adds missing
   versions, and a version already in the archive is never rebuilt.
-- `dists/` and `pool/` are objects in an R2 bucket, served through a Cloudflare
-  Worker. The human-facing tree - the pool's listing pages, the news log, the
-  keyring - lives on the [`archive`](../../tree/archive) branch and is served
-  by GitHub Pages. Both answer under `apt.pkg.haus`.
+- `dists/`, `pool/` and `buildinfo/` are objects in an R2 bucket, served
+  through a Cloudflare Worker. The human-facing tree - the pool's listing pages,
+  the news log, the keyring - lives on the [`archive`](../../tree/archive)
+  branch and is served by the same Worker as static assets. Both answer under
+  `apt.pkg.haus`; nothing is on GitHub Pages any more.
+- Every package publishes the two records of how it was built that the builder
+  produces: `buildinfo/<initial>/<source>/` holds dpkg's `.buildinfo`, naming
+  every build dependency and its version, and a `.source` naming the upstream
+  commit the package was built from. aptly cannot carry either - its pool is
+  addressed by package identity - so they are written beside it rather than
+  through it, the way Debian keeps buildinfos.debian.net separate from the
+  archive.
 - aptly's database lives on the [`aptly`](../../tree/aptly) branch. Its package
   pool does not: at the bucket's root prefix aptly only reads a package file it
   cannot already find published, so each run keeps just what it built.
 
 ## The archive Worker
 
-`worker/` is `pkghaus-archive`: `pool/` and `dists/` are objects in an R2
-bucket that only it can read, so it is what makes apt.pkg.haus an archive
+`worker/` is `pkghaus-archive`: `pool/`, `dists/` and `buildinfo/` are objects
+in an R2 bucket that only it can read, so it is what makes apt.pkg.haus an archive
 rather than a bucket. It also writes the download counters, because it is the
 one point every download passes through.
 

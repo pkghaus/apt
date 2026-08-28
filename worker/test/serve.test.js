@@ -78,6 +78,25 @@ test("a pool .deb is served immutable for a month and counted once", async () =>
     "package, version, suite and arch, with the day first");
 });
 
+const BUILDINFO = "/buildinfo/c/croc/croc_11.3.0-1~haus13+1_amd64.buildinfo";
+
+test("a buildinfo is served from the bucket, immutable like the pool", async () => {
+  const h = harness();
+  const res = await worker.fetch(new Request("https://apt.pkg.haus" + BUILDINFO), h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 200, "buildinfo/ must be an archive prefix, not fall through to assets");
+  assert.equal(res.headers.get("cache-control"), "public, max-age=2592000, immutable",
+    "a .buildinfo describes bytes that never change, so it caches like a pool object");
+});
+
+test("a buildinfo is not a download and is never counted", async () => {
+  const h = harness();
+  await worker.fetch(new Request("https://apt.pkg.haus" + BUILDINFO), h.env, h.ctx);
+  await h.settle();
+  assert.equal(h.writes.length, 0,
+    "the download regex is anchored on /pool/.../*.deb; a buildinfo must not reach the counters");
+});
+
 test("an index is never cached, and a fresh one counts as an update check", async () => {
   const h = harness();
   const res = await worker.fetch(new Request("https://apt.pkg.haus" + REL), h.env, h.ctx);
