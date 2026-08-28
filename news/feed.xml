@@ -7,6 +7,20 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: d2 0.8.2-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-28-updated-d2-0.8.2-1</guid>
+<pubDate>Fri, 28 Aug 2026 16:25:20 +0000</pubDate>
+<description>Updated from 0.7.1-2. (d2 0.8.2-1)</description>
+</item>
+<item>
+<title>updated: croc 11.3.3-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-28-updated-croc-11.3.3-1</guid>
+<pubDate>Fri, 28 Aug 2026 16:25:20 +0000</pubDate>
+<description>Updated from 11.3.2-1. (croc 11.3.3-1)</description>
+</item>
+<item>
 <title>updated: vale 3.19.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-27-updated-vale-3.19.0-1</guid>
