@@ -10,13 +10,23 @@
 
 APTLY_ROOT="${APTLY_ROOT:-aptly-state}"
 APTLY_CONF="${APTLY_CONF:-$APTLY_ROOT/aptly.conf}"
-# The empty prefix is load-bearing, not a default. aptly caches the published
-# objects it already has under a key that omits the publish prefix, then looks
-# them up under a key that includes it, so with any prefix set the cache never
-# hits and every package falls back to the local pool. At the root prefix the
-# lookup matches, and only packages whose objects are genuinely missing from the
-# bucket are read from the pool -- which is what lets the pool be thrown away
-# between runs.
+# The empty prefix is load-bearing, not a default, and it now has two reasons
+# rather than one.
+#
+# The original was an aptly bug: it cached published objects under a key that
+# omitted the publish prefix, then looked them up under a key that included it,
+# so any prefix meant the cache never hit and every package fell back to the
+# local pool. FIXED UPSTREAM in aptly 1.6.3 (PR #1480, issue #1475, reported by
+# someone else against 1.6.2 with the same diagnosis reached here
+# independently), so it is no longer what forces this.
+#
+# What forces it now is the Worker. worker/src/worker.js derives the R2 object
+# key straight from the request path -- `const key = path.slice(1)` -- so the
+# archive has to sit at the bucket root for every pool and dists URL to map to
+# an object. Publishing under a prefix would require rewriting that mapping and
+# relocating every object in the bucket.
+#
+# The cache hitting is still what lets the pool be thrown away between runs.
 PUBLISH_TARGET="${PUBLISH_TARGET:-s3:r2:}"
 
 _aptly_conf_written=0

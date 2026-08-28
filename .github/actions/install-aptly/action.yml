@@ -10,8 +10,8 @@ runs:
   steps:
     - shell: bash
       env:
-        APTLY_VERSION: 1.6.2
-        APTLY_SHA256: c180d6d3c1e78f08a9e36cb07f64f3d98a5dba4111b02f58050b06f220a76c15
+        APTLY_VERSION: 1.6.3
+        APTLY_SHA256: 535ed24eb706bc25a316b59d709a7e74e10165f2ffab8552097ba7e4816a3e7e
       run: |
         zip="aptly_${APTLY_VERSION}_linux_amd64"
         curl -fsSLo /tmp/aptly.zip \
