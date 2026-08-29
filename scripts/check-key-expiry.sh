@@ -14,7 +14,7 @@
 #   ingest.yml    the secret, warn only. An ingest at 89 days must still
 #                 publish; the key is valid and refusing would be worse than
 #                 the warning.
-#   watch-upstreams.yml
+#   archive-health.yml
 #                 the PUBLISHED public keyring, FAIL_ON_WARN=1. The ingest is
 #                 event-driven, so a quiet fleet can sit out the whole 90-day
 #                 window without ever running the check -- the first signal

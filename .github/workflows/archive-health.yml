@@ -1,0 +1,63 @@
+name: Archive health
+
+# Two things about the archive that only time can break, checked on a clock
+# because nothing else would notice.
+#
+# The signing key's expiry, read from the PUBLISHED keyring rather than the
+# secret, so no key material touches the check. That has a second effect the
+# archive depends on: fetching the keyring over the real edge is the only
+# recurring proof the archive is reachable at all. It FAILS rather than warns,
+# because an ingest-only check can sleep through the whole 90-day window on a
+# quiet fleet.
+#
+# And the archive serving what it claims: signature, index integrity, and a
+# real package out of the pool, over R2-backed paths only. A broken R2 binding
+# leaves the keyring answering 200 while every package and index 404s, which
+# the expiry check next door cannot see.
+#
+# Upstream drift used to live here too. It moved to pkghaus/packages on
+# 2026-08-29, where the same detection opens a verified pull request instead of
+# describing the work in an issue. Two resolvers asking GitHub the same
+# question every six hours, with no rule for which wins when they disagree, is
+# not redundancy.
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: archive-health
+  cancel-in-progress: false
+
+jobs:
+  health:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check signing-key expiry
+        if: ${{ !cancelled() }}
+        run: |
+          curl --fail-with-body -sS --max-time 30 \
+            -o published-keyring.gpg \
+            https://apt.pkg.haus/pkghaus-archive-keyring.gpg
+          FAIL_ON_WARN=1 scripts/check-key-expiry.sh published-keyring.gpg
+
+      # The archive's critical path, which nothing else checks on a schedule.
+      # The ingest is event driven, so weeks can pass with no publish and no
+      # other signal; a broken R2 binding would otherwise surface as a user
+      # reporting that apt cannot find a package. Verifies each suite's
+      # InRelease against the published keyring, that every index matches the
+      # hash Release gives for it, and that a real .deb downloads from the pool
+      # and matches. Costs four small requests per suite.
+      - name: Check the archive serves what it claims
+        if: ${{ !cancelled() }}
+        run: scripts/check-archive-health.sh
