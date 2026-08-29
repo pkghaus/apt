@@ -2,8 +2,9 @@
 #
 # Build-from-source ingest for the pkg.haus APT archive.
 #
-# The archive is fed from the packaging repositories listed in repos.txt: for
-# each one, the newest tag is the release. Anything that tag should provide and
+# The archive is fed from the packages enrolled in packages.txt, which live one
+# directory each in pkghaus/packages: for each one, the newest tag under its own
+# namespace is the release. Anything that tag should provide and
 # the archive does not yet carry gets built with the deb-builder image and
 # added to the aptly repo for its suite. Published pool files are never rebuilt
 # or replaced -- a version, once in the archive, is immutable.
