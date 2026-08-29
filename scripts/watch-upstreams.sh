@@ -8,8 +8,8 @@
 # is never reported as current -- a false all-clear is worse than no
 # watcher.
 #
-# Enrollment (repos.txt) is the source of truth, so retired packages
-# leave the report on their own.
+# Enrolment (packages.txt in pkghaus/packages) is the source of truth, so
+# retired packages leave the report on their own.
 #
 # Versions compare as STRINGS: package.conf's VERSION is the upstream tag
 # verbatim, and the fleet carries 2.13.c.5, 1.0.5.2 and a date-shaped
@@ -20,7 +20,8 @@ set -euo pipefail
 # called as x="$(f)" keeps running after a failure instead of aborting.
 shopt -s inherit_errexit
 
-REPOS_FILE="${REPOS_FILE:-repos.txt}"
+PACKAGES_REPO="${PACKAGES_REPO:-pkghaus/packages}"
+PACKAGES_FILE="${PACKAGES_FILE:-packages.txt}"
 RAW_BASE="${RAW_BASE:-https://raw.githubusercontent.com}"
 API_BASE="${API_BASE:-https://api.github.com}"
 
@@ -86,9 +87,11 @@ while read -r repo; do
     repo="${repo%%[[:space:]]*}"
     checked=$((checked + 1))
 
-    conf="$(curl -fsS "$RAW_BASE/$repo/HEAD/package.conf" 2>/dev/null || true)"
+    # One repository, a directory per package, so the package.conf sits under
+    # the package's own directory rather than at some other repository's root.
+    conf="$(curl -fsS "$RAW_BASE/$PACKAGES_REPO/HEAD/$repo/package.conf" 2>/dev/null || true)"
     if [ -z "$conf" ]; then
-        rows="$rows| \`${repo##*/}\` | ? | ? | no package.conf on the default branch |"$'\n'
+        rows="$rows| \`$repo\` | ? | ? | no package.conf in the tree |"$'\n'
         failed=1
         continue
     fi
@@ -99,22 +102,22 @@ while read -r repo; do
     slug="${slug%.git}"
 
     if [ -z "$ours" ] || [ -z "$slug" ]; then
-        rows="$rows| \`${repo##*/}\` | ${ours:-?} | ? | package.conf is missing UPSTREAM or VERSION |"$'\n'
+        rows="$rows| \`$repo\` | ${ours:-?} | ? | package.conf is missing UPSTREAM or VERSION |"$'\n'
         failed=1
         continue
     fi
 
     if ! newest="$(latest_tag "$slug")"; then
-        rows="$rows| \`${repo##*/}\` | \`$ours\` | ? | no release or tag found for \`$slug\` |"$'\n'
+        rows="$rows| \`$repo\` | \`$ours\` | ? | no release or tag found for \`$slug\` |"$'\n'
         failed=1
         continue
     fi
 
     if [ "$ours" != "$newest" ]; then
-        rows="$rows| \`${repo##*/}\` | \`$ours\` | \`$newest\` | [$slug](https://github.com/$slug/releases) |"$'\n'
+        rows="$rows| \`$repo\` | \`$ours\` | \`$newest\` | [$slug](https://github.com/$slug/releases) |"$'\n'
         drift=$((drift + 1))
     fi
-done < "$REPOS_FILE"
+done < "$PACKAGES_FILE"
 
 if [ -n "$rows" ]; then
     printf '| package | packaged | upstream | |\n|---|---|---|---|\n%s' "$rows"

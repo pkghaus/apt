@@ -22,9 +22,13 @@ run-name: >-
 #                committed back. Kept off the archive branch because that whole
 #                branch becomes the published asset set.
 #
-# Runs when a fleet repository reports a validated tag (repository_dispatch
-# from action-debian-build's notify job), on manual dispatch, and on pushes
-# that change the archive's own configuration.
+# Runs when pkghaus/packages reports a validated tag (repository_dispatch from
+# action-debian-build's notify job), on manual dispatch, and on pushes that
+# change the archive's own configuration.
+#
+# Enrolment is no longer a trigger here: packages.txt lives in pkghaus/packages.
+# Enrolling a package takes effect on the next ingest, and the tag that releases
+# it dispatches one.
 
 on:
   repository_dispatch:
@@ -33,7 +37,6 @@ on:
   push:
     branches: [master, main]
     paths:
-      - repos.txt
       - scripts/**
       - .github/actions/install-aptly/**
 
@@ -59,6 +62,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
+
+      - name: Checkout the packages
+        uses: actions/checkout@v7
+        with:
+          repository: pkghaus/packages
+          path: packages
           persist-credentials: false
 
       - name: Check signing-key expiry
@@ -90,6 +100,9 @@ jobs:
         id: plan
         # The matrix fans out one leg per plan row (package x suite x arch),
         # so each leg's artifact can carry the real package filename.
+        env:
+          # Enrolment lives with the packages, not with the archive.
+          PACKAGES_FILE: packages/packages.txt
         run: |
           scripts/ingest.sh plan > plan.tsv
           echo "--- plan ---"
