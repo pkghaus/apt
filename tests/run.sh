@@ -127,7 +127,7 @@ echo "render refuses to replace pool listings with nothing"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
-echo "the plan tells an unreachable repo apart from an untagged one"
+echo "the plan tells an unreachable source apart from an untagged package"
 (
     work="$(mktemp -d)"
     mkdir -p "$work/bin"
@@ -138,21 +138,21 @@ case "$1 $2" in "ls-remote --tags") echo "fatal: could not read from remote" >&2
 exec /usr/bin/git "$@"
 FAKE
     chmod +x "$work/bin/git"
-    printf 'pkghaus/croc-debian\n' > "$work/repos.txt"
+    printf 'croc\n' > "$work/packages.txt"
 
     # ls-remote used to head a pipeline, so its failure produced no output,
     # exited 0 through tail, and was reported as "no tags": the package left the
     # plan silently under a message blaming the upstream.
-    out="$(PATH="$work/bin:$PATH" REPOS_FILE="$work/repos.txt" \
+    out="$(PATH="$work/bin:$PATH" PACKAGES_FILE="$work/packages.txt" \
         "$ROOT/scripts/ingest.sh" plan 2>&1)" && rc=0 || rc=$?
     if [ "${rc:-0}" -eq 0 ]; then
-        no "an unreadable repo must not be reported as untagged" "exited 0"
+        no "an unreadable source must not be reported as untagged" "exited 0"
     elif grep -q 'no tags' <<<"${out:-}"; then
-        no "an unreadable repo must not be reported as untagged" "blamed the upstream: ${out:-}"
+        no "an unreadable source must not be reported as untagged" "blamed the upstream: ${out:-}"
     elif ! grep -q 'cannot read tags' <<<"${out:-}"; then
-        no "an unreadable repo must not be reported as untagged" "wrong message: ${out:-}"
+        no "an unreadable source must not be reported as untagged" "wrong message: ${out:-}"
     else
-        ok "an unreadable repo must not be reported as untagged"
+        ok "an unreadable source must not be reported as untagged"
     fi
 
     rm -rf "$work"

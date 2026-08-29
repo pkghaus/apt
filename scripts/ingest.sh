@@ -24,7 +24,10 @@ set -euo pipefail
 # called as x="$(f)" keeps running after a failure instead of aborting.
 shopt -s inherit_errexit
 
-REPOS_FILE="${REPOS_FILE:-repos.txt}"
+# The single repository holding every package, one directory each. Overridable
+# so the tests can point at a fixture; anything git clone accepts works.
+PACKAGES_REPO="${PACKAGES_REPO:-pkghaus/packages}"
+PACKAGES_FILE="${PACKAGES_FILE:-packages.txt}"
 # Prefix a repo slug resolves against. Tests point it at a local directory of
 # fixture repositories; anything git clone accepts works.
 GIT_BASE="${GIT_BASE:-https://github.com/}"
@@ -76,14 +79,26 @@ qualifier() {
 # output, exited 0 through tail, and was reported as "no tags" -- a network blip
 # silently dropping a package from the plan under a message saying the upstream
 # had never tagged anything.
+# The newest tag belonging to one package. Tags are namespaced by package
+# (croc/v11.3.4-1), so the package's own tags are the ones under its prefix and
+# every other package's are noise.
+#
+# Matched by exact prefix rather than a regex: Debian source names may contain
+# "." and "+", both of which mean something else to grep.
+#
+# Note this cannot use the old awk -F/ '{print $NF}': that takes the last path
+# component, which turns refs/tags/croc/v11.3.4-1 into v11.3.4-1 and silently
+# discards the package the tag belongs to.
 newest_tag() {
-    local repo="$1" refs
+    local pkg="$1" refs
 
-    refs="$(git ls-remote --tags "${GIT_BASE}${repo}")" || return 1
+    refs="$(git ls-remote --tags "${GIT_BASE}${PACKAGES_REPO}")" || return 1
 
     printf '%s\n' "$refs" \
-        | awk -F/ '{print $NF}' \
+        | awk '{print $2}' \
         | grep -v '\^{}$' \
+        | sed 's|^refs/tags/||' \
+        | awk -v p="$pkg/" 'index($0, p) == 1' \
         | sort -V \
         | tail -1
 }
@@ -115,19 +130,26 @@ archived_version() {
 plan() {
     local arches="${1:-amd64 arm64}"
     local repo tag clone header pkg version suite arch expected have all_only missing
+    # "repo" is the package directory now, kept as the plan row's first field so
+    # the workflow that consumes it needs no change: it names what to check out.
 
     while read -r repo; do
         case "$repo" in ''|\#*) continue ;; esac
+        repo="${repo%%[[:space:]]*}"
 
-        tag="$(newest_tag "$repo")" || die "cannot read tags from $repo"
+        tag="$(newest_tag "$repo")" || die "cannot read tags from $PACKAGES_REPO"
+        # Not an error. A package with no tag has never been released from this
+        # repository, which is exactly the state every package is in the moment
+        # the archive is cut over: the archive already holds it, and there is
+        # nothing to build until its next release.
         [ -n "$tag" ] || { log "SKIP $repo: no tags"; continue; }
 
         clone="$(mktemp -d)"
-        git clone -q --depth 1 --branch "$tag" -- "${GIT_BASE}${repo}" "$clone"
+        git clone -q --depth 1 --branch "$tag" -- "${GIT_BASE}${PACKAGES_REPO}" "$clone"
 
-        header="$(changelog_header "$clone")"
+        header="$(changelog_header "$clone/$repo")"
         all_only=0
-        if arch_all_only "$clone"; then
+        if arch_all_only "$clone/$repo"; then
             all_only=1
         fi
         rm -rf "$clone"
@@ -167,7 +189,7 @@ plan() {
                     "$repo" "$tag" "$pkg" "$suite" "$arch" "$expected"
             done
         done
-    done < "$REPOS_FILE"
+    done < "$PACKAGES_FILE"
 }
 
 # The suite a package belongs to is recoverable from its version qualifier,
