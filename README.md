@@ -48,26 +48,27 @@ shaped after Debian's `~bpo` backports convention but deliberately not squatting
 it - these packages do not come from Debian backports, and the token doubles as
 provenance in `dpkg -l`.
 
-The archive carries one version per package per suite: the newest tag of each
-packaging repository. Older versions are rebuildable from their tags but not
-retained.
+The archive carries one version per package per suite: each package's newest
+tag in [packages](https://github.com/pkghaus/packages). Older versions are
+rebuildable from their tags but not retained.
 
 ## How it works
 
-- `repos.txt` lists the packaging repositories. Each holds a `debian/`
-  directory and a `package.conf`, and is built by
+- [packages](https://github.com/pkghaus/packages) holds the packaging: one
+  directory per package, each with a `debian/` directory and a
+  `package.conf`, built by
   [action-debian-build](https://github.com/pkghaus/action-debian-build)'s
-  builder images.
+  builder images. Its `packages.txt` is the enrolment list, and tags are
+  namespaced by package (`croc/v11.3.5-1`).
 - Each validated release triggers the
-  [ingest](.github/workflows/ingest.yml), which compares the repository's
-  newest tag against the archive, builds only what is missing (natively per
+  [ingest](.github/workflows/ingest.yml), which compares each package's newest
+  tag against the archive, builds only what is missing (natively per
   architecture, no emulation), and includes it into an
-  [aptly](https://www.aptly.info/) repository. Each build leg checks the
-  packaging repository out at its tag and runs the same action a packaging
-  repository runs on its own tags, so a package that ships `debian/tests/` has
-  those tests run here too. That matters: the archive builds a tag whenever it
-  first needs it, sometimes weeks later, against whatever testing and unstable
-  have become since.
+  [aptly](https://www.aptly.info/) repository. Each build leg checks that tag
+  out and runs the same action the packages repository runs on its own tags, so
+  a package that ships `debian/tests/` has those tests run here too. That
+  matters: the archive builds a tag whenever it first needs it, sometimes weeks
+  later, against whatever testing and unstable have become since.
 - Published pool files are immutable: the plan only ever adds missing
   versions, and a version already in the archive is never rebuilt.
 - `dists/`, `pool/` and `buildinfo/` are objects in an R2 bucket, served
