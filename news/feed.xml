@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: ouch 0.8.2-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-08-31-updated-ouch-0.8.2-1</guid>
+<pubDate>Mon, 31 Aug 2026 07:55:32 +0000</pubDate>
+<description>Updated from 0.8.1-2. (ouch 0.8.2-1)</description>
+</item>
+<item>
 <title>updated: croc 11.3.6-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-30-updated-croc-11.3.6-1</guid>
