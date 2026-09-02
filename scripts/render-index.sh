@@ -219,6 +219,7 @@ page_close() {
     cat <<EOF
   <footer>
     <a href="https://pkg.haus">pkg.haus</a>
+    <a href="https://buildinfos.pkg.haus">buildinfos.pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
     <span>rendered by the ingest
     <time datetime="$(date -u +%Y-%m-%dT%H:%M:%SZ)">$(date -u '+%Y-%m-%d %H:%M:%S UTC')</time></span>
