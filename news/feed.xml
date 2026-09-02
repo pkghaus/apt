@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: pkghaus-archive-keyring 2026.09.02.1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-updated-pkghaus-archive-keyring-2026.09.02.1</guid>
+<pubDate>Wed, 02 Sep 2026 13:28:18 +0000</pubDate>
+<description>Updated from 2026.09.02. (pkghaus-archive-keyring 2026.09.02.1)</description>
+</item>
+<item>
 <title>updated: viddy 1.3.1-3</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-02-updated-viddy-1.3.1-3</guid>

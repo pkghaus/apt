@@ -59,3 +59,4 @@
 {"ts":"2026-09-02T10:58:41Z","type":"updated","title":"updated: zola 0.23.4-2","detail":"Updated from 0.23.4-1.","pkgs":"zola=0.23.4-2"}
 {"ts":"2026-09-02T12:13:32Z","type":"updated","title":"updated: lychee 0.24.2-3","detail":"Updated from 0.24.2-2.","pkgs":"lychee=0.24.2-3"}
 {"ts":"2026-09-02T12:13:32Z","type":"updated","title":"updated: viddy 1.3.1-3","detail":"Updated from 1.3.1-2.","pkgs":"viddy=1.3.1-3"}
+{"ts":"2026-09-02T13:28:18Z","type":"updated","title":"updated: pkghaus-archive-keyring 2026.09.02.1","detail":"Updated from 2026.09.02.","pkgs":"pkghaus-archive-keyring=2026.09.02.1"}
