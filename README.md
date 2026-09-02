@@ -71,24 +71,43 @@ rebuildable from their tags but not retained.
   later, against whatever testing and unstable have become since.
 - Published pool files are immutable: the plan only ever adds missing
   versions, and a version already in the archive is never rebuilt.
-- `dists/`, `pool/` and `buildinfo/` are objects in an R2 bucket, served
+- `dists/` and `pool/` are objects in an R2 bucket, served
   through a Cloudflare Worker. The human-facing tree - the pool's listing pages,
   the news log, the keyring - lives on the [`archive`](../../tree/archive)
   branch and is served by the same Worker as static assets. Both answer under
   `apt.pkg.haus`; nothing is on GitHub Pages any more.
-- Every package publishes how it was built and what it was built from.
-  `buildinfo/<initial>/<source>/` holds dpkg's `.buildinfo`, naming every build
-  dependency and its version, a `.source` naming the upstream commit and the
-  compiler that ran, and the source package itself. aptly cannot carry any of
-  them - its pool is addressed by package identity - so they are written beside
-  it rather than through it, the way Debian keeps buildinfos.debian.net
-  separate from the archive.
+- Every package publishes how it was built and what it was built from, at
+  [buildinfos.pkg.haus](https://buildinfos.pkg.haus). `buildinfo-pool/<initial>/
+  <source>/` holds dpkg's `.buildinfo`, naming every build dependency and its
+  version, a `.source` naming the upstream commit and the compiler that ran, and
+  the source package itself. A record is only ever published beside its `.dsc`
+  and tarballs - alone it is useless, because `debrebuild` would fall back to
+  debsnap, which has never heard of this archive. aptly cannot carry any of them
+  - its pool is addressed by package identity - so they are written beside it
+  rather than through it, the way Debian keeps buildinfos.debian.net separate
+  from the archive. They moved off this host on 2026-09-02: the layout is a
+  source pool, not an archive path, and the Worker serving it is the one that
+  answers `apt update`.
 - Those records are what make the archive verifiable with `debrebuild` rather
   than only readable, and `verify/rebuild.sh` is the whole procedure. Given a
   `.buildinfo`, it resolves every build dependency from snapshot.debian.org at
   the versions recorded, unpacks the `.dsc` published beside it, rebuilds, and
-  compares all four checksums. Proven end to end on croc: `all OK`, and the
-  rebuilt `.deb` byte-identical.
+  compares all four checksums:
+
+  ```sh
+  B=https://buildinfos.pkg.haus/buildinfo-pool/m/mandown
+  mkdir mandown && cd mandown
+  curl -fsSLO "$B/mandown_1.0.5.2-2~haus13+1_amd64.buildinfo"
+  curl -fsSLO "$B/mandown_1.0.5.2-2~haus13+1.dsc"
+  curl -fsSLO "$B/mandown_1.0.5.2-2~haus13+1.debian.tar.xz"
+  curl -fsSLO "$B/mandown_1.0.5.2.orig.tar.gz"
+  cd .. && verify/rebuild.sh mandown
+  ```
+
+  Proven end to end on 2026-09-02 against a freshly published record:
+  `checking mandown_1.0.5.2-2~haus13+1_amd64.deb: size... sha256... md5...
+  sha1... all OK`, and the rebuilt `.deb` byte-identical to the one the archive
+  serves.
 - The records are kept forever. So are the source tarballs, until the bucket
   approaches its budget: one generation across the fleet is 119 MB and additive
   growth is 836 MB a year, against a pool flat at 623 MB and a 10 GB free tier,
@@ -103,7 +122,7 @@ rebuildable from their tags but not retained.
 
 ## The archive Worker
 
-`worker/` is `pkghaus-archive`: `pool/`, `dists/` and `buildinfo/` are objects
+`worker/` is `pkghaus-archive`: `pool/` and `dists/` are objects
 in an R2 bucket that only it can read, so it is what makes apt.pkg.haus an archive
 rather than a bucket. It also writes the download counters, because it is the
 one point every download passes through.

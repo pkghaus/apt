@@ -4,12 +4,13 @@
 #
 #   verify/rebuild.sh <dir holding one package's .buildinfo, .dsc and tarballs>
 #
-# Everything it needs is published at the same path under buildinfo/:
+# Everything it needs is published at the same path on buildinfos.pkg.haus:
 #
-#   curl -fsSLO https://apt.pkg.haus/buildinfo/c/croc/croc_11.3.6-1_amd64.buildinfo
-#   curl -fsSLO https://apt.pkg.haus/buildinfo/c/croc/croc_11.3.6-1.dsc
-#   curl -fsSLO https://apt.pkg.haus/buildinfo/c/croc/croc_11.3.6.orig.tar.gz
-#   curl -fsSLO https://apt.pkg.haus/buildinfo/c/croc/croc_11.3.6-1.debian.tar.xz
+#   B=https://buildinfos.pkg.haus/buildinfo-pool/m/mandown
+#   curl -fsSLO $B/mandown_1.0.5.2-2_amd64.buildinfo
+#   curl -fsSLO $B/mandown_1.0.5.2-2.dsc
+#   curl -fsSLO $B/mandown_1.0.5.2.orig.tar.gz
+#   curl -fsSLO $B/mandown_1.0.5.2-2.debian.tar.xz
 #
 # debrebuild resolves every build dependency from snapshot.debian.org at the
 # versions the record names, unpacks the .dsc, rebuilds, and checks all four
@@ -22,6 +23,14 @@
 #    built from the files you already have satisfies it.
 #  - the mmdebstrap builder cannot run nested inside a container; the dpkg
 #    builder is used instead, which is why this runs in a throwaway one.
+#  - the dpkg builder installs the record's Installed-Build-Depends at exactly
+#    the pinned versions, and apt satisfies that by REMOVING whatever conflicts
+#    -- devscripts included, which is the package debrebuild itself came from.
+#    It survives because perl already loaded it, but the `dcmd` it shells out to
+#    afterwards is gone, and the run dies with "Can't exec dcmd" one step before
+#    the checksum comparison that is the whole point. dcmd is a POSIX sh script
+#    needing only dirname and sed, so a copy under /usr/local/bin (ahead of
+#    /usr/bin on PATH, and not owned by dpkg) outlives the install.
 
 set -euo pipefail
 
@@ -43,6 +52,7 @@ docker run --rm --privileged \
     --volume "$IN:/p" \
     "$IMAGE" sh -c '
         set -e
+        cp /usr/bin/dcmd /usr/local/bin/dcmd
         mkdir -p /srcrepo
         cp /p/*.dsc /p/*.tar.* /srcrepo/
         cd /srcrepo && dpkg-scansources . > Sources && gzip -kf Sources
