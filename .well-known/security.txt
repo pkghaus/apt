@@ -1,4 +1,4 @@
 Contact: mailto:security@pkg.haus
-Expires: 2027-09-02T10:19:22.000Z
+Expires: 2027-09-02T10:59:04.000Z
 Preferred-Languages: en
 Canonical: https://apt.pkg.haus/.well-known/security.txt
