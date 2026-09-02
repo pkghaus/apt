@@ -127,6 +127,25 @@ shopt -s nullglob
 extras=("$SRC"/*.source "$SRC"/*.dsc "$SRC"/*.tar.*)
 shopt -u nullglob
 
+# A record with no source beside it is not actionable. debrebuild looks for the
+# .dsc in the record's own directory first and, not finding one, falls back to
+# debsnap -- which has never heard of this archive, so the rebuild cannot even
+# start. Publishing it anyway puts a file on a host whose entire claim is "check
+# our builds" that cannot be used to check anything.
+#
+# This is not hypothetical: 36 such records, from builds made before the builder
+# emitted source packages, were served for a day and then deleted. The invariant
+# is enforced here rather than left to the builder so that a future change to
+# what gets collected fails loudly instead of quietly halving the value of every
+# record it publishes.
+dscs=("$SRC"/*.dsc)
+if [ "${#files[@]}" -gt 0 ] && [ ! -e "${dscs[0]}" ]; then
+    printf 'FATAL: %s holds %s build record(s) and no .dsc. A record is only\n' \
+        "$SRC" "${#files[@]}" >&2
+    printf '       publishable beside the source package it describes.\n' >&2
+    exit 1
+fi
+
 for dsc in "$SRC"/*.dsc; do
     [ -e "$dsc" ] || continue
     verify_dsc "$dsc"

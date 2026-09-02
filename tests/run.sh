@@ -468,6 +468,36 @@ DSC
         ok "verify_dsc rejects a checksum mismatch"
     fi
 
+    # A record with no source beside it. debrebuild reads the .dsc from the
+    # record's own directory and falls back to debsnap, which has never heard of
+    # this archive -- so such a record cannot be used for anything, and 36 of
+    # them were served for a day before being deleted. The guard runs after
+    # require_r2 and before the first upload, so fake credentials reach it.
+    recs="$(mktemp -d)"
+    : > "$recs/demo_1.0-1_amd64.buildinfo"
+    out="$(R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_BUCKET=x R2_ENDPOINT=x \
+        "$ROOT/scripts/publish-buildinfo.sh" "$recs" 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -ne 0 ] && printf '%s' "$out" | grep -q 'and no .dsc'; then
+        ok "a build record is refused when its source package is absent"
+    else
+        no "a build record is refused when its source package is absent" \
+            "rc=${rc:-0} out=$out"
+    fi
+
+    # And accepted with one, so the guard is not simply refusing everything.
+    cp "$work/demo_1.0.orig.tar.gz" "$recs/"
+    write_dsc "$good" "$size"
+    cp "$work/demo_1.0-1.dsc" "$recs/"
+    out="$(R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_BUCKET=x R2_ENDPOINT=x \
+        "$ROOT/scripts/publish-buildinfo.sh" "$recs" 2>&1)" && rc=0 || rc=$?
+    if printf '%s' "$out" | grep -q 'and no .dsc'; then
+        no "the guard passes once the source package is beside the record" \
+            "still refused: $out"
+    else
+        ok "the guard passes once the source package is beside the record"
+    fi
+    rm -rf "$recs"
+
     # Same bytes, wrong size: catches a .dsc paired with the wrong tarball when
     # a hash collision is not the failure mode -- a truncated upload is.
     write_dsc "$good" 999999
