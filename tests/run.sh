@@ -554,18 +554,18 @@ LIB
     # croc 1.0-1 in unstable and 1.0-1~haus13+1 in trixie share one orig
     # tarball, which is the case a per-suite rule would get wrong.
     dsc_body() { printf 'Format: 3.0 (quilt)\nChecksums-Sha256:\n aaa 10 croc_1.0.orig.tar.gz\n bbb 20 croc_%s.debian.tar.xz\nFiles:\n ccc 10 croc_1.0.orig.tar.gz\n' "$1"; }
-    put buildinfo/c/croc/croc_1.0-1.dsc                     "$(dsc_body 1.0-1)"
-    put buildinfo/c/croc/croc_1.0-1~haus13+1.dsc            "$(dsc_body '1.0-1~haus13+1')"
-    put buildinfo/c/croc/croc_1.0.orig.tar.gz               "$(head -c 400 /dev/zero | tr '\0' o)"
-    put buildinfo/c/croc/croc_1.0-1.debian.tar.xz           deb-unstable
-    put buildinfo/c/croc/croc_1.0-1~haus13+1.debian.tar.xz  deb-trixie
+    put buildinfos/buildinfo-pool/c/croc/croc_1.0-1.dsc                     "$(dsc_body 1.0-1)"
+    put buildinfos/buildinfo-pool/c/croc/croc_1.0-1~haus13+1.dsc            "$(dsc_body '1.0-1~haus13+1')"
+    put buildinfos/buildinfo-pool/c/croc/croc_1.0.orig.tar.gz               "$(head -c 400 /dev/zero | tr '\0' o)"
+    put buildinfos/buildinfo-pool/c/croc/croc_1.0-1.debian.tar.xz           deb-unstable
+    put buildinfos/buildinfo-pool/c/croc/croc_1.0-1~haus13+1.debian.tar.xz  deb-trixie
     # Two superseded versions, one clearly older than the other.
-    put buildinfo/c/croc/croc_0.9-1.dsc  "$(printf 'Checksums-Sha256:\n ddd 10 croc_0.9.orig.tar.gz\n')"
-    put buildinfo/c/croc/croc_0.9.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' n)"
-    put buildinfo/c/croc/croc_0.8-1.dsc  "$(printf 'Checksums-Sha256:\n eee 10 croc_0.8.orig.tar.gz\n')"
-    put buildinfo/c/croc/croc_0.8.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' m)"
-    dated buildinfo/c/croc/croc_0.8.orig.tar.gz "2024-01-01 00:00:00"
-    dated buildinfo/c/croc/croc_0.9.orig.tar.gz "2025-01-01 00:00:00"
+    put buildinfos/buildinfo-pool/c/croc/croc_0.9-1.dsc  "$(printf 'Checksums-Sha256:\n ddd 10 croc_0.9.orig.tar.gz\n')"
+    put buildinfos/buildinfo-pool/c/croc/croc_0.9.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' n)"
+    put buildinfos/buildinfo-pool/c/croc/croc_0.8-1.dsc  "$(printf 'Checksums-Sha256:\n eee 10 croc_0.8.orig.tar.gz\n')"
+    put buildinfos/buildinfo-pool/c/croc/croc_0.8.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' m)"
+    dated buildinfos/buildinfo-pool/c/croc/croc_0.8.orig.tar.gz "2024-01-01 00:00:00"
+    dated buildinfos/buildinfo-pool/c/croc/croc_0.9.orig.tar.gz "2025-01-01 00:00:00"
 
     printf 'croc\t1.0-1\tamd64\n' > "$work/contents.unstable"
     printf 'croc\t1.0-1~haus13+1\tamd64\n' > "$work/contents.trixie"
@@ -593,18 +593,18 @@ LIB
     BUCKET_BUDGET_BYTES=$((total - 300)) "$work/scripts/prune-source-tarballs.sh" >/dev/null 2>&1
     got="$(tr '\n' ' ' < "$work/deleted" 2>/dev/null)"
     eq "over budget deletes the oldest superseded tarball, and only it" \
-       "buildinfo/c/croc/croc_0.8.orig.tar.gz " "$got"
+       "buildinfos/buildinfo-pool/c/croc/croc_0.8.orig.tar.gz " "$got"
 
     # --- what must never go ---------------------------------------------------
     for f in croc_1.0.orig.tar.gz croc_1.0-1.debian.tar.xz croc_1.0-1~haus13+1.debian.tar.xz; do
-        if [ -e "$work/objects/$(printf 'buildinfo/c/croc/%s' "$f" | tr / '%')" ]; then
+        if [ -e "$work/objects/$(printf 'buildinfos/buildinfo-pool/c/croc/%s' "$f" | tr / '%')" ]; then
             ok "a published version's tarball survives the budget: $f"
         else
             no "a published version's tarball survives the budget: $f" "it was deleted"
         fi
     done
 
-    if [ -e "$work/objects/$(printf 'buildinfo/c/croc/croc_0.8-1.dsc' | tr / '%')" ]; then
+    if [ -e "$work/objects/$(printf 'buildinfos/buildinfo-pool/c/croc/croc_0.8-1.dsc' | tr / '%')" ]; then
         ok "the .dsc of a pruned version is kept"
     else
         no "the .dsc of a pruned version is kept" "it was deleted"
@@ -623,7 +623,7 @@ LIB
 
     # --- stored but unreadable is not the same as absent ----------------------
     rm -f "$work/deleted"
-    printf 'buildinfo/c/croc/croc_1.0-1.dsc\n' > "$work/unreadable"
+    printf 'buildinfos/buildinfo-pool/c/croc/croc_1.0-1.dsc\n' > "$work/unreadable"
     if BUCKET_BUDGET_BYTES=1 "$work/scripts/prune-source-tarballs.sh" >/dev/null 2>&1; then
         no "an unreadable .dsc fails the run" "exited zero"
     elif [ ! -e "$work/deleted" ]; then

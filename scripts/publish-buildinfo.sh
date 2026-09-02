@@ -35,9 +35,14 @@
 #
 # Layout mirrors the pool's sharding so a reader can guess it, and debrebuild
 # requires the source to sit beside the record it belongs to:
-#   buildinfo/<initial>/<source>/<name>_<version>_<arch>.buildinfo
-#   buildinfo/<initial>/<source>/<name>_<version>.dsc
-#   buildinfo/<initial>/<source>/<name>_<upstream>.orig.tar.gz
+#   buildinfos/buildinfo-pool/<initial>/<source>/<name>_<version>_<arch>.buildinfo
+#   buildinfos/buildinfo-pool/<initial>/<source>/<name>_<version>.dsc
+#   buildinfos/buildinfo-pool/<initial>/<source>/<name>_<upstream>.orig.tar.gz
+#
+# The prefix is buildinfos/ and the pool sits inside it, which is what
+# buildinfos.pkg.haus serves: shards at the root would make the root namespace
+# the alphabet, leaving nowhere for the flat index and colliding with any
+# source package whose name starts with a digit.
 #
 # Uploads are additive. A .buildinfo describes bytes that are themselves
 # immutable, so re-uploading the same name is either identical or a bug
@@ -55,6 +60,10 @@ set -euo pipefail
 shopt -s inherit_errexit
 
 SRC="${1:?usage: $0 <dir holding *.buildinfo>}"
+
+# Where buildinfos.pkg.haus serves from. Kept in one place because the prune
+# script and the worker both have to agree with it.
+PREFIX="${BUILDINFO_PREFIX:-buildinfos/buildinfo-pool}"
 
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
@@ -141,9 +150,9 @@ for f in "${files[@]}" "${extras[@]}"; do
     # lib, so that case is deliberately not handled rather than guessed at.
     initial="${source:0:1}"
 
-    aws_ s3 cp "$f" "s3://$R2_BUCKET/buildinfo/$initial/$source/$name" \
+    aws_ s3 cp "$f" "s3://$R2_BUCKET/$PREFIX/$initial/$source/$name" \
         --only-show-errors
     published=$((published + 1))
 done
 
-printf 'published %s file(s) under buildinfo/\n' "$published" >&2
+printf 'published %s file(s) under %s/\n' "$published" "$PREFIX" >&2

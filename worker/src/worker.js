@@ -75,11 +75,11 @@ export function shouldCount(hit, status) {
 // Anything under these prefixes is the archive proper and is answered from the
 // bucket. Everything else on the routes -- the listing pages that share the
 // pool/ path space -- is left to Pages.
-// /buildinfo/ holds the .buildinfo for each published package, written by
-// scripts/publish-buildinfo.sh rather than by aptly, which cannot ingest one.
-// Served like the rest of the archive; treated as immutable the same way pool
-// objects are, since it describes bytes that never change.
-const ARCHIVE_PREFIXES = ["/pool/", "/dists/", "/buildinfo/"];
+// The build records used to be served here too, under /buildinfo/. They moved
+// to buildinfos.pkg.haus, which is a separate script on a separate host: that
+// layout is Debian's source pool, which apt never fetches and no Release file
+// references, and this Worker is what answers `apt update`.
+const ARCHIVE_PREFIXES = ["/pool/", "/dists/"];
 
 // A pool file is immutable by the archive's own rule -- a version, once
 // published, is never rebuilt -- so it is cached at the edge for a month. The
@@ -114,11 +114,9 @@ async function archive(request, env, ctx, path) {
 
   const key = path.slice(1);
   const range = request.headers.get("range");
-  // Both pool objects and buildinfos are immutable: a published version is
-  // never rebuilt, and a .buildinfo describes bytes that therefore cannot
-  // change. dists/ is the opposite and must never be cached.
-  const immutable =
-    path.startsWith("/pool/") || path.startsWith("/buildinfo/");
+  // A pool object is immutable: a published version is never rebuilt. dists/
+  // is the opposite and must never be cached.
+  const immutable = path.startsWith("/pool/");
 
   // A response the worker builds itself never reaches the CDN cache the zone's
   // cache rules configure -- those govern origin fetches, and there is no

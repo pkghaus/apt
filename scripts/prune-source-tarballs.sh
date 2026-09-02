@@ -50,7 +50,7 @@ DRY_RUN=0
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 
 SUITES="${SUITES:-trixie testing unstable}"
-PREFIX="${BUILDINFO_PREFIX:-buildinfo}"
+PREFIX="${BUILDINFO_PREFIX:-buildinfos/buildinfo-pool}"
 
 # 8 GiB of the free tier's 10, leaving room for the pool to grow and for the
 # gap between a publish and this step running.
