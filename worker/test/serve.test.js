@@ -22,7 +22,11 @@ function r2Object({ body = BODY, size = BODY.length, range } = {}) {
     writeHttpMetadata(h) { h.set("last-modified", "Mon, 25 Aug 2026 08:00:00 GMT"); },
   };
   if (body !== null) o.body = body;
-  if (range) o.range = range;
+  // Real R2 puts all three keys on the range object with `suffix` always
+  // undefined (measured 2026-09-02). A hand-built {offset, length} is a shape
+  // R2 never returns, and testing against it is how the NaN in Content-Range
+  // reached production and stayed there.
+  if (range) o.range = { suffix: undefined, ...range };
   return o;
 }
 

@@ -180,13 +180,25 @@ async function archive(request, env, ctx, path) {
   return response;
 }
 
-// R2 reports the range it served in one of three shapes -- {offset, length},
-// {offset} to the end, or {suffix} from the end -- and Content-Range needs
-// absolute bounds whichever it was.
+// Measured against live R2 on 2026-09-02: the result's range is always
+// {offset, length}, both resolved to numbers, whatever the request asked for --
+// a suffix range arrives already converted to an offset, an open-ended one with
+// its length filled in. There are not three shapes, there is one.
+//
+// But all three keys are own properties and `suffix` is always undefined, so
+// `"suffix" in range` is true on EVERY result. The old key-presence branch
+// therefore fired every time and computed `size - undefined`: this Worker has
+// answered ranged requests with `content-range: bytes NaN-<size-1>/<size>`
+// since the R2 cutover. The bytes were always right, which is why apt never
+// complained -- it fetches whole .debs and reads no Content-Range.
 export function resolveRange(range, size) {
-  if ("suffix" in range) return [size - range.suffix, size - 1];
-  const start = "offset" in range ? range.offset : 0;
-  const end = "length" in range ? start + range.length - 1 : size - 1;
+  // Guarded on the VALUE, not the key. Unreached by live R2, one typeof, and it
+  // keeps the function total if R2 ever reports a suffix it has not resolved.
+  if (typeof range.offset !== "number" && typeof range.suffix === "number") {
+    return [size - range.suffix, size - 1];
+  }
+  const start = typeof range.offset === "number" ? range.offset : 0;
+  const end = typeof range.length === "number" ? start + range.length - 1 : size - 1;
   return [start, end];
 }
 

@@ -57,8 +57,19 @@ test("contentType names what the archive publishes", () => {
   assert.equal(contentType("dists/trixie/InRelease"), "text/plain; charset=utf-8");
 });
 
-test("resolveRange handles all three shapes R2 reports", () => {
-  assert.deepEqual(resolveRange({ offset: 100, length: 50 }, 1000), [100, 149]);
+test("resolveRange reads R2's values, never its keys", () => {
+  // The shape live R2 actually returns, measured 2026-09-02 across all four
+  // request forms: offset and length resolved, `suffix` present and undefined.
+  // A range object without that third key is one R2 never produces, and it is
+  // what the old fixtures asserted against while production served NaN.
+  assert.deepEqual(resolveRange({ offset: 100, length: 50, suffix: undefined }, 1000),
+    [100, 149]);
+  assert.deepEqual(resolveRange({ offset: 900, length: 100, suffix: undefined }, 1000),
+    [900, 999]);
+  assert.deepEqual(resolveRange({ offset: 0, length: 1000, suffix: undefined }, 1000),
+    [0, 999]);
+
+  // Shapes R2 does not return today. Kept because the function must stay total.
   assert.deepEqual(resolveRange({ offset: 900 }, 1000), [900, 999]);
   assert.deepEqual(resolveRange({ suffix: 100 }, 1000), [900, 999]);
   assert.deepEqual(resolveRange({ length: 10 }, 1000), [0, 9]);
