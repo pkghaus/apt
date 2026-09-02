@@ -11414,3 +11414,123 @@
 09:16:36.305566 table@build exiting
 09:16:36.305569 table@build revert @2260
 09:16:36.305712 db@close done T·1.772465ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:06.257643 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:06.258037 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:06.258057 db@open opening
+09:26:06.258292 journal@recovery F·1
+09:26:06.258327 journal@recovery recovering @2258
+09:26:06.258654 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:06.263083 db@janitor F·220 G·0
+09:26:06.263113 db@open done T·5.039556ms
+09:26:06.263161 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:06.263347 db@close closing
+09:26:06.265308 table@build created L1@2262 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:06.265318 table@build exiting
+09:26:06.265321 table@build revert @2262
+09:26:06.265416 db@close done T·2.06864ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:06.282328 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:06.282642 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:06.282655 db@open opening
+09:26:06.282869 journal@recovery F·1
+09:26:06.282902 journal@recovery recovering @2260
+09:26:06.283176 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:06.312753 db@janitor F·220 G·0
+09:26:06.312786 db@open done T·30.117356ms
+09:26:06.312822 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:06.313543 db@close closing
+09:26:06.314798 table@build created L1@2264 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:06.314806 table@build exiting
+09:26:06.314809 table@build revert @2264
+09:26:06.314917 db@close done T·1.372203ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:09.708350 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:09.708664 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:09.708677 db@open opening
+09:26:09.708893 journal@recovery F·1
+09:26:09.708927 journal@recovery recovering @2262
+09:26:09.709203 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:09.728410 db@janitor F·220 G·0
+09:26:09.728432 db@open done T·19.744452ms
+09:26:09.728479 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:09.728676 db@close closing
+09:26:09.730604 table@build created L1@2266 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:09.730613 table@build exiting
+09:26:09.730615 table@build revert @2266
+09:26:09.730722 db@close done T·2.045085ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:09.746780 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:09.748112 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:09.748130 db@open opening
+09:26:09.748383 journal@recovery F·1
+09:26:09.748421 journal@recovery recovering @2264
+09:26:09.748527 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:09.751081 db@janitor F·220 G·0
+09:26:09.751114 db@open done T·2.969504ms
+09:26:09.751163 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:09.752301 db@close closing
+09:26:09.753974 table@build created L1@2268 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:09.753984 table@build exiting
+09:26:09.753987 table@build revert @2268
+09:26:09.754112 db@close done T·1.809711ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:13.357618 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:13.358257 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:13.358306 db@open opening
+09:26:13.358867 journal@recovery F·1
+09:26:13.358911 journal@recovery recovering @2266
+09:26:13.359025 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:13.404597 db@janitor F·220 G·0
+09:26:13.404641 db@open done T·46.315067ms
+09:26:13.404724 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:13.405221 db@close closing
+09:26:13.421897 table@build created L1@2270 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:13.421908 table@build exiting
+09:26:13.421912 table@build revert @2270
+09:26:13.422038 db@close done T·16.816301ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:13.439083 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:13.439422 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:13.439438 db@open opening
+09:26:13.439653 journal@recovery F·1
+09:26:13.439687 journal@recovery recovering @2268
+09:26:13.439960 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:13.442669 db@janitor F·220 G·0
+09:26:13.442696 db@open done T·3.246351ms
+09:26:13.442736 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:13.443427 db@close closing
+09:26:13.444927 table@build created L1@2272 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:13.444935 table@build exiting
+09:26:13.444938 table@build revert @2272
+09:26:13.445054 db@close done T·1.625734ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:21.276705 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:21.277128 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:21.277151 db@open opening
+09:26:21.277415 journal@recovery F·1
+09:26:21.277451 journal@recovery recovering @2270
+09:26:21.277555 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:21.289050 db@janitor F·220 G·0
+09:26:21.289071 db@open done T·11.915063ms
+09:26:21.289141 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:21.289525 db@close closing
+09:26:21.291643 table@build created L1@2274 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:21.291657 table@build exiting
+09:26:21.291661 table@build revert @2274
+09:26:21.291765 db@close done T·2.238576ms
+=============== Sep 2, 2026 (UTC) ===============
+09:26:21.308282 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:26:21.308589 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:21.308602 db@open opening
+09:26:21.308839 journal@recovery F·1
+09:26:21.308872 journal@recovery recovering @2272
+09:26:21.309195 version@stat F·[4 214] S·276KiB[3KiB 272KiB] Sc·[1.00 0.00]
+09:26:21.517567 db@janitor F·220 G·0
+09:26:21.517603 db@open done T·208.988428ms
+09:26:21.517674 table@compaction L0·1 -> L1·1 S·163KiB Q·2019
+09:26:21.518415 db@close closing
+09:26:21.519808 table@build created L1@2276 N·1092 S·161KiB "E0a..004,v1975":"xFP..0fd,v485"
+09:26:21.519817 table@build exiting
+09:26:21.519820 table@build revert @2276
+09:26:21.519957 db@close done T·1.541578ms
