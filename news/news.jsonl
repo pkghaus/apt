@@ -34,3 +34,7 @@
 {"ts":"2026-08-31T07:55:32Z","type":"updated","title":"updated: ouch 0.8.2-1","detail":"Updated from 0.8.1-2.","pkgs":"ouch=0.8.2-1"}
 {"ts":"2026-09-02T09:14:53Z","type":"updated","title":"updated: mandown 1.0.5.2-2","detail":"Updated from 1.0.5.2-1.","pkgs":"mandown=1.0.5.2-2"}
 {"ts":"2026-09-02T09:14:53Z","type":"security","title":"security: monolith 2.10.1-2","detail":"Updated from 2.10.1-1 (urgency=high).","pkgs":"monolith=2.10.1-2"}
+{"ts":"2026-09-02T10:19:05Z","type":"updated","title":"updated: act 0.2.89-2","detail":"Updated from 0.2.89-1.","pkgs":"act=0.2.89-2"}
+{"ts":"2026-09-02T10:19:05Z","type":"updated","title":"updated: actionlint 1.7.12-3","detail":"Updated from 1.7.12-2.","pkgs":"actionlint=1.7.12-3"}
+{"ts":"2026-09-02T10:19:05Z","type":"updated","title":"updated: berry 0.1.13-3","detail":"Updated from 0.1.13-2.","pkgs":"berry=0.1.13-3"}
+{"ts":"2026-09-02T10:19:05Z","type":"updated","title":"updated: betterlockscreen 4.4.0-2","detail":"Updated from 4.4.0-1.","pkgs":"betterlockscreen=4.4.0-2"}

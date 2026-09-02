@@ -7,6 +7,34 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: betterlockscreen 4.4.0-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-updated-betterlockscreen-4.4.0-2</guid>
+<pubDate>Wed, 02 Sep 2026 10:19:05 +0000</pubDate>
+<description>Updated from 4.4.0-1. (betterlockscreen 4.4.0-2)</description>
+</item>
+<item>
+<title>updated: berry 0.1.13-3</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-updated-berry-0.1.13-3</guid>
+<pubDate>Wed, 02 Sep 2026 10:19:05 +0000</pubDate>
+<description>Updated from 0.1.13-2. (berry 0.1.13-3)</description>
+</item>
+<item>
+<title>updated: actionlint 1.7.12-3</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-updated-actionlint-1.7.12-3</guid>
+<pubDate>Wed, 02 Sep 2026 10:19:05 +0000</pubDate>
+<description>Updated from 1.7.12-2. (actionlint 1.7.12-3)</description>
+</item>
+<item>
+<title>updated: act 0.2.89-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-updated-act-0.2.89-2</guid>
+<pubDate>Wed, 02 Sep 2026 10:19:05 +0000</pubDate>
+<description>Updated from 0.2.89-1. (act 0.2.89-2)</description>
+</item>
+<item>
 <title>updated: mandown 1.0.5.2-2</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-02-updated-mandown-1.0.5.2-2</guid>
