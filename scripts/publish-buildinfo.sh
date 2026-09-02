@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Publish the .buildinfo files a build produced, to their own R2 prefix.
+# Publish the build records and source packages a build produced, to their own
+# R2 prefix.
 #
 #   publish-buildinfo.sh <dir>       a directory holding *.buildinfo
 #
@@ -9,6 +10,13 @@
 # dpkg could see. It is what makes "built from source" checkable by someone
 # else, and it is the input a rebuilder needs. dpkg-buildpackage emits one
 # beside every .deb; until now it expired with the build runner.
+#
+# The source package ships with it, and that is what makes the record
+# actionable rather than merely readable. Given a .buildinfo alone, debrebuild
+# resolves the whole environment from snapshot.debian.org and then stops,
+# because our source was never in Debian and debsnap cannot find it. It looks
+# for the .dsc in the same directory as the record FIRST and only falls back to
+# debsnap when it is absent, so putting the two together is the entire fix.
 #
 # Why a prefix of its own rather than beside the .deb in the pool. aptly cannot
 # ingest a .buildinfo: its extension registry is exactly .changes, .deb, .dsc
@@ -25,12 +33,22 @@
 # and its own README calls itself a stopgap because ftp-master does not publish
 # them either.
 #
-# Layout mirrors the pool's sharding so a reader can guess it:
+# Layout mirrors the pool's sharding so a reader can guess it, and debrebuild
+# requires the source to sit beside the record it belongs to:
 #   buildinfo/<initial>/<source>/<name>_<version>_<arch>.buildinfo
+#   buildinfo/<initial>/<source>/<name>_<version>.dsc
+#   buildinfo/<initial>/<source>/<name>_<upstream>.orig.tar.gz
 #
 # Uploads are additive. A .buildinfo describes bytes that are themselves
 # immutable, so re-uploading the same name is either identical or a bug
 # elsewhere; nothing here deletes.
+#
+# One orig tarball serves all three suites -- the qualifier lands on the Debian
+# revision, so 11.3.6-1 and 11.3.6-1~haus13+1 share an upstream version -- and
+# all six legs of a version produce it byte-identically. The artifact download
+# merges them into one file before this script sees them, so divergence would be
+# invisible here; verify_dsc below catches it instead, because a .dsc records
+# the checksum of the tarball it expects.
 
 set -euo pipefail
 # Without this, set -e stops at the edge of a command substitution.
@@ -54,12 +72,64 @@ if [ "${#files[@]}" -eq 0 ]; then
     exit 0
 fi
 
+# A .dsc lists the sha256 of every file in its source package. Checking that
+# before upload is the only place divergence between legs can still be caught:
+# if two suites disagreed about the shared orig tarball, one of their .dsc files
+# would name a checksum the stored tarball does not have, and a verifier would
+# hit it instead of us.
+verify_dsc() {
+    local dsc="$1" dir want size file got
+
+    # The Checksums-Sha256 block runs until the next line that starts in column
+    # one. Fields are: hash, size, filename.
+    dir="$(dirname "$dsc")"
+    while read -r want size file; do
+        [ -n "$file" ] || continue
+
+        [ -e "$dir/$file" ] || {
+            printf 'FATAL: %s names %s, which the build did not produce\n' \
+                "$(basename "$dsc")" "$file" >&2
+            return 1
+        }
+
+        got="$(sha256sum "$dir/$file" | cut -d' ' -f1)"
+        [ "$got" = "$want" ] || {
+            printf 'FATAL: %s does not match the checksum in %s\n' \
+                "$file" "$(basename "$dsc")" >&2
+            printf '       expected %s\n       got      %s\n' "$want" "$got" >&2
+            printf '       Two build legs disagree about a shared source file.\n' >&2
+            return 1
+        }
+
+        [ "$(stat -c %s "$dir/$file")" = "$size" ] || {
+            printf 'FATAL: %s has the wrong size for %s\n' "$file" \
+                "$(basename "$dsc")" >&2
+            return 1
+        }
+    done < <(awk '/^Checksums-Sha256:/ {inblock=1; next}
+                  inblock && /^ / {print $1, $2, $3; next}
+                  inblock {exit}' "$dsc")
+}
+
+# Everything the builder collected that belongs beside the record. *.tar.*
+# rather than the two quilt names, because a native package's source is a single
+# <source>_<version>.tar.xz and a .dsc published without it cannot be unpacked.
+shopt -s nullglob
+extras=("$SRC"/*.source "$SRC"/*.dsc "$SRC"/*.tar.*)
+shopt -u nullglob
+
+for dsc in "$SRC"/*.dsc; do
+    [ -e "$dsc" ] || continue
+    verify_dsc "$dsc"
+done
+
 published=0
-for f in "${files[@]}"; do
+for f in "${files[@]}" "${extras[@]}"; do
     name="$(basename "$f")"
 
-    # <source>_<version>_<arch>.buildinfo. The source name is everything before
-    # the first underscore; a Debian package name may not contain one.
+    # <source>_<version>_<arch>.buildinfo, and the same leading field on every
+    # other name here. The source name is everything before the first
+    # underscore; a Debian package name may not contain one.
     source="${name%%_*}"
     if [ -z "$source" ] || [ "$source" = "$name" ]; then
         printf 'FATAL: cannot read a source name from %s\n' "$name" >&2
@@ -76,4 +146,4 @@ for f in "${files[@]}"; do
     published=$((published + 1))
 done
 
-printf 'published %s .buildinfo file(s) under buildinfo/\n' "$published" >&2
+printf 'published %s file(s) under buildinfo/\n' "$published" >&2

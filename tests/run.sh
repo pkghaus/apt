@@ -419,6 +419,240 @@ PKG
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# --- verify_dsc: the last place two build legs can be caught disagreeing -----
+#
+# One orig tarball serves all three suites and all six legs produce it, but
+# actions/download-artifact merges them into a single file before the publish
+# script runs, so a divergence leaves no trace by then. What survives is that
+# each suite's .dsc records the checksum it expects, and only one tarball is
+# stored -- so a mismatch is detectable here and nowhere else.
+(
+    work="$(mktemp -d)"
+    R2_BUCKET=unused
+
+    # Sourcing the publisher would run it, so lift just the function out. The
+    # sed range is the function body, terminated by its closing brace in column
+    # one, which is how every function in that file is written.
+    sed -n '/^verify_dsc() {$/,/^}$/p' "$ROOT/scripts/publish-buildinfo.sh" > "$work/fn.sh"
+    # shellcheck source=/dev/null
+    . "$work/fn.sh"
+
+    printf 'upstream source\n' > "$work/demo_1.0.orig.tar.gz"
+    good="$(sha256sum "$work/demo_1.0.orig.tar.gz" | cut -d' ' -f1)"
+    size="$(stat -c %s "$work/demo_1.0.orig.tar.gz")"
+
+    write_dsc() { # <hash> <size>
+        cat > "$work/demo_1.0-1.dsc" <<DSC
+Format: 3.0 (quilt)
+Source: demo
+Version: 1.0-1
+Checksums-Sha256:
+ $1 $2 demo_1.0.orig.tar.gz
+Files:
+ 00000000000000000000000000000000 $2 demo_1.0.orig.tar.gz
+DSC
+    }
+
+    write_dsc "$good" "$size"
+    if verify_dsc "$work/demo_1.0-1.dsc" 2>/dev/null; then
+        ok "verify_dsc accepts a .dsc whose checksums match"
+    else
+        no "verify_dsc accepts a .dsc whose checksums match" "returned non-zero"
+    fi
+
+    # The divergence case: the stored tarball is not the one this .dsc expects.
+    write_dsc "$(printf %064d 0)" "$size"
+    if verify_dsc "$work/demo_1.0-1.dsc" 2>/dev/null; then
+        no "verify_dsc rejects a checksum mismatch" "returned zero"
+    else
+        ok "verify_dsc rejects a checksum mismatch"
+    fi
+
+    # Same bytes, wrong size: catches a .dsc paired with the wrong tarball when
+    # a hash collision is not the failure mode -- a truncated upload is.
+    write_dsc "$good" 999999
+    if verify_dsc "$work/demo_1.0-1.dsc" 2>/dev/null; then
+        no "verify_dsc rejects a size mismatch" "returned zero"
+    else
+        ok "verify_dsc rejects a size mismatch"
+    fi
+
+    # A .dsc naming a file the build never produced would publish a source
+    # package that cannot be unpacked. Asserted on the message, not just the
+    # exit status: an absent file also fails the checksum compare below, so a
+    # status-only test passes even with this branch removed entirely, and said
+    # nothing about the diagnostic a reader actually gets.
+    write_dsc "$good" "$size"
+    rm "$work/demo_1.0.orig.tar.gz"
+    err="$(verify_dsc "$work/demo_1.0-1.dsc" 2>&1 || true)"
+    case "$err" in
+        *"which the build did not produce"*)
+            ok "verify_dsc names a missing file as missing" ;;
+        *)
+            no "verify_dsc names a missing file as missing" "got: $err" ;;
+    esac
+
+    # The block ends at the next line starting in column one. Without that, the
+    # Files: stanza below it would be read as more sha256 entries and its md5
+    # hashes compared as though they were sha256 -- failing every valid .dsc.
+    printf 'upstream source\n' > "$work/demo_1.0.orig.tar.gz"
+    write_dsc "$good" "$size"
+    if verify_dsc "$work/demo_1.0-1.dsc" 2>/dev/null; then
+        ok "verify_dsc stops at the end of the Checksums-Sha256 block"
+    else
+        no "verify_dsc stops at the end of the Checksums-Sha256 block" \
+           "the Files: stanza leaked into the comparison"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+# --- prune-source-tarballs: budget, order, and what must never go ------------
+#
+# Tarballs are kept for as long as the bucket can afford them, so the normal
+# case deletes nothing at all. When it does delete, it goes oldest first and
+# must not touch anything a published version needs -- deleting one of those
+# breaks verification for a package people can still download.
+(
+    work="$(mktemp -d)"
+    mkdir -p "$work/scripts" "$work/objects"
+    cp "$ROOT/scripts/prune-source-tarballs.sh" "$work/scripts/"
+
+    # Stands in for aptly and R2. Objects are files under objects/, keyed by
+    # their name with slashes replaced -- '%' because a Debian filename can
+    # contain '_' but never that.
+    cat > "$work/scripts/aptly-lib.sh" <<'LIB'
+require_r2() { :; }
+R2_BUCKET=testbucket
+flat() { printf '%s' "$1" | tr / '%'; }
+suite_contents() { cat "$STUB_DIR/contents.$1" 2>/dev/null || true; }
+aws_() {
+    case "$2" in
+        cp) key="${3#s3://testbucket/}"
+            # Modelled explicitly rather than with chmod: the suite runs as root
+            # in CI, and root reads a 0000 file quite happily.
+            grep -qxF "$key" "$STUB_DIR/unreadable" 2>/dev/null && return 1
+            cat "$STUB_DIR/objects/$(flat "$key")" 2>/dev/null || return 1 ;;
+        ls) for f in "$STUB_DIR"/objects/*; do
+                [ -e "$f" ] || continue
+                k="$(basename "$f" | tr '%' /)"
+                d="$(sed -n "s|^$k \(.*\)|\1|p" "$STUB_DIR/dates" 2>/dev/null)"
+                printf '%s %s %s\n' "${d:-2026-09-01 00:00:00}" "$(stat -c%s "$f")" "$k"
+            done ;;
+        rm) key="${3#s3://testbucket/}"
+            printf '%s\n' "$key" >> "$STUB_DIR/deleted"
+            rm -f "$STUB_DIR/objects/$(flat "$key")" ;;
+    esac
+}
+LIB
+
+    export STUB_DIR="$work"
+    put() { printf '%s' "$2" > "$work/objects/$(printf '%s' "$1" | tr / '%')"; }
+    dated() { printf '%s %s\n' "$1" "$2" >> "$work/dates"; }
+
+    # croc 1.0-1 in unstable and 1.0-1~haus13+1 in trixie share one orig
+    # tarball, which is the case a per-suite rule would get wrong.
+    dsc_body() { printf 'Format: 3.0 (quilt)\nChecksums-Sha256:\n aaa 10 croc_1.0.orig.tar.gz\n bbb 20 croc_%s.debian.tar.xz\nFiles:\n ccc 10 croc_1.0.orig.tar.gz\n' "$1"; }
+    put buildinfo/c/croc/croc_1.0-1.dsc                     "$(dsc_body 1.0-1)"
+    put buildinfo/c/croc/croc_1.0-1~haus13+1.dsc            "$(dsc_body '1.0-1~haus13+1')"
+    put buildinfo/c/croc/croc_1.0.orig.tar.gz               "$(head -c 400 /dev/zero | tr '\0' o)"
+    put buildinfo/c/croc/croc_1.0-1.debian.tar.xz           deb-unstable
+    put buildinfo/c/croc/croc_1.0-1~haus13+1.debian.tar.xz  deb-trixie
+    # Two superseded versions, one clearly older than the other.
+    put buildinfo/c/croc/croc_0.9-1.dsc  "$(printf 'Checksums-Sha256:\n ddd 10 croc_0.9.orig.tar.gz\n')"
+    put buildinfo/c/croc/croc_0.9.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' n)"
+    put buildinfo/c/croc/croc_0.8-1.dsc  "$(printf 'Checksums-Sha256:\n eee 10 croc_0.8.orig.tar.gz\n')"
+    put buildinfo/c/croc/croc_0.8.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' m)"
+    dated buildinfo/c/croc/croc_0.8.orig.tar.gz "2024-01-01 00:00:00"
+    dated buildinfo/c/croc/croc_0.9.orig.tar.gz "2025-01-01 00:00:00"
+
+    printf 'croc\t1.0-1\tamd64\n' > "$work/contents.unstable"
+    printf 'croc\t1.0-1~haus13+1\tamd64\n' > "$work/contents.trixie"
+    : > "$work/contents.testing"
+
+    # --- the normal case: room to spare, so nothing goes ---------------------
+    # Asserted on the message as well as the absence of deletions. Without the
+    # early exit the overage is negative and the delete loop breaks on its first
+    # test anyway, so "nothing was deleted" holds even with the budget check
+    # removed entirely, and says nothing about whether it ran.
+    out="$(BUCKET_BUDGET_BYTES=100000000 "$work/scripts/prune-source-tarballs.sh" 2>&1)"
+    if [ ! -e "$work/deleted" ] && printf '%s' "$out" | grep -q 'under budget, keeping every source tarball'; then
+        ok "under budget, nothing is considered for deletion"
+    else
+        no "under budget, nothing is considered for deletion" \
+           "deleted [$(tr '\n' ' ' < "$work/deleted" 2>/dev/null)] out [$out]"
+    fi
+
+    # --- over budget: oldest first, and only enough ---------------------------
+    # 300 bytes over, and the tarballs are 400 each, so exactly one goes: the
+    # loop stops as soon as it has freed enough, which is what keeps a budget
+    # overshoot from cascading into a purge.
+    rm -f "$work/deleted"
+    total="$(cat "$work"/objects/* | wc -c)"
+    BUCKET_BUDGET_BYTES=$((total - 300)) "$work/scripts/prune-source-tarballs.sh" >/dev/null 2>&1
+    got="$(tr '\n' ' ' < "$work/deleted" 2>/dev/null)"
+    eq "over budget deletes the oldest superseded tarball, and only it" \
+       "buildinfo/c/croc/croc_0.8.orig.tar.gz " "$got"
+
+    # --- what must never go ---------------------------------------------------
+    for f in croc_1.0.orig.tar.gz croc_1.0-1.debian.tar.xz croc_1.0-1~haus13+1.debian.tar.xz; do
+        if [ -e "$work/objects/$(printf 'buildinfo/c/croc/%s' "$f" | tr / '%')" ]; then
+            ok "a published version's tarball survives the budget: $f"
+        else
+            no "a published version's tarball survives the budget: $f" "it was deleted"
+        fi
+    done
+
+    if [ -e "$work/objects/$(printf 'buildinfo/c/croc/croc_0.8-1.dsc' | tr / '%')" ]; then
+        ok "the .dsc of a pruned version is kept"
+    else
+        no "the .dsc of a pruned version is kept" "it was deleted"
+    fi
+
+    # --- over budget with nothing safe left is a failure, not a free-for-all --
+    rm -f "$work/deleted"
+    if BUCKET_BUDGET_BYTES=1 "$work/scripts/prune-source-tarballs.sh" >/dev/null 2>&1; then
+        no "unreachable budget fails rather than deleting live tarballs" "exited zero"
+    elif ! grep -q '1\.0\.orig' "$work/deleted" 2>/dev/null; then
+        ok "unreachable budget fails rather than deleting live tarballs"
+    else
+        no "unreachable budget fails rather than deleting live tarballs" \
+           "deleted $(tr '\n' ' ' < "$work/deleted")"
+    fi
+
+    # --- stored but unreadable is not the same as absent ----------------------
+    rm -f "$work/deleted"
+    printf 'buildinfo/c/croc/croc_1.0-1.dsc\n' > "$work/unreadable"
+    if BUCKET_BUDGET_BYTES=1 "$work/scripts/prune-source-tarballs.sh" >/dev/null 2>&1; then
+        no "an unreadable .dsc fails the run" "exited zero"
+    elif [ ! -e "$work/deleted" ]; then
+        ok "an unreadable .dsc fails the run and deletes nothing"
+    else
+        no "an unreadable .dsc fails the run and deletes nothing" \
+           "deleted $(tr '\n' ' ' < "$work/deleted")"
+    fi
+    rm -f "$work/unreadable"
+
+    # --- over budget with no published versions at all ------------------------
+    # Reachable only when the aptly state failed to restore, where "everything
+    # is orphaned" is the one reading that must not be acted on.
+    rm -f "$work/deleted"
+    : > "$work/contents.unstable"
+    : > "$work/contents.trixie"
+    if BUCKET_BUDGET_BYTES=1 "$work/scripts/prune-source-tarballs.sh" >/dev/null 2>&1; then
+        no "no published versions at all fails the run" "exited zero"
+    elif [ ! -e "$work/deleted" ]; then
+        ok "no published versions at all fails the run and deletes nothing"
+    else
+        no "no published versions at all fails the run and deletes nothing" \
+           "deleted $(tr '\n' ' ' < "$work/deleted")"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
 if [ "$fail" -eq 0 ]; then
     echo "all tests passed"

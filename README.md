@@ -76,13 +76,27 @@ rebuildable from their tags but not retained.
   the news log, the keyring - lives on the [`archive`](../../tree/archive)
   branch and is served by the same Worker as static assets. Both answer under
   `apt.pkg.haus`; nothing is on GitHub Pages any more.
-- Every package publishes the two records of how it was built that the builder
-  produces: `buildinfo/<initial>/<source>/` holds dpkg's `.buildinfo`, naming
-  every build dependency and its version, and a `.source` naming the upstream
-  commit the package was built from. aptly cannot carry either - its pool is
-  addressed by package identity - so they are written beside it rather than
-  through it, the way Debian keeps buildinfos.debian.net separate from the
-  archive.
+- Every package publishes how it was built and what it was built from.
+  `buildinfo/<initial>/<source>/` holds dpkg's `.buildinfo`, naming every build
+  dependency and its version, a `.source` naming the upstream commit and the
+  compiler that ran, and the source package itself. aptly cannot carry any of
+  them - its pool is addressed by package identity - so they are written beside
+  it rather than through it, the way Debian keeps buildinfos.debian.net
+  separate from the archive.
+- Those records are what make the archive verifiable with `debrebuild` rather
+  than only readable, and `verify/rebuild.sh` is the whole procedure. Given a
+  `.buildinfo`, it resolves every build dependency from snapshot.debian.org at
+  the versions recorded, unpacks the `.dsc` published beside it, rebuilds, and
+  compares all four checksums. Proven end to end on croc: `all OK`, and the
+  rebuilt `.deb` byte-identical.
+- The records are kept forever. So are the source tarballs, until the bucket
+  approaches its budget: one generation across the fleet is 119 MB and additive
+  growth is 836 MB a year, against a pool flat at 623 MB and a 10 GB free tier,
+  so `scripts/prune-source-tarballs.sh` deletes nothing for the next several
+  years. When it does, it goes oldest first and never touches a tarball a
+  published version needs. A version leaving the pool is not the trigger: the
+  `.deb` it describes is still installed on machines and still in apt caches,
+  and that is exactly what a rebuild is checked against.
 - aptly's database lives on the [`aptly`](../../tree/aptly) branch. Its package
   pool does not: at the bucket's root prefix aptly only reads a package file it
   cannot already find published, so each run keeps just what it built.

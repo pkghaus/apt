@@ -33,7 +33,7 @@ jobs:
             --volume "$PWD:/repo" \
             --workdir /repo \
             koalaman/shellcheck@sha256:61862eba1fcf09a484ebcc6feea46f1782532571a34ed51fedf90dd25f925a8d \
-            -x scripts/*.sh tests/*.sh
+            -x scripts/*.sh tests/*.sh verify/*.sh
 
       - name: Test
         run: tests/run.sh

@@ -264,6 +264,20 @@ jobs:
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/publish-buildinfo.sh build
 
+      # After the publish, so the keep set is read from the state this run
+      # produced, and unconditional for the same reason the mirror below is: it
+      # reconciles rather than reacting to an event, so a failed run is repaired
+      # by the next one. Deletes nothing while the bucket is under budget, which
+      # at the measured growth rate is the next several years; its other job is
+      # printing what the bucket is using.
+      - name: Prune source tarballs if the bucket is near budget
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+        run: scripts/prune-source-tarballs.sh
+
       # Unconditional, including on an empty plan. Gating this on "did we
       # publish anything" made a failed mirror unrepairable: the step runs
       # after the publish, so a failure leaves the archive published, the run
