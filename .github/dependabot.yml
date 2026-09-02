@@ -11,3 +11,19 @@ updates:
       interval: weekly
     commit-message:
       prefix: "ci"
+
+  # wrangler is pinned exactly and runs with a token that can deploy the worker
+  # serving pool/ and dists/. Pinning is what stops it changing on its own;
+  # this is what stops it going stale.
+  #
+  # The directory is /worker, not /. This entry was simply missing until
+  # 2026-09-02, and the two repos in the estate that lacked npm coverage were
+  # exactly the two whose package.json is not at the root -- a config saying
+  # `directory: /` there finds nothing and reports nothing, so the gap is
+  # silent either way.
+  - package-ecosystem: npm
+    directory: /worker
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "deps"
