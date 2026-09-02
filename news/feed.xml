@@ -7,6 +7,20 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: mandown 1.0.5.2-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-updated-mandown-1.0.5.2-2</guid>
+<pubDate>Wed, 02 Sep 2026 09:14:53 +0000</pubDate>
+<description>Updated from 1.0.5.2-1. (mandown 1.0.5.2-2)</description>
+</item>
+<item>
+<title>security: monolith 2.10.1-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-02-security-monolith-2.10.1-2</guid>
+<pubDate>Wed, 02 Sep 2026 09:14:53 +0000</pubDate>
+<description>Updated from 2.10.1-1 (urgency=high). (monolith 2.10.1-2)</description>
+</item>
+<item>
 <title>updated: ouch 0.8.2-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-08-31-updated-ouch-0.8.2-1</guid>

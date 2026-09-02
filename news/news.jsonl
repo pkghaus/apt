@@ -32,3 +32,5 @@
 {"ts":"2026-08-29T11:41:28Z","type":"updated","title":"updated: croc 11.3.5-1","detail":"Updated from 11.3.4-1.","pkgs":"croc=11.3.5-1"}
 {"ts":"2026-08-30T08:43:11Z","type":"updated","title":"updated: croc 11.3.6-1","detail":"Updated from 11.3.5-1.","pkgs":"croc=11.3.6-1"}
 {"ts":"2026-08-31T07:55:32Z","type":"updated","title":"updated: ouch 0.8.2-1","detail":"Updated from 0.8.1-2.","pkgs":"ouch=0.8.2-1"}
+{"ts":"2026-09-02T09:14:53Z","type":"updated","title":"updated: mandown 1.0.5.2-2","detail":"Updated from 1.0.5.2-1.","pkgs":"mandown=1.0.5.2-2"}
+{"ts":"2026-09-02T09:14:53Z","type":"security","title":"security: monolith 2.10.1-2","detail":"Updated from 2.10.1-1 (urgency=high).","pkgs":"monolith=2.10.1-2"}
