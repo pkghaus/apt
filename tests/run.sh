@@ -46,6 +46,44 @@ Filename: pool/main/z/zola/zola_0.23.4-1${qual}_amd64.deb
 EOF
 }
 
+echo "render helpers: the pool prefix follows Debian's lib rule"
+(
+    ARCHIVE_DIR="$(mktemp -d)"
+    export ARCHIVE_DIR
+    # shellcheck source=scripts/render-index.sh
+    . "$ROOT/scripts/render-index.sh"
+
+    # Debian puts lib* sources in a four-character directory so the thousands
+    # of them fan out. Verified against Debian itself: pool/main/libg/libgcrypt20/
+    # is 200, pool/main/l/libgcrypt20/ is 404. This built the prefix by hand as
+    # ${name:0:1}, so a lib package's news link pointed at a path that does not
+    # exist. No fleet package starts with lib, which is why it went unnoticed.
+    eq "an ordinary name takes its first letter"  "c"    "$(pool_prefix croc)"
+    eq "a lib name takes four characters"         "libg" "$(pool_prefix libgcrypt20)"
+    eq "  and not just the l"                     "libf" "$(pool_prefix libfoo)"
+    eq "a name that merely contains lib does not" "z"    "$(pool_prefix zlib-tools)"
+    eq "a name of exactly lib is stable"          "lib"  "$(pool_prefix lib)"
+
+    # The link the news page emits, end to end.
+    eq "a lib package links into its real pool directory" "1" \
+       "$(pkg_tokens 'libgcrypt20=1.0-1' | grep -c '/pool/main/libg/libgcrypt20/')"
+    eq "  and never into the one-letter path" "0" \
+       "$(pkg_tokens 'libgcrypt20=1.0-1' | grep -c '/pool/main/l/libgcrypt20/')"
+    eq "an ordinary package is unaffected" "1" \
+       "$(pkg_tokens 'croc=11.3.6-1' | grep -c '/pool/main/c/croc/')"
+    # A retired package renders unlinked, so there is no path to get wrong.
+    eq "a retired package stays unlinked" "0" \
+       "$(pkg_tokens 'gone=' | grep -c 'href')"
+
+    # esc()'s comment says it covers the date. It did not: the date was
+    # interpolated raw while type and the name list went through it.
+    eq "esc quotes what would break an attribute" '&quot;x&quot;' "$(esc '"x"')"
+    eq "esc escapes markup" '&lt;b&gt;' "$(esc '<b>')"
+
+    rm -rf "$ARCHIVE_DIR"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo "purge scope"
 (
     export BUILD_DIR ARCHIVE_DIR SUITES="trixie testing" ARCHES="amd64"
