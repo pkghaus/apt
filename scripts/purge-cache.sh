@@ -66,6 +66,35 @@ pool_paths() {
 }
 
 
+# The URLs to purge, one per pool path.
+#
+# This used to emit three spellings of every path -- literal, %7e/%2b and
+# %7E/%2B -- because apt requests pool files percent-encoded and, with Pages as
+# the origin, the CDN keyed its cache on the request URL. A literal-only purge
+# then missed the encoded entry, and that was a real incident: a POP kept
+# serving pre-rebuild mandown bytes and apt failed on the hash.
+#
+# The R2 cutover ended it. worker.js derives its cache key from the DECODED
+# path, so every spelling collapses to one entry under the literal form. The
+# other two addressed keys that cannot exist.
+#
+# Measured 2026-09-03, two ways, because each colo has its own cache and the
+# naive test cannot tell "different spelling" from "different POP":
+#
+#   1. Connection reuse pins the colo -- one curl invocation, several URLs.
+#      Fill through either spelling and the other HITs the same entry.
+#   2. Warm several colos through the ENCODED spelling only, purge just the
+#      literal URL, and every warm colo flips HIT to MISS. Repeated on typst,
+#      croc and difftastic.
+#
+# The second also answers a question Cloudflare's docs hedge on: purge-by-URL
+# does reach an entry a Worker created under its own cache key.
+purge_urls() {
+    pool_paths | while read -r rel; do
+        printf '%s/%s\n' "$BASE_URL" "$rel"
+    done
+}
+
 # Sourced rather than run: the tests exercise the URL selection above without
 # purging anything, and without needing a token.
 if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
@@ -75,22 +104,7 @@ fi
 : "${CLOUDFLARE_PURGE_TOKEN:?token with Zone - Cache Purge - Edit on pkg.haus}"
 : "${CLOUDFLARE_ZONE_ID:?the pkg.haus zone id}"
 
-mapfile -t urls < <(
-    {
-        # A POP still holding the pre-rebuild bytes breaks apt with hash
-        # mismatches against the fresh, never-cached dists metadata. apt
-        # requests these URLs with '~' and '+' percent-encoded (observed
-        # live: %7e / %2b, lowercase), so the cached key can exist under an
-        # encoded spelling the literal URL would not match. Purge every
-        # spelling; the duplicates collapse in sort -u.
-        pool_paths \
-            | while read -r rel; do
-                printf '%s/%s\n' "$BASE_URL" "$rel"
-                printf '%s/%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7e/g; s/+/%2b/g')"
-                printf '%s/%s\n' "$BASE_URL" "$(printf '%s' "$rel" | sed 's/~/%7E/g; s/+/%2B/g')"
-            done
-    } | LC_ALL=C sort -u
-)
+mapfile -t urls < <(purge_urls | LC_ALL=C sort -u)
 
 for ((i = 0; i < ${#urls[@]}; i += 30)); do
     printf '%s\n' "${urls[@]:i:30}" \
