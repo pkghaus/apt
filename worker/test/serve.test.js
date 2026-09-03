@@ -32,8 +32,19 @@ function r2Object({ body = BODY, size = BODY.length, range } = {}) {
 
 function harness({ object = r2Object(), throwOnGet = false, d1Throws = false } = {}) {
   const writes = [];
+  const reads = [];
   const tasks = [];
-  globalThis.caches = { default: { match: async () => undefined, put: async () => {} } };
+  // A cache that actually stores. It was a pair of no-ops, which made the warm
+  // cache unrepresentable -- and a cache that never hits cannot demonstrate the
+  // one thing worth asserting here, that a conditional request is not answered
+  // from it.
+  const cacheStore = new Map();
+  globalThis.caches = {
+    default: {
+      async match(req) { const h = cacheStore.get(req.url); return h ? h.clone() : undefined; },
+      async put(req, res) { cacheStore.set(req.url, res.clone()); },
+    },
+  };
   globalThis.fetch = async () => new Response("origin", { status: 418 });
   const env = {
     // A distinct sentinel from the origin's 418. These tests have to tell
@@ -43,7 +54,23 @@ function harness({ object = r2Object(), throwOnGet = false, d1Throws = false } =
     ARCHIVE: {
       async get(key, opts) {
         if (throwOnGet) throw new Error("bucket unreachable");
-        return object === null ? null : { ...object, key, opts };
+        reads.push(key);
+        if (object === null) return null;
+        const o = { ...object, key, opts };
+
+        // Honour onlyIf, the way R2 does: a satisfied "has it changed" or a
+        // FAILED "only if it is still this" both come back with no body, and
+        // it is the Worker's job to turn that into 304 or 412. Modelled here
+        // so a conditional request can be tested against a WARM cache -- with
+        // a fixed object the cache could always be the thing answering, which
+        // is exactly the bug this hid.
+        const h = opts?.onlyIf instanceof Headers ? opts.onlyIf : null;
+        if (h) {
+          const inm = h.get("if-none-match");
+          const im = h.get("if-match");
+          if (inm === o.httpEtag || (im && im !== o.httpEtag)) delete o.body;
+        }
+        return o;
       },
     },
     DB: {
@@ -60,7 +87,7 @@ function harness({ object = r2Object(), throwOnGet = false, d1Throws = false } =
     },
   };
   const ctx = { waitUntil: (p) => tasks.push(p) };
-  return { env, ctx, writes, settle: () => Promise.allSettled(tasks) };
+  return { env, ctx, writes, reads, cacheStore, settle: () => Promise.allSettled(tasks) };
 }
 
 const DEB = "/pool/main/c/croc/croc_11.3.0-1~haus13+1_amd64.deb";
@@ -206,4 +233,81 @@ test("the percent-encoded spellings apt sends resolve to the same object", async
   assert.equal(res.status, 200);
   assert.equal(h.writes.length, 1, "an encoded request counts like a literal one");
   assert.ok(h.writes[0].args.includes("11.3.0-1~haus13+1"), "the version is the decoded form");
+});
+
+// The cache must not answer anything only R2 can answer. Every conditional
+// test above starts cold, so none of them could see the cache intercepting --
+// which is how a cached 200 came to be returned for a request carrying
+// If-None-Match, 6.3 MB of .deb where a 304 was correct.
+const warm = async (h, path = DEB) => {
+  const first = await worker.fetch(new Request("https://apt.pkg.haus" + path), h.env, h.ctx);
+  await h.settle();
+  assert.equal(first.status, 200);
+  assert.ok(h.cacheStore.size > 0, "the object has to be cached for this to mean anything");
+};
+
+test("a warm cache still serves a plain GET without reading R2", async () => {
+  const h = harness();
+  await warm(h);
+  const before = h.reads.length;
+  const res = await worker.fetch(new Request("https://apt.pkg.haus" + DEB), h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 200);
+  assert.equal(await res.text(), BODY);
+  assert.equal(h.reads.length, before, "a plain GET must come from the cache");
+});
+
+test("If-None-Match is answered by R2, not the warm cache", async () => {
+  const h = harness();
+  await warm(h);
+  const before = h.reads.length;
+  const res = await worker.fetch(
+    new Request("https://apt.pkg.haus" + DEB, { headers: { "if-none-match": '"deadbeef"' } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 304, "a cached 200 here re-sends the whole .deb");
+  assert.equal(h.reads.length, before + 1, "the conditional must reach the bucket");
+});
+
+test("a failed If-Match is a 412 even when the object is cached", async () => {
+  const h = harness();
+  await warm(h);
+  const res = await worker.fetch(
+    new Request("https://apt.pkg.haus" + DEB, { headers: { "if-match": '"stale"' } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 412);
+});
+
+test("If-Modified-Since is answered by R2, not the warm cache", async () => {
+  const h = harness();
+  await warm(h);
+  const before = h.reads.length;
+  await worker.fetch(
+    new Request("https://apt.pkg.haus" + DEB,
+      { headers: { "if-modified-since": "Mon, 25 Aug 2026 08:00:00 GMT" } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(h.reads.length, before + 1);
+});
+
+test("If-Unmodified-Since is answered by R2, not the warm cache", async () => {
+  const h = harness();
+  await warm(h);
+  const before = h.reads.length;
+  await worker.fetch(
+    new Request("https://apt.pkg.haus" + DEB,
+      { headers: { "if-unmodified-since": "Mon, 25 Aug 2026 08:00:00 GMT" } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(h.reads.length, before + 1);
+});
+
+test("a conditional request is never stored under the plain GET's key", async () => {
+  const h = harness();
+  await worker.fetch(
+    new Request("https://apt.pkg.haus" + DEB, { headers: { "if-none-match": '"deadbeef"' } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(h.cacheStore.size, 0, "a 304 is not the object");
 });
