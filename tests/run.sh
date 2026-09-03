@@ -132,28 +132,38 @@ echo "the plan tells an unreachable source apart from an untagged package"
     work="$(mktemp -d)"
     mkdir -p "$work/bin"
     # git that cannot reach the remote: a blip, an outage, a revoked token.
+    # Injected at `clone`, which is where the plan reads the fleet since it
+    # stopped running one ls-remote and one clone per enrolled package. The
+    # stub also keeps this test offline: without it the clone would succeed
+    # against the real repository.
     cat > "$work/bin/git" <<'FAKE'
 #!/bin/sh
-case "$1 $2" in "ls-remote --tags") echo "fatal: could not read from remote" >&2; exit 128 ;; esac
+case "$1" in clone) echo "fatal: could not read from remote" >&2; exit 128 ;; esac
 exec /usr/bin/git "$@"
 FAKE
     chmod +x "$work/bin/git"
     printf 'croc\n' > "$work/packages.txt"
 
-    # ls-remote used to head a pipeline, so its failure produced no output,
+    # The listing used to head a pipeline, so its failure produced no output,
     # exited 0 through tail, and was reported as "no tags": the package left the
-    # plan silently under a message blaming the upstream.
+    # plan silently under a message blaming the upstream. The shape of that bug
+    # is what this asserts against, whatever the read is implemented as.
     out="$(PATH="$work/bin:$PATH" PACKAGES_FILE="$work/packages.txt" \
         "$ROOT/scripts/ingest.sh" plan 2>&1)" && rc=0 || rc=$?
     if [ "${rc:-0}" -eq 0 ]; then
         no "an unreadable source must not be reported as untagged" "exited 0"
     elif grep -q 'no tags' <<<"${out:-}"; then
         no "an unreadable source must not be reported as untagged" "blamed the upstream: ${out:-}"
-    elif ! grep -q 'cannot read tags' <<<"${out:-}"; then
+    elif ! grep -q 'cannot clone' <<<"${out:-}"; then
         no "an unreadable source must not be reported as untagged" "wrong message: ${out:-}"
     else
         ok "an unreadable source must not be reported as untagged"
     fi
+
+    # And an unreadable source must not be mistaken for an empty fleet: the
+    # plan has to be empty AND the run has to fail, not one of the two.
+    eq "an unreadable source plans nothing at all" "0" \
+       "$(printf '%s\n' "$out" | grep -cP '^croc\t')"
 
     rm -rf "$work"
     exit $((fail > 0))
@@ -744,6 +754,126 @@ LIB
         no "no published versions at all fails the run and deletes nothing" \
            "deleted $(tr '\n' ' ' < "$work/deleted")"
     fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+# --- ingest.sh plan(): what the archive decides to build ----------------------
+#
+# plan() had no test at all, which is a poor match for its job: it is the
+# function that decides what the archive builds and therefore what it ships.
+# These drive it against a real git repository with namespaced tags, because
+# the tag namespacing and the per-tag file reads are the parts that were
+# rewritten to stop cloning once per package.
+echo "ingest plan"
+(
+    work="$(mktemp -d)"
+    fleet="$work/fleet"
+
+    # A packages repository shaped like the real one: one directory per
+    # package, tags namespaced by package.
+    mkdir -p "$fleet"
+    git -C "$fleet" init -q
+    git -C "$fleet" config user.email t@example.invalid
+    git -C "$fleet" config user.name t
+    git -C "$fleet" config commit.gpgsign false
+
+    mkpkg() { # name version arch
+        mkdir -p "$fleet/$1/debian"
+        printf '%s (%s) unstable; urgency=medium\n\n  * x\n' "$1" "$2" \
+            > "$fleet/$1/debian/changelog"
+        printf 'Source: %s\n\nPackage: %s\nArchitecture: %s\n' "$1" "$1" "$3" \
+            > "$fleet/$1/debian/control"
+    }
+
+    mkpkg alpha 1.0-1 any
+    mkpkg keyring 2026.01.01 all
+    mkpkg untagged 9.9-1 any
+    printf 'alpha\nkeyring\nuntagged\n' > "$work/packages.txt"
+    git -C "$fleet" add -A
+    git -C "$fleet" commit -q -m one
+    git -C "$fleet" tag alpha/v1.0-1
+    git -C "$fleet" tag keyring/v2026.01.01
+
+    # A newer alpha, and a tag for another package that sorts above it. The
+    # prefix match is what has to keep them apart.
+    mkpkg alpha 1.2-1 any
+    git -C "$fleet" add -A
+    git -C "$fleet" commit -q -m two
+    git -C "$fleet" tag alpha/v1.2-1
+    git -C "$fleet" tag zzz/v99.0-1
+
+    # Plain assignments, not a command prefix. `VAR=x . file` makes VAR a
+    # temporary that is discarded when the source returns, taking the value
+    # ingest.sh's own `GIT_BASE="${GIT_BASE:-...}"` assigned to it with it.
+    SUITES=unstable
+    PACKAGES_FILE="$work/packages.txt"
+    GIT_BASE="$work/"
+    PACKAGES_REPO=fleet
+    export SUITES PACKAGES_FILE GIT_BASE PACKAGES_REPO
+    # shellcheck source=scripts/ingest.sh
+    . "$ROOT/scripts/ingest.sh"
+
+    # In the test's own shell, exactly as plan() does it: a clone made inside
+    # a command substitution does not outlive it.
+    if ensure_packages_mirror; then
+        ok "the fleet clones once, into this run's scratch directory"
+    else
+        no "the fleet clones once, into this run's scratch directory" "clone failed"
+    fi
+    eq "the clone survives the substitution that made it" \
+       "yes" "$([ -d "$MIRROR" ] && echo yes || echo no)"
+
+    eq "newest_tag takes the newest tag for the package" \
+       "alpha/v1.2-1" "$(newest_tag alpha)"
+    eq "newest_tag ignores another package's higher-sorting tag" \
+       "keyring/v2026.01.01" "$(newest_tag keyring)"
+    eq "newest_tag is empty for a package that has never been tagged" \
+       "" "$(newest_tag untagged)"
+
+    eq "changelog_header reads the version at that tag, not at HEAD" \
+       "alpha 1.0-1" "$(changelog_header alpha/v1.0-1 alpha)"
+    eq "changelog_header follows the tag forward too" \
+       "alpha 1.2-1" "$(changelog_header alpha/v1.2-1 alpha)"
+
+    if arch_all_only keyring/v2026.01.01 keyring; then
+        ok "arch_all_only spots an Architecture: all package"
+    else
+        no "arch_all_only spots an Architecture: all package" "said no"
+    fi
+    if arch_all_only alpha/v1.2-1 alpha; then
+        no "arch_all_only rejects Architecture: any" "said yes"
+    else
+        ok "arch_all_only rejects Architecture: any"
+    fi
+
+    # The whole plan, against an archive that carries nothing. One row per
+    # arch for the arch-any package, one "all" row for the arch-all one, and
+    # nothing at all for the untagged one.
+    plan_out="$(SUITES=unstable plan "amd64 arm64" 2>/dev/null)"
+    eq "an untagged package is not planned" \
+       "0" "$(printf '%s\n' "$plan_out" | grep -c '^untagged')"
+    eq "an arch-any package is planned once per architecture" \
+       "2" "$(printf '%s\n' "$plan_out" | grep -c '^alpha')"
+    eq "an arch-all package is planned once, as all" \
+       "1" "$(printf '%s\n' "$plan_out" | grep -c '^keyring')"
+    eq "the arch-all row says all, not an architecture" \
+       "all" "$(printf '%s\n' "$plan_out" | awk -F'\t' '$1=="keyring"{print $5}')"
+    eq "a planned row carries the newest tag" \
+       "alpha/v1.2-1" "$(printf '%s\n' "$plan_out" | awk -F'\t' '$1=="alpha"{print $2; exit}')"
+    eq "a planned row carries the version from that tag" \
+       "1.2-1" "$(printf '%s\n' "$plan_out" | awk -F'\t' '$1=="alpha"{print $6; exit}')"
+
+    # An unreadable repository is not an empty fleet. This is the direction
+    # that matters: reported as "no tags", every package silently leaves the
+    # plan under a message saying upstream never tagged anything.
+    out="$(GIT_BASE="$work/" PACKAGES_REPO=does-not-exist \
+           bash "$ROOT/scripts/ingest.sh" plan 2>&1 || true)"
+    case "$out" in
+        *"cannot clone"*) ok "an unreadable packages repo fails rather than planning nothing" ;;
+        *) no "an unreadable packages repo fails rather than planning nothing" "got [$out]" ;;
+    esac
 
     rm -rf "$work"
     exit $((fail > 0))
