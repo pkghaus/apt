@@ -49,6 +49,12 @@ require_r2() {
 write_aptly_conf() {
     [ "$_aptly_conf_written" = 1 ] && return 0
     mkdir -p "$APTLY_ROOT"
+    # Scoped to this function. A bare `umask 077` here is sourced into the
+    # caller's shell and never restored, so every file the rest of the script
+    # creates comes out 0600 -- which is not what the mask is for. The config
+    # is the only thing that needs it: it carries the R2 credentials.
+    local previous_umask
+    previous_umask="$(umask)"
     umask 077
 
     if have_r2; then
@@ -78,6 +84,7 @@ CONF
 CONF
     fi
 
+    umask "$previous_umask"
     _aptly_conf_written=1
 }
 
@@ -90,10 +97,13 @@ aptly_() {
 # over a shared pool; aptly has no multi-distribution local repo.
 repo_of() { printf 'pkghaus-%s' "$1"; }
 
-# Every package in a suite as "<name>\t<version>", one line per name. aptly
-# prints <name>_<version>_<arch>; splitting on _ is safe because neither a
-# package name nor a version may contain one. Both architecture lines, and an
-# Architecture: all package's single line, collapse under sort -u.
+# Every package in a suite as "<name>\t<version>\t<arch>", one line per
+# binary. aptly prints <name>_<version>_<arch>; splitting on _ is safe because
+# neither a package name nor a version may contain one.
+#
+# The arch is a field, so the two architecture lines of one package do NOT
+# collapse. A caller that wants one row per package says so itself -- see
+# news.sh, which cuts to the first two fields before sorting -u.
 #
 # Prints nothing when the repo does not exist yet, and nothing when it is
 # empty: aptly exits 1 with "ERROR: no results" for the latter, which is an

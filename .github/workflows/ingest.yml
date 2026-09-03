@@ -217,12 +217,25 @@ jobs:
         #
         # Kept off the archive branch because that whole branch is uploaded as
         # the Worker's asset set, and this is a leveldb, not a web page.
+        #
+        # Fatal when the branch is missing, exactly as the plan job treats it.
+        # This step used to `mkdir -p aptly-state` and carry on, which was a
+        # bootstrap path from when the branch could be created by pushing to
+        # it. Commits are made through the API now and it cannot create a
+        # branch, so the fallback could no longer bootstrap anything -- it
+        # could only hand aptly an EMPTY database, and an empty database
+        # publishes indices listing just this run's packages. That silently
+        # drops every other package from the archive. The plan job's success is
+        # what makes this unreachable today; it is fatal so that it stays that
+        # way if that ever stops being true.
         run: |
           if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
               git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
           else
-              echo "no aptly branch yet -- starting empty"
-              mkdir -p aptly-state
+              echo "FATAL: no aptly branch. It has to exist before the run can"
+              echo "       commit to it -- commits are made through the API now,"
+              echo "       which cannot create a branch."
+              exit 1
           fi
 
       - name: Download built packages

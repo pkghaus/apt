@@ -415,6 +415,72 @@ PKG
     eq "smallest_package sees a final stanza with no trailing blank line" \
        "pool/main/l/last/last.deb" "$(smallest_package "$work/Packages" | cut -d' ' -f3)"
 
+    # Its own fixture, deliberately. The file above has had a stanza appended
+    # with no blank line before it, which merges it into the previous one --
+    # that is what the test above is asserting. Reusing it here would test the
+    # arch pick against a fixture that has already lost a package.
+    cat > "$work/Arch" <<'PKG'
+Package: keyring
+Version: 1-1
+Size: 2600
+SHA256: 2222222222222222222222222222222222222222222222222222222222222222
+Filename: pool/main/p/pkghaus-archive-keyring/pkghaus-archive-keyring_1-1_all.deb
+
+Package: middle
+Version: 3.0-1
+Size: 50000
+SHA256: 3333333333333333333333333333333333333333333333333333333333333333
+Filename: pool/main/m/middle/middle_3.0-1_amd64.deb
+
+Package: big
+Version: 1.0-1
+Size: 900000
+SHA256: 1111111111111111111111111111111111111111111111111111111111111111
+Filename: pool/main/b/big/big_1.0-1_amd64.deb
+
+Package: onlyarm
+Version: 1-1
+Size: 4000
+SHA256: 6666666666666666666666666666666666666666666666666666666666666666
+Filename: pool/main/o/onlyarm/onlyarm_1-1_arm64.deb
+PKG
+
+    # The whole point: the smallest object here is the Architecture: all
+    # keyring at 2600 bytes, which is the same object in every index. The arch
+    # pick has to skip it and take the 50000-byte amd64 package.
+    eq "smallest_package would pick the Architecture: all keyring" \
+       "pool/main/p/pkghaus-archive-keyring/pkghaus-archive-keyring_1-1_all.deb" \
+       "$(smallest_package "$work/Arch" | cut -d' ' -f3)"
+    eq "smallest_arch_package skips it for a real amd64 package" \
+       "pool/main/m/middle/middle_3.0-1_amd64.deb" \
+       "$(smallest_arch_package "$work/Arch" amd64 | cut -d' ' -f3)"
+    eq "smallest_arch_package reports that package's own size" \
+       "50000" "$(smallest_arch_package "$work/Arch" amd64 | cut -d' ' -f1)"
+    eq "smallest_arch_package does not confuse one arch for another" \
+       "pool/main/o/onlyarm/onlyarm_1-1_arm64.deb" \
+       "$(smallest_arch_package "$work/Arch" arm64 | cut -d' ' -f3)"
+    eq "smallest_arch_package is empty when nothing is built for the arch" \
+       "" "$(smallest_arch_package "$work/Arch" i386 | cut -d' ' -f3)"
+
+    # A final stanza with no trailing blank line: the flush-at-END path is
+    # separate code from the flush-at-blank-line one.
+    printf '\nPackage: tiny\nVersion: 5-1\nSize: 5\nSHA256: 5555\nFilename: pool/main/t/tiny/tiny_5-1_amd64.deb\n' \
+        >> "$work/Arch"
+    eq "smallest_arch_package sees a final stanza with no trailing blank line" \
+       "pool/main/t/tiny/tiny_5-1_amd64.deb" \
+       "$(smallest_arch_package "$work/Arch" amd64 | cut -d' ' -f3)"
+
+    # The total after the slash is the assertion the ranged probe makes: it is
+    # R2's view of the object's size, which has to agree with the index.
+    eq "content_range_total reads the size after the slash" \
+       "6307948" "$(printf 'HTTP/2 206\r\ncontent-range: bytes 0-1023/6307948\r\n\r\n' | content_range_total)"
+    eq "content_range_total is case-insensitive about the header name" \
+       "4358" "$(printf 'Content-Range: bytes 0-99/4358\r\n' | content_range_total)"
+    # A 200 carries no Content-Range. Empty is what makes the probe fail loudly
+    # rather than pass on a response that never proved a pool read happened.
+    eq "content_range_total is empty when the response is not partial" \
+       "" "$(printf 'HTTP/2 200\r\ncontent-length: 4358\r\n' | content_range_total)"
+
     rm -rf "$work"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
