@@ -63,3 +63,4 @@
 {"ts":"2026-09-02T14:51:23Z","type":"security","title":"security: berry 0.1.13-4","detail":"Updated from 0.1.13-3 (urgency=high).","pkgs":"berry=0.1.13-4"}
 {"ts":"2026-09-02T14:51:23Z","type":"updated","title":"updated: vegeta 12.13.0-4","detail":"Updated from 12.13.0-3.","pkgs":"vegeta=12.13.0-4"}
 {"ts":"2026-09-02T14:51:23Z","type":"updated","title":"updated: viddy 1.3.1-4","detail":"Updated from 1.3.1-3.","pkgs":"viddy=1.3.1-4"}
+{"ts":"2026-09-03T05:22:53Z","type":"updated","title":"updated: vale 3.20.0-1","detail":"Updated from 3.19.0-2.","pkgs":"vale=3.20.0-1"}
