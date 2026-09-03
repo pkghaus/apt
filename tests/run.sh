@@ -70,6 +70,27 @@ echo "purge scope"
 
     eq "a package the run did not build is never purged" "0" \
         "$(pool_paths | grep -c zola)"
+
+    # One URL per pool path, in the literal spelling.
+    #
+    # This emitted three spellings per path until 2026-09-03 -- literal,
+    # %7e/%2b and %7E/%2B -- from when Pages was the origin and the CDN keyed
+    # its cache on the request URL. The Worker keys on the DECODED path, so all
+    # three collapse to one entry and the encoded two addressed keys that
+    # cannot exist. Asserted here because the count is now load-bearing: adding
+    # a spelling back is waste, and dropping the literal one purges nothing.
+    eq "each pool path yields exactly one purge URL" "2" \
+        "$(purge_urls | wc -l)"
+    eq "the URL is the literal spelling, not percent-encoded" \
+        "https://apt.pkg.haus/pool/main/c/croc/croc_11.2.4-1~haus13+1_amd64.deb" \
+        "$(purge_urls | grep haus13 | head -1)"
+    eq "no encoded spelling is emitted" "0" \
+        "$(purge_urls | grep -ciE '%7e|%2b')"
+    # Emptied first: the assertions above left two debs in it. A run that
+    # built nothing must purge nothing, or an empty plan would evict the pool.
+    rm -f "$BUILD_DIR"/*.deb
+    eq "a run that built nothing purges nothing at all" "" "$(purge_urls)"
+
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
