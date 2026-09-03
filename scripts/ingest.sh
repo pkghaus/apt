@@ -91,7 +91,9 @@ qualifier() {
 # mktemp and a trap set inside a command substitution are both undone the
 # moment the substitution ends, which silently deleted the clone before its
 # first use.
-SCRATCH="${SCRATCH:-$(mktemp -d)}"
+# Not overridable from the environment. Nothing needs it to be, and an
+# inherited value would point this rm -rf at a directory the caller owns.
+SCRATCH="$(mktemp -d)"
 trap 'rm -rf "$SCRATCH"' EXIT
 
 MIRROR="$SCRATCH/packages.git"
