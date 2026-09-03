@@ -123,7 +123,23 @@ async function archive(request, env, ctx, path) {
   // origin here any more. Without this the 30-day pool cache silently became
   // "read R2 on every download". Only plain full GETs are cached: a 206 is a
   // fragment and a conditional answer is not the object.
-  const cacheable = immutable && request.method === "GET" && !range;
+  // Not just !range. A precondition or a revalidation can only be answered by
+  // R2, because only R2 knows the object as it is now, so a cached copy must
+  // not intercept either. Without this the cache returned a full 200 to a
+  // request carrying If-None-Match -- 6.3 MB of .deb where a 304 was correct
+  // -- and a cached 200 to a failed If-Match, which made the 412 below
+  // unreachable for any object the cache held.
+  //
+  // Measured live before the fix: one 304 with no cf-cache-status, then five
+  // 200s with cf-cache-status: HIT. pkghaus-buildinfos had the same defect and
+  // was fixed first; this is the same shape in the worker that serves apt.
+  const conditional =
+    range ||
+    request.headers.has("if-none-match") ||
+    request.headers.has("if-modified-since") ||
+    request.headers.has("if-match") ||
+    request.headers.has("if-unmodified-since");
+  const cacheable = immutable && request.method === "GET" && !conditional;
   const cacheKey = new Request(`https://apt.pkg.haus${path}`);
   const cache = caches.default;
   if (cacheable) {
