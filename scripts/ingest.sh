@@ -207,7 +207,8 @@ suite_of() {
 
 include() {
     local dir="${1:?usage: ingest.sh include <dir>}"
-    local deb version suite included=0 touched=""
+    local deb version suite included=0
+    local -a touched=()
 
     [ -d "$ARCHIVE_DIR" ] || mkdir -p "$ARCHIVE_DIR"
 
@@ -223,13 +224,13 @@ include() {
         ensure_repo "$suite"
         aptly_ repo add "$(repo_of "$suite")" "$deb" >/dev/null
         prune_older "$suite" "$deb"
-        touched="$touched$suite\n"
+        touched+=("$suite")
         included=$((included + 1))
     done
 
     # Publish once per touched suite rather than once per deb. First publish for
     # a suite creates the publish point; later ones update it in place.
-    for suite in $(printf '%b' "$touched" | sort -u); do
+    for suite in $(printf '%s\n' "${touched[@]}" | LC_ALL=C sort -u); do
         publish_suite "$suite"
     done
 
@@ -249,9 +250,20 @@ prune_older() {
     version="$(dpkg-deb -f "$deb" Version)"
     arch="$(dpkg-deb -f "$deb" Architecture)"
 
-    removed="$(aptly_ repo remove "$(repo_of "$suite")" \
-        "Name ($pkg), \$Version (<< $version), \$Architecture ($arch)" 2>&1 \
-        | grep -c '^\[-\]' || true)"
+    # Two steps, because one pipeline hid a failure. `aptly repo remove | grep
+    # -c` reports the pipeline's grep status, and `|| true` masked even that:
+    # a remove that errored produced no [-] lines, counted 0, logged nothing
+    # and returned success -- indistinguishable from "there was nothing older
+    # to prune". This function is the only thing enforcing one version per
+    # package per suite, so a silent failure grows the pool forever.
+    local out
+    if ! out="$(aptly_ repo remove "$(repo_of "$suite")" \
+        "Name ($pkg), \$Version (<< $version), \$Architecture ($arch)" 2>&1)"; then
+        printf '%s\n' "$out" >&2
+        die "pruning older $arch versions of $pkg from $suite failed"
+    fi
+
+    removed="$(printf '%s' "$out" | grep -c '^\[-\]' || true)"
     [ "$removed" -gt 0 ] && log "PRUNE $pkg: dropped $removed older $arch version(s) from $suite"
     return 0
 }
