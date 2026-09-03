@@ -528,6 +528,24 @@ PY
 # name=version pairs -> linked package tokens. The name links into its
 # pool directory; retired packages (empty version) render unlinked, since
 # the pool directory is gone.
+# Debian's pool prefix: the first letter of the source name, EXCEPT names
+# starting with "lib", which take the first four characters so that the
+# thousands of lib packages fan out instead of piling into pool/main/l/.
+#
+# Verified against Debian itself 2026-09-03:
+#   pool/main/libg/libgcrypt20/  200
+#   pool/main/l/libgcrypt20/     404
+#
+# This only matters for links built by hand. The listing pages take their paths
+# from each index's Filename field, which is whatever aptly actually wrote, so
+# they were never affected.
+pool_prefix() {
+    case "$1" in
+        lib*) printf '%s' "${1:0:4}" ;;
+        *)    printf '%s' "${1:0:1}" ;;
+    esac
+}
+
 pkg_tokens() {
     local pairs="$1" pair name ver out=""
     [ -n "$pairs" ] || return 0
@@ -535,7 +553,7 @@ pkg_tokens() {
         name="${pair%%=*}"
         ver="${pair#*=}"
         if [ -n "$ver" ]; then
-            out="$out"'<span><a href="/pool/main/'"${name:0:1}"'/'"$name"'/"><code>'"$name"'</code></a> <code class="ver">'"$ver"'</code></span>'
+            out="$out"'<span><a href="/pool/main/'"$(pool_prefix "$name")"'/'"$name"'/"><code>'"$name"'</code></a> <code class="ver">'"$ver"'</code></span>'
         else
             out="$out"'<span><code>'"$name"'</code></span>'
         fi
@@ -555,7 +573,7 @@ news_rows() {
         # plus the row text.
         names="$(printf '%s' "$pkgs" | tr ' ' '\n' | sed 's/=.*//' | tr '\n' ' ')"
         printf '        <tr data-type="%s" data-pkg="%s"><td class="date">%s</td><td><span class="%s">%s</span></td><td>%s%s</td></tr>\n' \
-            "$(esc "$type")" "$(esc "${names% }")" "${ts%%T*}" \
+            "$(esc "$type")" "$(esc "${names% }")" "$(esc "${ts%%T*}")" \
             "$cls" "$(esc "$type")" "$detail" "$(pkg_tokens "$pkgs")"
     done
 }
@@ -751,6 +769,15 @@ prune_moved() {
         find "$ARCHIVE_DIR/$d" -type d -empty -delete
     done
 }
+
+# Sourced rather than run: the tests reach the helpers above without rendering
+# anything. Same guard as ingest.sh, check-archive-health.sh and purge-cache.sh.
+# Without it, sourcing this file runs a whole render, which is why none of the
+# functions above had a direct test.
+# shellcheck disable=SC2317
+if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
+    return 0
+fi
 
 # Read the indices before anything is deleted. prune_moved clears the pool
 # tree that render_pool_listings then rebuilds from this, so an empty manifest
