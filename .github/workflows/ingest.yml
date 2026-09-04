@@ -43,6 +43,21 @@ on:
       # run reads -- and naming one meant a change to the other did not re-run
       # the thing it changed.
       - .github/actions/**
+  # Read-only. The plan job clones both state branches, installs aptly and asks
+  # it what the archive already carries; nothing downstream of it runs on a pull
+  # request. It exists because CI here was one lint job while five of the seven
+  # workflows never executed on a pull request at all -- including this one, the
+  # most intricate of them. A composite action that failed to clone, or a plan()
+  # that stopped planning, would have been caught by someone reading the diff or
+  # not at all.
+  #
+  # ingest.yml itself is in the paths, so a change to these very gates is
+  # exercised by the pull request that makes it.
+  pull_request:
+    paths:
+      - scripts/**
+      - .github/actions/**
+      - .github/workflows/ingest.yml
 
 permissions:
   contents: read
@@ -59,9 +74,21 @@ permissions:
 # For as long as that lasted, a hand-fired seed could republish the archive
 # underneath a running ingest. The name says what it guards now, not which
 # workflow happened to claim it first.
+#
+# A pull-request plan takes a group of its own. It must not hold archive-write:
+# that would queue every pull request behind a running ingest and, far worse,
+# queue real ingests behind pull requests. Cancellable, because only the newest
+# push to a branch is worth planning.
+#
+# `a && b || c` is the shape that has misfired twice in this estate, because it
+# yields c whenever b is falsy. It is safe here and only here: b is a format()
+# that always returns a non-empty string, so it can never be the falsy branch.
 concurrency:
-  group: archive-write
-  cancel-in-progress: false
+  group: >-
+    ${{ github.event_name == 'pull_request'
+        && format('ingest-plan-{0}', github.ref)
+        || 'archive-write' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   plan:
@@ -84,6 +111,10 @@ jobs:
           persist-credentials: false
 
       - name: Check signing-key expiry
+        # Not on a pull request: it reads the exported private key material and
+        # fails hard without it, so it cannot run where secrets are absent. It
+        # is also not what a pull request is here to exercise.
+        if: github.event_name != 'pull_request'
         env:
           ARCHIVE_SIGNING_KEY: ${{ secrets.ARCHIVE_SIGNING_KEY }}
         run: scripts/check-key-expiry.sh
@@ -133,7 +164,9 @@ jobs:
   build:
     name: build / ${{ matrix.pkg }} / ${{ matrix.suite }} / ${{ matrix.arch }}
     needs: plan
-    if: needs.plan.outputs.has_work == 'true'
+    # Never on a pull request. The plan is the point; rebuilding the fleet on
+    # every branch push is not, and publish sits behind this.
+    if: needs.plan.outputs.has_work == 'true' && github.event_name != 'pull_request'
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
     strategy:
@@ -182,7 +215,15 @@ jobs:
     # re-rendered idempotently, and the commit step no-ops when nothing
     # changed. Only a failed or cancelled upstream job stops a publish.
     needs: [plan, build]
-    if: ${{ !cancelled() && needs.plan.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.build.result) }}
+    #
+    # github.event_name is the load-bearing clause. Without it this is TRUE on a
+    # pull request -- plan succeeds, build is skipped, and skipped is in the
+    # list -- so a pull request would publish to the live archive.
+    if: >-
+      ${{ !cancelled()
+          && github.event_name != 'pull_request'
+          && needs.plan.result == 'success'
+          && contains(fromJSON('["success", "skipped"]'), needs.build.result) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
