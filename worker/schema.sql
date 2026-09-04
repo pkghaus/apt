@@ -15,3 +15,15 @@ CREATE TABLE IF NOT EXISTS heartbeats (
     count INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (day, suite)
 );
+
+-- Every package the archive currently serves, mirrored from
+-- news/known-packages.tsv by scripts/sync-package-inventory.sh on each publish.
+--
+-- Exists because `downloads` gains a row only when a .deb is served, so the
+-- stats page could never mention a package nobody had installed yet. The
+-- reader (pkghaus/stats) UNIONs the two, which is also why pruning a retired
+-- package from here does not remove its download history.
+CREATE TABLE IF NOT EXISTS packages (
+    package TEXT PRIMARY KEY,
+    version TEXT NOT NULL  -- as published to unstable, the unqualified version
+);
