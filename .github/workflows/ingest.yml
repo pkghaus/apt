@@ -38,7 +38,11 @@ on:
     branches: [master, main]
     paths:
       - scripts/**
-      - .github/actions/install-aptly/**
+      # Every composite action, not install-aptly by name. Both of them are the
+      # ingest's own machinery -- fetch-state-branch restores the databases this
+      # run reads -- and naming one meant a change to the other did not re-run
+      # the thing it changed.
+      - .github/actions/**
 
 permissions:
   contents: read
