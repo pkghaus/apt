@@ -21,8 +21,9 @@
 export default {
   async fetch(request, env, ctx) {
     let hit = null;
+    let path = null;
     try {
-      const path = decodeURIComponent(new URL(request.url).pathname);
+      path = decodeURIComponent(new URL(request.url).pathname);
 
       // Full downloads only: no Range header (apt resume sends one and a
       // resumed download would double-count), GET only.
@@ -42,12 +43,27 @@ export default {
         return served;
       }
     } catch (e) {
-      // Counting is best-effort; serving is not. A throw here leaves the
-      // request to the origin below, which is the correct answer for every
-      // path the bucket does not carry anyway. Logged rather than swallowed:
+      // Counting is best-effort; serving is not. Logged rather than swallowed:
       // a silent fallthrough and a healthy archive look identical from
       // outside, and this is the path a broken R2 binding takes.
       console.error("archive path failed, falling through:", e?.message ?? e);
+
+      // An ABSENT object returns null and falls through by design, because the
+      // listing pages share the pool/ path space and the asset layer answers
+      // them. A THROW is different: it means R2 failed, and falling through
+      // renders that as 404 -- telling apt the package or index does not
+      // exist, which is both false and not retryable. 503 is the truthful
+      // answer and the one a client will come back from.
+      if (path !== null && ARCHIVE_PREFIXES.some((p) => path.startsWith(p))) {
+        return new Response("archive temporarily unavailable\n", {
+          status: 503,
+          headers: {
+            "cache-control": "no-store",
+            "retry-after": "30",
+            "content-type": "text/plain; charset=utf-8",
+          },
+        });
+      }
     }
 
     // The asset layer, not the origin. It holds the listing tree, /news/ and
@@ -150,10 +166,40 @@ async function archive(request, env, ctx, path) {
   // onlyIf gives conditional requests (apt sends If-Modified-Since for the
   // indices on every update) and range requests to R2, which answers them
   // against the object rather than after transferring it.
-  const object = await env.ARCHIVE.get(key, {
-    onlyIf: request.headers,
-    range: request.method === "HEAD" ? undefined : request.headers,
-  });
+  let object;
+  try {
+    object = await env.ARCHIVE.get(key, {
+      onlyIf: request.headers,
+      range: request.method === "HEAD" ? undefined : request.headers,
+    });
+  } catch (e) {
+    // R2 THROWS for a range it cannot satisfy rather than returning null, and
+    // the caller's catch treats any throw as "the bucket does not carry this
+    // path" -- so a stale partial download was being answered 404. To apt that
+    // means the Release file is gone and `apt update` fails outright, when the
+    // client's only problem was a resume offset past the current end of file.
+    //
+    // Measured in production 2026-09-04: 55 of these in six hours against 59
+    // dists/ 404s, every one of them from a Debian APT-HTTP user agent, across
+    // fifteen countries. Reproducible: `Range: bytes=6066-` on the 6066-byte
+    // InRelease returned 404.
+    //
+    // RFC 9110 says 416 with the object's real length, which is what tells apt
+    // to throw its partial away and start again.
+    if (!isUnsatisfiableRange(e)) throw e;
+    const head = await env.ARCHIVE.head(key);
+    if (head === null) return null; // genuinely absent; let the asset layer answer
+    return new Response(null, {
+      status: 416,
+      headers: {
+        "content-range": `bytes */${head.size}`,
+        "accept-ranges": "bytes",
+        // Specific to this request's Range header, so it must never be stored
+        // and replayed to a client that asked for something else.
+        "cache-control": "no-store",
+      },
+    });
+  }
 
   if (object === null) return null; // no such object: Pages may have a page here
 
@@ -194,6 +240,17 @@ async function archive(request, env, ctx, path) {
   const response = new Response(object.body, { status: 200, headers });
   if (cacheable) ctx.waitUntil(cache.put(cacheKey, response.clone()));
   return response;
+}
+
+// R2 signals an unsatisfiable range by throwing. There is no typed error to
+// match on, so this matches the message and the code R2 actually emits -- both,
+// because either alone is one upstream wording change away from silently
+// reverting this to a 404. Captured verbatim from a production log line:
+//   archive path failed, falling through: get: The requested range is not
+//   satisfiable (10039)
+export function isUnsatisfiableRange(e) {
+  const msg = String(e?.message ?? e);
+  return msg.includes("range is not satisfiable") || msg.includes("10039");
 }
 
 // Measured against live R2 on 2026-09-02: the result's range is always

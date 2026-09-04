@@ -30,7 +30,8 @@ function r2Object({ body = BODY, size = BODY.length, range } = {}) {
   return o;
 }
 
-function harness({ object = r2Object(), throwOnGet = false, d1Throws = false } = {}) {
+function harness({ object = r2Object(), throwOnGet = false, d1Throws = false,
+                   rangeError = false, headObject = undefined } = {}) {
   const writes = [];
   const reads = [];
   const tasks = [];
@@ -52,7 +53,18 @@ function harness({ object = r2Object(), throwOnGet = false, d1Throws = false } =
     // route", and until this binding existed those were one path.
     ASSETS: { fetch: async () => new Response("asset-404", { status: 404 }) },
     ARCHIVE: {
+      // R2 does not return null for a range it cannot satisfy -- it THROWS,
+      // with this exact wording. Copied from a production log line rather than
+      // invented, because a fake that throws something else would let the
+      // matcher rot without any test noticing.
+      async head(key) {
+        if (headObject !== undefined) return headObject;
+        return object === null ? null : { size: object.size, key };
+      },
       async get(key, opts) {
+        if (rangeError) {
+          throw new Error("get: The requested range is not satisfiable (10039)");
+        }
         if (throwOnGet) throw new Error("bucket unreachable");
         reads.push(key);
         if (object === null) return null;
@@ -210,11 +222,70 @@ test("a malformed percent-escape falls through instead of throwing", async () =>
   assert.equal(res.status, 404);
 });
 
-test("an unreachable bucket falls through rather than erroring", async () => {
+// Was asserting 404. That satisfied the letter of "do not turn a bucket failure
+// into a 500" and broke the spirit: 404 tells apt the package does not exist,
+// which is false, is not retryable, and is exactly what a failing R2 looked
+// like from outside. An ABSENT object still falls through -- that is a
+// different path, and the two tests below hold it.
+test("an unreachable bucket says so, retryably, instead of denying the file", async () => {
   const h = harness({ throwOnGet: true });
   const res = await worker.fetch(new Request("https://apt.pkg.haus" + DEB), h.env, h.ctx);
   await h.settle();
-  assert.equal(res.status, 404, "serving must not turn a bucket failure into a 500");
+  assert.equal(res.status, 503, "a bucket failure is not the same as a missing file");
+  assert.equal(res.headers.get("retry-after"), "30");
+  assert.equal(res.headers.get("cache-control"), "no-store");
+});
+
+test("an absent object still falls through to the asset layer", async () => {
+  const h = harness({ object: null });
+  const res = await worker.fetch(new Request("https://apt.pkg.haus/pool/main/c/croc/"), h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 404, "the listing pages share the pool/ path space");
+});
+
+test("a failure outside the archive prefixes still falls through", async () => {
+  const h = harness({ throwOnGet: true });
+  const res = await worker.fetch(new Request("https://apt.pkg.haus/news/"), h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 404, "only pool/ and dists/ are the archive's to claim");
+});
+
+// The bug this file exists to prevent recurring. apt sends a Range when it
+// resumes a partial download; if the file changed size the offset can land past
+// the end, R2 throws, and the worker used to answer 404 -- which told apt the
+// Release file was gone and failed `apt update` outright. Measured in
+// production 2026-09-04: 55 range errors against 59 dists/ 404s in six hours,
+// every one from a Debian APT-HTTP agent.
+test("a range past the end is 416 with the real length, not 404", async () => {
+  const h = harness({ rangeError: true, headObject: { size: 6066 } });
+  const res = await worker.fetch(
+    new Request("https://apt.pkg.haus" + REL, { headers: { range: "bytes=6066-" } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 416, "404 here breaks apt update for a stale partial");
+  assert.equal(res.headers.get("content-range"), "bytes */6066",
+    "apt needs the real length to know where to restart");
+  assert.equal(res.headers.get("accept-ranges"), "bytes");
+});
+
+test("the 416 is never stored, since it answers one specific Range", async () => {
+  const h = harness({ rangeError: true, headObject: { size: 6066 } });
+  const res = await worker.fetch(
+    new Request("https://apt.pkg.haus" + DEB, { headers: { range: "bytes=999999-" } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 416);
+  assert.equal(res.headers.get("cache-control"), "no-store");
+  assert.equal(h.cacheStore.size, 0, "a 416 must not enter the cache");
+});
+
+test("a bad range on an object that is genuinely gone still falls through", async () => {
+  const h = harness({ rangeError: true, headObject: null });
+  const res = await worker.fetch(
+    new Request("https://apt.pkg.haus" + REL, { headers: { range: "bytes=10-" } }),
+    h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 404, "no object means the asset layer answers, as before");
 });
 
 test("a database that will not accept the write does not break serving", async () => {
