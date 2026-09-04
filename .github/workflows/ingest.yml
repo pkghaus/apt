@@ -409,12 +409,36 @@ jobs:
       # here only runs `wrangler d1 list`, which is a read, and the Worker's own
       # counter writes go through its runtime binding rather than the token.
       - name: Sync the package inventory into D1
+        id: inventory
         continue-on-error: true
         working-directory: worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.PKGHAUS_APT_CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: ../scripts/sync-package-inventory.sh ../public/news/known-packages.tsv
+
+      # continue-on-error masks the step above: GitHub reports its CONCLUSION as
+      # success whatever happened, so a permanently broken sync reads as green
+      # to anyone scanning step results, and only the raw log disagrees. That is
+      # the failure mode the flag was supposed to trade away, not acquire.
+      #
+      # `outcome` keeps the truth that `conclusion` discards. Surfacing it in the
+      # job summary puts it on the run's own front page rather than 200 lines
+      # into a log nobody opens on a green run.
+      - name: Say so when the inventory did not sync
+        if: always() && steps.inventory.outcome == 'failure'
+        run: |
+          {
+            echo "### Package inventory not synced"
+            echo
+            echo "The archive published normally; this affects only the package list"
+            echo "on apt.pkg.haus/stats, which falls back to showing packages that"
+            echo "have recorded downloads. Nothing is lost and the next publish retries."
+            echo
+            echo "Common causes: the \`packages\` table does not exist, or"
+            echo "\`PKGHAUS_APT_CLOUDFLARE_API_TOKEN\` lacks D1 edit."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::warning title=Package inventory not synced::apt.pkg.haus/stats will omit packages with no downloads until the next successful publish"
 
       - name: Deploy the Worker and its assets
         working-directory: worker
