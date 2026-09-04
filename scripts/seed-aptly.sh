@@ -25,6 +25,11 @@ SOURCE_URL="${SOURCE_URL:-https://apt.pkg.haus}"
 SUITES="${SUITES:-trixie testing unstable}"
 ARCHES="${ARCHES:-amd64 arm64}"
 SEED_DIR="${SEED_DIR:-seed}"
+# "off" rebuilds the database and publishes nothing. That is the recovery drill:
+# everything before the publish is read-only against the public archive, so the
+# whole path can be exercised with no credentials and no second bucket. Only
+# publish_suite writes, which is why require_r2 sits behind this too.
+SEED_PUBLISH="${SEED_PUBLISH:-on}"
 
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
@@ -66,7 +71,9 @@ if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
     return 0
 fi
 
-require_r2
+if [ "$SEED_PUBLISH" = on ]; then
+    require_r2
+fi
 
 manifest="$(mktemp)"
 build_manifest source_index > "$manifest"
@@ -112,6 +119,11 @@ for suite in $SUITES; do
     aptly_ repo add "$repo" "$stage" >/dev/null
     log "$suite: $n packages staged, repo now holds $(suite_contents "$suite" | wc -l)"
 done
+
+if [ "$SEED_PUBLISH" != on ]; then
+    log "SEED_PUBLISH=off: rebuilt from $SOURCE_URL, published nothing"
+    exit 0
+fi
 
 for suite in $SUITES; do
     suite_contents "$suite" | grep -q . || continue

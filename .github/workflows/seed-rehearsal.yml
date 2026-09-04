@@ -1,0 +1,77 @@
+name: Rehearse the recovery path
+
+# seed-aptly.sh is the only way back from a lost aptly database. R2 has no
+# object versioning, so there is no other copy. It had unit tests as of today
+# and had still never run end to end since the R2 cutover in August.
+#
+# This runs it for real, with SEED_PUBLISH=off: the manifest is built from the
+# published archive, every .deb is downloaded and checked against the SHA256 the
+# index claims, and the aptly repos are rebuilt. Only publish_suite writes
+# anything, and it is the one step that does not run. So the drill needs no
+# credentials, no second bucket, and cannot touch the live archive.
+#
+# The database is built under rehearsal/ rather than aptly-state/, and no state
+# branch is cloned, so there is nothing here that a later step could commit.
+#
+# Rebuilding is not the assertion. verify-rebuild.sh is: a run that seeded half
+# the fleet would exit 0 without it.
+
+on:
+  schedule:
+    # Weekly, the whole fleet. Not Monday 04:41 (the source-tarball prune) and
+    # not :17 (the archive health check every six hours).
+    - cron: '7 3 * * 4'
+  workflow_dispatch:
+  # Bounded to one suite and one architecture on a pull request: the full drill
+  # downloads the pool, which is minutes and hundreds of megabytes. One suite is
+  # ~110 MB and exercises every decision the full run makes.
+  pull_request:
+    paths:
+      - scripts/seed-aptly.sh
+      - scripts/verify-rebuild.sh
+      - scripts/aptly-lib.sh
+      - .github/workflows/seed-rehearsal.yml
+
+permissions:
+  contents: read
+
+# Its own group. The drill writes nothing, so it must not hold archive-write and
+# make real ingests queue behind a rehearsal.
+concurrency:
+  group: >-
+    ${{ github.event_name == 'pull_request'
+        && format('seed-rehearsal-{0}', github.ref)
+        || 'seed-rehearsal' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  rehearse:
+    name: Rebuild the archive from itself, and publish nothing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      # `a && b || c` yields c whenever b is falsy; both middles here are
+      # non-empty literals, so neither can take that branch.
+      SUITES: ${{ github.event_name == 'pull_request' && 'trixie' || 'trixie testing unstable' }}
+      ARCHES: ${{ github.event_name == 'pull_request' && 'amd64' || 'amd64 arm64' }}
+      APTLY_ROOT: rehearsal/db
+      SEED_DIR: rehearsal/seed
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install aptly
+        uses: ./.github/actions/install-aptly
+
+      # No R2 credentials in the environment, deliberately. seed-aptly.sh calls
+      # require_r2 only when it is going to publish, so their absence is what
+      # proves this cannot write to the bucket even if SEED_PUBLISH were wrong.
+      - name: Rebuild the database from the published archive
+        env:
+          SEED_PUBLISH: "off"
+        run: scripts/seed-aptly.sh
+
+      - name: Assert the rebuild reproduces the archive
+        run: scripts/verify-rebuild.sh

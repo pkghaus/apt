@@ -942,6 +942,55 @@ echo "ingest plan"
 # This is the only recovery path there is -- R2 has no object versioning -- and
 # the parse that decides which suite gets which bytes had never been exercised
 # outside a real rebuild of the live archive.
+# --- verify-rebuild.sh: does a rebuild actually reproduce the archive? --------
+# Without this the recovery drill only proves seed-aptly exits 0, which it also
+# does having seeded half the fleet.
+echo "rebuild verification"
+(
+    # shellcheck source=scripts/verify-rebuild.sh
+    . "$ROOT/scripts/verify-rebuild.sh"
+
+    SUITES="trixie unstable"
+    ARCHES="amd64 arm64"
+
+    # An arch-all package sits in BOTH arch indices of the reference but appears
+    # once in aptly, so the architecture has to fold out or the sets can never
+    # be equal.
+    reader() { # suite arch
+        printf 'Package: croc\nVersion: 1-1\n\n'
+        printf 'Package: keyring\nVersion: 2026.09.02\n\n'
+    }
+    out="$(reference_set reader)"
+
+    eq "an arch-all package is counted once per suite, not once per arch" "2" \
+       "$(printf '%s\n' "$out" | grep -c 'keyring')"
+    eq "each suite contributes its own rows" "4" "$(printf '%s\n' "$out" | grep -c .)"
+    eq "rows are suite, name, version" "trixie croc 1-1" \
+       "$(printf '%s\n' "$out" | grep '^trixie croc')"
+
+    # This parser prints on the Version line rather than on a blank one, so a
+    # truncated index with no trailing newline still yields its last package.
+    # The other index parsers in this repo need an awk END clause for that; this
+    # one is a different shape on purpose and the test says so.
+    notrail() { printf 'Package: last\nVersion: 9-9\n'; }
+    eq "a stanza with no trailing blank line is still emitted" "2" \
+       "$(reference_set notrail | grep -c 'last 9-9')"
+
+    # A stanza whose Package line never arrived must not attach its version to
+    # whatever package came before it.
+    orphan() { printf 'Package: a\nVersion: 1\n\nVersion: 2\n\n'; }
+    eq "a version with no package of its own is dropped" "2" \
+       "$(reference_set orphan | grep -c .)"
+
+    suite_contents() { printf 'croc\t1-1\tamd64\nkeyring\t2026.09.02\tall\n'; }
+    eq "the rebuilt set has the same shape as the reference" "4" \
+       "$(rebuilt_set | grep -c .)"
+    eq "and compares equal to it" "" \
+       "$(LC_ALL=C comm -3 <(reference_set reader) <(rebuilt_set))"
+
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo "seed manifest"
 (
     # shellcheck source=scripts/seed-aptly.sh
