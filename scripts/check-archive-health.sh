@@ -116,6 +116,35 @@ content_range_total() { # header-block -> size
     tr -d "\r" | awk 'tolower($1) == "content-range:" { n = split($3, p, "/"); print p[n]; exit }'
 }
 
+# A range starting at or past the end of the object, which the server cannot
+# satisfy. No --fail-with-body: 416 is the CORRECT answer here and would make
+# curl exit non-zero, so the status is read rather than inferred from the exit
+# code.
+unsatisfiable_probe() { # url start-offset -> "status total"
+    local hdrs
+    hdrs="$(curl -sS --max-time 60 -D - -o /dev/null -H "Range: bytes=$2-" "$1" 2>/dev/null)" \
+        || { printf 'curl-failed '; return 0; }
+    printf '%s %s' \
+        "$(printf '%s' "$hdrs" | tr -d '\r' | awk 'toupper($1) ~ /^HTTP/ { print $2 }' | tail -n1)" \
+        "$(printf '%s' "$hdrs" | content_range_total)"
+}
+
+# What a client with a stale partial download sends, and the one shape no check
+# here used to make. R2 THROWS for a range it cannot satisfy; until 2026-09-04
+# the Worker rendered that throw as a fallthrough 404, which told apt the file
+# was gone and failed `apt update` for real clients in fifteen countries, for
+# weeks, while every check above passed. The bug was invisible precisely because
+# nothing sent a Range past the end.
+assert_bad_range_is_416() { # label url size
+    local status total
+    read -r status total <<<"$(unsatisfiable_probe "$2" "$3")"
+    [ "$status" = 416 ] \
+        || fail "$1: a range past the end returned ${status:-nothing}, want 416 (404 here breaks apt update)"
+    [ "$total" = "$3" ] \
+        || fail "$1: the 416 reported a total of ${total:-nothing}, want $3"
+    note "$1: an unsatisfiable range is 416 with the real length"
+}
+
 # Sourced by tests/run.sh to reach the parsers above without a network. The
 # return is what stops the checks below from running under the test harness.
 # shellcheck disable=SC2317
@@ -145,6 +174,9 @@ for suite in $SUITES; do
            fail "$suite: InRelease was not signed by $SIGNING_KEY_ID" ;;
     esac
     note "InRelease verifies, signed by $SIGNING_KEY_ID"
+
+    assert_bad_range_is_416 "$suite/InRelease" \
+        "$BASE/dists/$suite/InRelease" "$(stat -c%s "$WORK/InRelease")"
 
     # The signed body, so every hash below is read from verified bytes rather
     # than from the file as fetched.
@@ -211,6 +243,8 @@ for suite in $SUITES; do
         [ "$probe_total" = "$probe_size" ] \
             || fail "$suite/$arch: $probe_path is $probe_total bytes in the pool, index says $probe_size"
         note "$arch pool read live: $(basename "$probe_path") is $probe_total bytes in R2"
+
+        assert_bad_range_is_416 "$suite/$arch pool" "$BASE/$probe_path" "$probe_size"
     done
 done
 
