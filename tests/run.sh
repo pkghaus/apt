@@ -186,6 +186,64 @@ echo "render refuses to replace pool listings with nothing"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+echo "the package inventory upserts the fleet and prunes only what left it"
+(
+    # shellcheck source=scripts/sync-package-inventory.sh
+    . "$ROOT/scripts/sync-package-inventory.sh"
+
+    tsv="$(mktemp)"
+    printf 'croc\t11.4.0-1\nkudu\t0.3.0-1\n' > "$tsv"
+    sql="$(inventory_sql "$tsv")"
+
+    eq "one upsert per package" 2 "$(printf '%s\n' "$sql" | grep -c '^INSERT INTO packages')"
+    eq "exactly one prune" 1 "$(printf '%s\n' "$sql" | grep -c '^DELETE FROM packages')"
+
+    # The prune must name the packages to KEEP. A prune that named the ones to
+    # remove would silently do nothing the first time a package was retired.
+    if printf '%s\n' "$sql" | grep -q "DELETE FROM packages WHERE package NOT IN ('croc', 'kudu');"; then
+        ok "the prune keeps exactly the current set"
+    else
+        no "the prune keeps exactly the current set" "$(printf '%s\n' "$sql" | grep '^DELETE')"
+    fi
+
+    # It must never touch the counters. Retirement drops a package from the
+    # inventory; its all-time downloads survive because the reader unions the
+    # two tables.
+    if printf '%s\n' "$sql" | grep -qi 'downloads'; then
+        no "the inventory sync never mentions the downloads table" "$(printf '%s\n' "$sql" | grep -i downloads)"
+    else
+        ok "the inventory sync never mentions the downloads table"
+    fi
+
+    # A retired line keeps its name with an empty version until the next
+    # publish drops it. It is not in the archive, so it is not in the inventory.
+    printf 'croc\t11.4.0-1\nscaphandre\t\n' > "$tsv"
+    sql="$(inventory_sql "$tsv")"
+    eq "a versionless (retired) line is not inventoried" 1 \
+        "$(printf '%s\n' "$sql" | grep -c '^INSERT INTO packages')"
+
+    # An empty or unreadable TSV looks exactly like an emptied archive. Pruning
+    # to nothing on that basis would blank the page's package list.
+    : > "$tsv"
+    if inventory_sql "$tsv" >/dev/null 2>&1; then
+        no "an empty TSV refuses to prune the inventory to nothing" "it produced SQL"
+    else
+        ok "an empty TSV refuses to prune the inventory to nothing"
+    fi
+
+    # Quoting: a name or version carrying an apostrophe must not end the string.
+    printf "od'd\t1.0'1\n" > "$tsv"
+    sql="$(inventory_sql "$tsv")"
+    if printf '%s\n' "$sql" | grep -q "('od''d', '1.0''1')"; then
+        ok "apostrophes are doubled rather than ending the literal"
+    else
+        no "apostrophes are doubled rather than ending the literal" "$(printf '%s\n' "$sql" | head -1)"
+    fi
+    rm -f "$tsv"
+
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo "the plan tells an unreachable source apart from an untagged package"
 (
     work="$(mktemp -d)"
