@@ -938,6 +938,106 @@ echo "ingest plan"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# --- seed-aptly.sh: the manifest the recovery path rebuilds from --------------
+# This is the only recovery path there is -- R2 has no object versioning -- and
+# the parse that decides which suite gets which bytes had never been exercised
+# outside a real rebuild of the live archive.
+echo "seed manifest"
+(
+    # shellcheck source=scripts/seed-aptly.sh
+    . "$ROOT/scripts/seed-aptly.sh"
+
+    SUITES="trixie unstable"
+    ARCHES="amd64 arm64"
+
+    # Deliberately not a well-formed archive: one package in both suites at the
+    # same pool path, one only in unstable, one stanza with no trailing blank
+    # line, and one with no SHA256 at all.
+    reader() { # suite arch
+        case "$1" in
+            trixie)
+                printf 'Package: croc\nFilename: pool/main/c/croc/croc_1-1~haus13+1_%s.deb\nSHA256: aaa\n\n' "$2"
+                ;;
+            unstable)
+                printf 'Package: croc\nFilename: pool/main/c/croc/croc_1-1_%s.deb\nSHA256: bbb\n\n' "$2"
+                printf 'Package: nohash\nFilename: pool/main/n/nohash/nohash_2-1_%s.deb\n\n' "$2"
+                printf 'Package: last\nFilename: pool/main/l/last/last_3-1_%s.deb\nSHA256: ccc\n' "$2"
+                ;;
+        esac
+    }
+    out="$(build_manifest reader)"
+
+    # The suite comes from the index the line was found in. A version qualifier
+    # is a consequence of the suite, never the evidence for it: read the other
+    # way round, unstable's unqualified versions would be unattributable.
+    eq "a package is attributed to the suite whose index carried it" "trixie" \
+       "$(printf '%s\n' "$out" | awk '$2 ~ /haus13/ {print $1; exit}')"
+
+    # trixie carries croc on two arches, unstable carries three packages on
+    # two arches. Nothing dedups: the pool path differs per arch, and a package
+    # that really is one file for both arches would collapse to one line here,
+    # which is what sort -u is for.
+    eq "each suite/arch pair contributes its own line" "8" \
+       "$(printf '%s\n' "$out" | grep -c .)"
+
+    # The awk END clause. Debian indices end with a blank line, but a truncated
+    # or hand-made one may not, and dropping the final package silently would
+    # leave the archive one package short with nothing to show for it.
+    eq "a final stanza with no trailing blank line is still emitted" "2" \
+       "$(printf '%s\n' "$out" | grep -c ' pool/main/l/last/')"
+
+    # Documents existing behaviour rather than blessing it: the download loop
+    # treats an empty hash as "no check", so this package is fetched unverified.
+    # Emitting it is still better than dropping it -- a missing package is a
+    # hole in the rebuilt archive, and this way it is at least visible.
+    eq "a stanza with no SHA256 is emitted with an empty hash" "2" \
+       "$(printf '%s\n' "$out" | grep -c '^unstable pool/main/n/nohash/[^ ]* *$')"
+
+    eq "the manifest is sorted" "sorted" \
+       "$(printf '%s\n' "$out" | LC_ALL=C sort -c 2>/dev/null && echo sorted || echo unsorted)"
+
+    # An empty source is the caller's diagnostic (`[ -s "$manifest" ]`), so this
+    # must yield nothing rather than inventing a line.
+    empty() { :; }
+    eq "an empty source archive yields no manifest" "" "$(build_manifest empty)"
+
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+# --- compare-archives.sh: the parse that proved the R2 cutover ----------------
+echo "archive comparison"
+(
+    # shellcheck source=scripts/compare-archives.sh
+    . "$ROOT/scripts/compare-archives.sh"
+
+    SUITES="trixie"
+    ARCHES="amd64 arm64"
+
+    reader() { printf 'Package: croc\nFilename: pool/main/c/croc/croc_1-1_%s.deb\nSHA256: aaa\n\n' "$2"; }
+    out="$(index_triples reader)"
+
+    # Keyed by suite AND arch, unlike the seed manifest which keys by suite
+    # alone. The difference is the point: a publish that landed one architecture
+    # and not the other is exactly what this script exists to catch, and folding
+    # the arches together would hide it.
+    eq "triples are keyed by suite and arch" "trixie/amd64 trixie/arm64" \
+       "$(printf '%s\n' "$out" | cut -d' ' -f1 | sort -u | tr '\n' ' ' | sed 's/ $//')"
+
+    eq "the path and hash ride along" "1" \
+       "$(printf '%s\n' "$out" | grep -c '^trixie/amd64 pool/main/c/croc/croc_1-1_amd64.deb aaa$')"
+
+    # comm(1) compares the two sides line by line and needs both sorted the same
+    # way; a locale-sensitive sort on one side would report phantom differences.
+    eq "triples are sorted in the C locale" "sorted" \
+       "$(printf '%s\n' "$out" | LC_ALL=C sort -c 2>/dev/null && echo sorted || echo unsorted)"
+
+    trailing() { printf 'Package: last\nFilename: pool/main/l/last/last_3-1_%s.deb\nSHA256: ccc\n' "$2"; }
+    eq "a final stanza with no trailing blank line is still emitted" "2" \
+       "$(index_triples trailing | grep -c ' pool/main/l/last/')"
+
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
 if [ "$fail" -eq 0 ]; then
     echo "all tests passed"

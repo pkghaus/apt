@@ -43,12 +43,20 @@ on:
 permissions:
   contents: read
 
-# Two ingests interleaving would race on the archive branch; one at a time,
-# never cancelled mid-publish.
-# Shared with deploy-worker.yml: the publish job below deploys the same
-# Worker that workflow does, and two concurrent deploys would race.
+# Everything that writes the archive shares this group: this workflow,
+# deploy-worker.yml, seed-aptly.yml, acquire-by-hash.yml and prune.yml. Two of
+# them interleaving would race the archive and aptly branches, the R2 bucket,
+# or the Worker deploy. One at a time, never cancelled mid-publish.
+#
+# Group names are global across workflows, so the string is the coupling and
+# renaming it is how the coupling gets broken. It was: this workflow moved from
+# `ingest` to `deploy-archive-worker` when it started deploying the Worker, and
+# seed-aptly and acquire-by-hash stayed behind on a group nothing else used.
+# For as long as that lasted, a hand-fired seed could republish the archive
+# underneath a running ingest. The name says what it guards now, not which
+# workflow happened to claim it first.
 concurrency:
-  group: deploy-archive-worker
+  group: archive-write
   cancel-in-progress: false
 
 jobs:
@@ -76,22 +84,13 @@ jobs:
           ARCHIVE_SIGNING_KEY: ${{ secrets.ARCHIVE_SIGNING_KEY }}
         run: scripts/check-key-expiry.sh
 
+      # What the archive already carries is a database question, so the plan
+      # job needs the database and nothing else.
       - name: Fetch aptly state
-        env:
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-        # What the archive already carries is a database question, so the plan
-        # job needs the database and nothing else. Distinguishes "the branch
-        # does not exist" (first run: everything is missing) from "the clone
-        # failed" (fail the run), which would otherwise plan a full rebuild.
-        run: |
-          if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
-              git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
-          else
-              echo "FATAL: no aptly branch. It has to exist before the run can"
-              echo "       commit to it -- commits are made through the API now,"
-              echo "       which cannot create a branch."
-              exit 1
-          fi
+        uses: ./.github/actions/fetch-state-branch
+        with:
+          branch: aptly
+          path: aptly-state
 
       - name: Install aptly
         uses: ./.github/actions/install-aptly
@@ -191,52 +190,27 @@ jobs:
           persist-credentials: false
 
       - name: Fetch archive state
-        env:
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-        # Distinguishes "the branch does not exist" (first run: start empty)
-        # from "the clone failed" (fail the run): falling back to an empty tree
-        # on a transient failure would publish an archive missing its pool.
-        run: |
-          if git ls-remote --exit-code "$REPO_URL" refs/heads/archive >/dev/null; then
-              git clone --branch archive --single-branch --depth 1 "$REPO_URL" public
-          else
-              echo "FATAL: no archive branch. It has to exist before the run can"
-              echo "       commit to it -- commits are made through the API now,"
-              echo "       which cannot create a branch."
-              exit 1
-          fi
+        uses: ./.github/actions/fetch-state-branch
+        with:
+          branch: archive
+          path: public
 
+      # aptly's leveldb, and only that. Its package pool is a second copy of
+      # every published .deb and is deliberately thrown away each run: at the
+      # root publish prefix aptly reads the pool only for packages whose
+      # objects are missing from the bucket, which is none of them except the
+      # ones this run just built.
+      #
+      # Kept off the archive branch because that whole branch is uploaded as
+      # the Worker's asset set, and this is a leveldb, not a web page.
+      #
+      # A missing branch is fatal here exactly as it is in the plan job; the
+      # action says why.
       - name: Fetch aptly state
-        env:
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-        # aptly's leveldb, and only that. Its package pool is a second copy of
-        # every published .deb and is deliberately thrown away each run: at the
-        # root publish prefix aptly reads the pool only for packages whose
-        # objects are missing from the bucket, which is none of them except the
-        # ones this run just built.
-        #
-        # Kept off the archive branch because that whole branch is uploaded as
-        # the Worker's asset set, and this is a leveldb, not a web page.
-        #
-        # Fatal when the branch is missing, exactly as the plan job treats it.
-        # This step used to `mkdir -p aptly-state` and carry on, which was a
-        # bootstrap path from when the branch could be created by pushing to
-        # it. Commits are made through the API now and it cannot create a
-        # branch, so the fallback could no longer bootstrap anything -- it
-        # could only hand aptly an EMPTY database, and an empty database
-        # publishes indices listing just this run's packages. That silently
-        # drops every other package from the archive. The plan job's success is
-        # what makes this unreachable today; it is fatal so that it stays that
-        # way if that ever stops being true.
-        run: |
-          if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
-              git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
-          else
-              echo "FATAL: no aptly branch. It has to exist before the run can"
-              echo "       commit to it -- commits are made through the API now,"
-              echo "       which cannot create a branch."
-              exit 1
-          fi
+        uses: ./.github/actions/fetch-state-branch
+        with:
+          branch: aptly
+          path: aptly-state
 
       - name: Download built packages
         if: needs.build.result == 'success'
@@ -276,20 +250,6 @@ jobs:
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/publish-buildinfo.sh build
-
-      # After the publish, so the keep set is read from the state this run
-      # produced, and unconditional for the same reason the mirror below is: it
-      # reconciles rather than reacting to an event, so a failed run is repaired
-      # by the next one. Deletes nothing while the bucket is under budget, which
-      # at the measured growth rate is the next several years; its other job is
-      # printing what the bucket is using.
-      - name: Prune source tarballs if the bucket is near budget
-        env:
-          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
-          R2_BUCKET: ${{ vars.R2_BUCKET }}
-          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
-        run: scripts/prune-source-tarballs.sh
 
       # Unconditional, including on an empty plan. Gating this on "did we
       # publish anything" made a failed mirror unrepairable: the step runs
@@ -370,6 +330,8 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
 
       - name: Install wrangler
         working-directory: worker

@@ -23,8 +23,6 @@ ARCHES="${ARCHES:-amd64 arm64}"
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 
-require_r2
-
 # "<suite>/<arch> <pool-path> <sha256>", one line per published package.
 index_triples() {
     local reader="$1" suite arch
@@ -45,6 +43,16 @@ source_index() {
     curl -fsSL --max-time 120 "$SOURCE_URL/dists/$1/main/binary-$2/Packages.gz" \
         | gunzip 2>/dev/null || true
 }
+
+# Everything above is definitions, everything below runs. The guard lets the
+# tests source this file for index_triples -- the parse that decided the R2
+# cutover was byte-correct -- without comparing against the live archive, and
+# without needing R2 credentials, since require_r2 now sits below it.
+if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
+    return 0
+fi
+
+require_r2
 
 before="$(mktemp)"; after="$(mktemp)"
 index_triples source_index > "$before"

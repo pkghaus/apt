@@ -16,10 +16,10 @@ on:
 permissions:
   contents: read
 
-# Shared with the ingest's publish job, which deploys the same Worker.
-# Group names are global across workflows, so the string is the coupling.
+# Shared with every workflow that writes the archive; see ingest.yml for the
+# full list and why the name is what it is.
 concurrency:
-  group: deploy-archive-worker
+  group: archive-write
   cancel-in-progress: false
 
 jobs:
@@ -54,6 +54,8 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
 
       # wrangler is a pinned devDependency, not `npx wrangler@4`. It runs with
       # a token that can deploy the Worker serving the archive, so the code it
