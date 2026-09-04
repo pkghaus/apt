@@ -1,0 +1,43 @@
+name: Fetch a state branch
+description: >-
+  Clone one of the archive's state branches into a working directory, or fail
+  the run. Neither branch is served directly: `archive` is the human-facing
+  tree that becomes the Worker's static assets, `aptly` is aptly's leveldb.
+
+  A missing branch is fatal rather than a bootstrap. It used to be survivable,
+  back when a branch could be created by pushing to it; commits are made
+  through the GitHub API now and the API cannot create one. So the fallback
+  could no longer bootstrap anything -- it could only hand aptly an EMPTY
+  database, and an empty database publishes indices listing just the packages
+  of the run that found it. That silently drops every other package from the
+  archive. Failing loudly is the only safe answer left.
+
+  This is also why the check is `git ls-remote --exit-code` rather than letting
+  the clone fail: it tells "the branch does not exist" apart from "the network
+  broke", and only the first is a state we could ever reason about.
+
+inputs:
+  branch:
+    description: State branch to clone -- archive or aptly.
+    required: true
+  path:
+    description: Directory to clone it into.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        BRANCH: ${{ inputs.branch }}
+        DEST: ${{ inputs.path }}
+        REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+      run: |
+        if git ls-remote --exit-code "$REPO_URL" "refs/heads/$BRANCH" >/dev/null; then
+            git clone --branch "$BRANCH" --single-branch --depth 1 "$REPO_URL" "$DEST"
+        else
+            echo "FATAL: no $BRANCH branch. It has to exist before the run can"
+            echo "       commit to it -- commits are made through the API now,"
+            echo "       which cannot create a branch."
+            exit 1
+        fi

@@ -23,8 +23,10 @@ on:
 permissions:
   contents: read
 
+# archive-write, not `ingest`: this re-signs the publish points through
+# aptly's API and must not run under an ingest. See ingest.yml.
 concurrency:
-  group: ingest
+  group: archive-write
   cancel-in-progress: false
 
 jobs:
@@ -40,14 +42,10 @@ jobs:
           persist-credentials: false
 
       - name: Fetch aptly state
-        env:
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-        run: |
-          if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
-              git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
-          else
-              echo "FATAL: no aptly branch"; exit 1
-          fi
+        uses: ./.github/actions/fetch-state-branch
+        with:
+          branch: aptly
+          path: aptly-state
 
       - name: Install aptly
         uses: ./.github/actions/install-aptly

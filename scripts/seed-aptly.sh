@@ -31,24 +31,45 @@ SEED_DIR="${SEED_DIR:-seed}"
 
 log() { printf '%s\n' "$*" >&2; }
 
-require_r2
+source_index() { # suite arch
+    curl -fsSL --max-time 120 \
+        "$SOURCE_URL/dists/$1/main/binary-$2/Packages.gz" | gunzip
+}
 
 # Every package in the source archive as "<suite> <pool-path> <sha256>".
 # Suite comes from the index the line was found in, not from the version
 # qualifier: the source is the authority on which suite carries what.
+#
+# The reader is an argument for the same reason compare-archives.sh takes one:
+# it is the seam the tests reach through. This is the recovery path -- the only
+# one, since R2 has no object versioning -- and until now the parse that decides
+# which suite gets which bytes had never been exercised anywhere but a real
+# rebuild of the live archive.
+build_manifest() { # reader
+    local reader="$1" suite arch
+    for suite in $SUITES; do
+        for arch in $ARCHES; do
+            "$reader" "$suite" "$arch" \
+                | awk -v s="$suite" '
+                    /^Filename: /   { f = $2 }
+                    /^SHA256: /     { h = $2 }
+                    /^$/            { if (f != "") print s, f, h; f = ""; h = "" }
+                    END             { if (f != "") print s, f, h }'
+        done
+    done | LC_ALL=C sort -u
+}
+
+# Everything above is definitions, everything below runs. The guard lets the
+# tests source this file without seeding anything, and without R2 credentials,
+# since require_r2 sits below it.
+if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
+    return 0
+fi
+
+require_r2
+
 manifest="$(mktemp)"
-for suite in $SUITES; do
-    for arch in $ARCHES; do
-        curl -fsSL --max-time 120 \
-            "$SOURCE_URL/dists/$suite/main/binary-$arch/Packages.gz" \
-            | gunzip \
-            | awk -v s="$suite" '
-                /^Filename: /   { f = $2 }
-                /^SHA256: /     { h = $2 }
-                /^$/            { if (f != "") print s, f, h; f = ""; h = "" }
-                END             { if (f != "") print s, f, h }'
-    done
-done | LC_ALL=C sort -u > "$manifest"
+build_manifest source_index > "$manifest"
 
 [ -s "$manifest" ] || { log "FATAL: $SOURCE_URL published no packages"; exit 1; }
 log "source archive: $(wc -l < "$manifest") suite/package pairs, $(cut -d' ' -f2 "$manifest" | sort -u | wc -l) distinct files"

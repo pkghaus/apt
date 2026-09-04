@@ -20,8 +20,11 @@ on:
 permissions:
   contents: read
 
+# archive-write, not `ingest`: this republishes the whole archive, and the
+# group it used to name stopped being the ingest's when that workflow started
+# deploying the Worker. See ingest.yml.
 concurrency:
-  group: ingest
+  group: archive-write
   cancel-in-progress: false
 
 jobs:
@@ -37,17 +40,10 @@ jobs:
           persist-credentials: false
 
       - name: Fetch aptly state
-        env:
-          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
-        run: |
-          if git ls-remote --exit-code "$REPO_URL" refs/heads/aptly >/dev/null; then
-              git clone --branch aptly --single-branch --depth 1 "$REPO_URL" aptly-state
-          else
-              echo "FATAL: no aptly branch. It has to exist before the run can"
-              echo "       commit to it -- commits are made through the API now,"
-              echo "       which cannot create a branch."
-              exit 1
-          fi
+        uses: ./.github/actions/fetch-state-branch
+        with:
+          branch: aptly
+          path: aptly-state
 
       - name: Install aptly
         uses: ./.github/actions/install-aptly

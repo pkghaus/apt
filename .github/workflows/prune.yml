@@ -1,0 +1,68 @@
+name: Prune source tarballs
+
+# Reconciles the bucket against its budget, on its own cadence.
+#
+# This used to be a step in the ingest's publish job, where it cost 26 seconds
+# of every publish to delete nothing: the measured headroom is years, and the
+# step's other job is printing what the bucket is using. Latency on the ingest
+# is what a person waits for after a package lands; this is not.
+#
+# It reconciles rather than reacting to an event, so it is unconditional and a
+# failed run is repaired by the next one. That is the same reasoning the pool
+# mirror carries, and the reason this is a schedule rather than something gated
+# on a publish having happened.
+#
+# It needs more than R2 credentials, which is easy to get wrong: the keep set
+# comes from suite_contents(), which asks aptly what each suite publishes, so
+# the leveldb has to be restored and the binary installed. Without them
+# suite_contents returns nothing, the script reports "0 published version(s)",
+# exits 0 under budget and refuses to act over it -- a silent no-op that looks
+# exactly like a healthy run.
+
+on:
+  schedule:
+    # Weekly. Not on :17, which is the archive health check every six hours,
+    # and not 05:23 Monday, which is the stats D1 export.
+    - cron: '41 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Deletes objects the archive serves from, so it takes the archive's write
+# lock like every other writer. Without it a prune could read a settled aptly
+# branch while an ingest is midway through publishing new objects to the
+# bucket. See ingest.yml for the full membership.
+concurrency:
+  group: archive-write
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    name: Prune if the bucket is near budget
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # The keep set is read from what aptly says each suite publishes, so this
+      # is not optional; see the note at the top.
+      - name: Fetch aptly state
+        uses: ./.github/actions/fetch-state-branch
+        with:
+          branch: aptly
+          path: aptly-state
+
+      - name: Install aptly
+        uses: ./.github/actions/install-aptly
+
+      - name: Prune source tarballs if the bucket is near budget
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.PKGHAUS_APT_R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.PKGHAUS_APT_R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+        run: scripts/prune-source-tarballs.sh
