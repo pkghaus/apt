@@ -334,8 +334,6 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: worker/package-lock.json
 
       - name: Install wrangler
         working-directory: worker
