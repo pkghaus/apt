@@ -151,7 +151,49 @@ for dsc in "$SRC"/*.dsc; do
     verify_dsc "$dsc"
 done
 
+# The one name that can collide. Every other file here carries the full Debian
+# version, so a second upload under the same key is the same bytes by
+# construction; an orig tarball is keyed on the UPSTREAM version, so every
+# revision of one upstream version writes the same key.
+#
+# That was supposed to be harmless -- the comment at the top of this file says
+# re-uploading a name is "either identical or a bug elsewhere" -- and it was the
+# bug. The tarball was stamped with the changelog's timestamp, so each revision
+# produced different bytes, and this overwrote the previous one under a URL the
+# zone caches for 30 days. Measured 2026-09-06: buildinfos.pkg.haus served two
+# different tarballs for i3status-rust_0.36.1.orig.tar.gz depending on the POP
+# (BRU held the superseded copy at age 1174 while CDG, FRA and AMS had the new
+# one), and every superseded .dsc named a checksum that no longer existed.
+#
+# action-debian-build now stamps the tarball with upstream's commit date, so
+# the bytes no longer move. This is the detector for when they do anyway: it
+# cannot be fatal, because the first build of each package after that change
+# legitimately replaces the published tarball exactly once.
+orig_needs_purge() {
+    local f="$1" key="$2" remote
+
+    case "$(basename "$f")" in *.orig.tar.*) ;; *) return 1 ;; esac
+
+    remote="$(aws_ s3api head-object --bucket "$R2_BUCKET" --key "$key" \
+        --query ContentLength --output text 2>/dev/null)" || return 1
+    [ -n "$remote" ] && [ "$remote" != "None" ] || return 1
+
+    # Compared by content, not by size: the difference is tar header mtimes
+    # inside a gzip stream, which routinely compresses to the same length.
+    local tmp got want
+    tmp="$(mktemp)"
+    if ! aws_ s3 cp "s3://$R2_BUCKET/$key" "$tmp" --only-show-errors 2>/dev/null; then
+        rm -f "$tmp"; return 1
+    fi
+    got="$(sha256sum "$tmp" | cut -d' ' -f1)"
+    want="$(sha256sum "$f" | cut -d' ' -f1)"
+    rm -f "$tmp"
+
+    [ "$got" != "$want" ]
+}
+
 published=0
+purge_list=()
 for f in "${files[@]}" "${extras[@]}"; do
     name="$(basename "$f")"
 
@@ -169,9 +211,38 @@ for f in "${files[@]}" "${extras[@]}"; do
     # lib, so that case is deliberately not handled rather than guessed at.
     initial="${source:0:1}"
 
-    aws_ s3 cp "$f" "s3://$R2_BUCKET/$PREFIX/$initial/$source/$name" \
-        --only-show-errors
+    key="$PREFIX/$initial/$source/$name"
+
+    if orig_needs_purge "$f" "$key"; then
+        printf '::warning::%s is being REPLACED with different bytes. Its URL is\n' "$name" >&2
+        printf '  cached for 30 days per zone rule, so it is purged below. Expect this\n' >&2
+        printf '  once per package after the upstream-mtime change, and never again.\n' >&2
+        purge_list+=("https://buildinfos.pkg.haus/${key#buildinfos/}")
+    fi
+
+    aws_ s3 cp "$f" "s3://$R2_BUCKET/$key" --only-show-errors
     published=$((published + 1))
 done
+
+# Purged here rather than left to purge-cache.sh, which walks the apt pool and
+# has no view of this prefix. Skipped without a token rather than failing: the
+# upload has already happened and refusing now would leave the same split state
+# with no record of it.
+if [ "${#purge_list[@]}" -gt 0 ]; then
+    if [ -n "${CLOUDFLARE_PURGE_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ZONE_ID:-}" ]; then
+        printf '%s\n' "${purge_list[@]}" | jq -R . | jq -s '{files: .}' \
+            | curl -sS --fail-with-body -X POST \
+                "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+                -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
+                -H 'Content-Type: application/json' --data @- >/dev/null
+        printf 'purged %s replaced source URL(s)\n' "${#purge_list[@]}" >&2
+    else
+        printf '::warning::%s source file(s) were replaced but no purge token is set;\n' \
+            "${#purge_list[@]}" >&2
+        printf '  the edge will serve the superseded bytes from some POPs until the\n' >&2
+        printf '  30-day rule expires. Purge these by hand:\n' >&2
+        printf '    %s\n' "${purge_list[@]}" >&2
+    fi
+fi
 
 printf 'published %s file(s) under %s/\n' "$published" "$PREFIX" >&2
