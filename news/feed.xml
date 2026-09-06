@@ -7,6 +7,20 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>added: hl 0.36.3-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-06-added-hl-0.36.3-1</guid>
+<pubDate>Sun, 06 Sep 2026 12:03:54 +0000</pubDate>
+<description>Joins the archive in all three suites. (hl 0.36.3-1)</description>
+</item>
+<item>
+<title>added: gitu 0.43.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-06-added-gitu-0.43.0-1</guid>
+<pubDate>Sun, 06 Sep 2026 12:03:54 +0000</pubDate>
+<description>Joins the archive in all three suites. (gitu 0.43.0-1)</description>
+</item>
+<item>
 <title>added: kudu 0.3.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-04-added-kudu-0.3.0-1</guid>
