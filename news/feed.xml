@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.5.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-06-updated-croc-11.5.0-1</guid>
+<pubDate>Sun, 06 Sep 2026 20:33:02 +0000</pubDate>
+<description>Updated from 11.4.0-1. (croc 11.5.0-1)</description>
+</item>
+<item>
 <title>updated: i3status-rust 0.36.1-2</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-06-updated-i3status-rust-0.36.1-2</guid>
