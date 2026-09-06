@@ -70,3 +70,4 @@
 {"ts":"2026-09-04T15:14:33Z","type":"added","title":"added: kudu 0.3.0-1","detail":"Joins the archive in all three suites.","pkgs":"kudu=0.3.0-1"}
 {"ts":"2026-09-06T12:03:54Z","type":"added","title":"added: gitu 0.43.0-1","detail":"Joins the archive in all three suites.","pkgs":"gitu=0.43.0-1"}
 {"ts":"2026-09-06T12:03:54Z","type":"added","title":"added: hl 0.36.3-1","detail":"Joins the archive in all three suites.","pkgs":"hl=0.36.3-1"}
+{"ts":"2026-09-06T12:11:43Z","type":"added","title":"added: xplr 1.1.1-1","detail":"Joins the archive in all three suites.","pkgs":"xplr=1.1.1-1"}

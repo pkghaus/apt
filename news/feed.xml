@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>added: xplr 1.1.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-06-added-xplr-1.1.1-1</guid>
+<pubDate>Sun, 06 Sep 2026 12:11:43 +0000</pubDate>
+<description>Joins the archive in all three suites. (xplr 1.1.1-1)</description>
+</item>
+<item>
 <title>added: hl 0.36.3-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-06-added-hl-0.36.3-1</guid>
