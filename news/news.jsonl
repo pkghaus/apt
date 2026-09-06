@@ -71,3 +71,4 @@
 {"ts":"2026-09-06T12:03:54Z","type":"added","title":"added: gitu 0.43.0-1","detail":"Joins the archive in all three suites.","pkgs":"gitu=0.43.0-1"}
 {"ts":"2026-09-06T12:03:54Z","type":"added","title":"added: hl 0.36.3-1","detail":"Joins the archive in all three suites.","pkgs":"hl=0.36.3-1"}
 {"ts":"2026-09-06T12:11:43Z","type":"added","title":"added: xplr 1.1.1-1","detail":"Joins the archive in all three suites.","pkgs":"xplr=1.1.1-1"}
+{"ts":"2026-09-06T14:15:23Z","type":"added","title":"added: i3status-rust 0.36.1-1","detail":"Joins the archive in all three suites.","pkgs":"i3status-rust=0.36.1-1"}
