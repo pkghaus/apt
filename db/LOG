@@ -13996,3 +13996,524 @@
 09:16:24.102517 table@build exiting
 09:16:24.102521 table@build revert @5669
 09:16:24.102768 db@close done T·9.863352ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:40.395007 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:40.395664 version@stat F·[4 451] S·1MiB[375KiB 1MiB] Sc·[1.00 0.01]
+12:21:40.395691 db@open opening
+12:21:40.396247 journal@recovery F·1
+12:21:40.396287 journal@recovery recovering @5667
+12:21:40.396635 version@stat F·[4 451] S·1MiB[375KiB 1MiB] Sc·[1.00 0.01]
+12:21:40.402978 db@janitor F·457 G·0
+12:21:40.403018 db@open done T·7.308436ms
+12:21:40.403077 table@compaction L0·1 -> L1·1 S·1MiB Q·4989
+12:21:40.403951 db@close closing
+12:21:40.404059 db@close done T·106.138µs
+=============== Sep 7, 2026 (UTC) ===============
+12:21:40.434720 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:40.435361 version@stat F·[4 451] S·1MiB[375KiB 1MiB] Sc·[1.00 0.01]
+12:21:40.435386 db@open opening
+12:21:40.435991 journal@recovery F·1
+12:21:40.436036 journal@recovery recovering @5669
+12:21:40.436370 version@stat F·[4 451] S·1MiB[375KiB 1MiB] Sc·[1.00 0.01]
+12:21:40.439835 db@janitor F·457 G·0
+12:21:40.439864 db@open done T·4.465044ms
+12:21:40.439904 table@compaction L0·1 -> L1·1 S·1MiB Q·4989
+12:21:40.455501 table@build created L1@5673 N·2277 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:40.455597 version@stat F·[3 451] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:40.456024 table@compaction committed F-1 S-2KiB Ke·0 D·2 T·16.100407ms
+12:21:40.456167 table@remove removed @5664
+12:21:40.456335 table@remove removed @5663
+12:21:40.710837 memdb@flush N·1 S·376B
+12:21:40.711792 memdb@flush created L0@5675 N·1 S·525B "Cd1..deb,v4990":"Cd1..deb,v4990"
+12:21:40.711920 version@stat F·[4 451] S·1MiB[2KiB 1MiB] Sc·[1.00 0.02]
+12:21:40.713564 memdb@flush committed F·1 T·2.698849ms
+12:21:40.713615 journal@remove removed @5671
+12:21:40.713709 table@move L0@5675 -> L1
+12:21:40.713737 version@stat F·[3 452] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:40.714709 transaction@flush created L0@5676 N·4 S·1KiB "Pam..6df,v4991":"xFP..6df,v4992"
+12:21:40.714725 version@stat F·[4 452] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:40.715075 table@compaction L0·1 -> L1·1 S·1MiB Q·4994
+12:21:40.715177 db@close closing
+12:21:40.729143 table@build created L1@5677 N·2281 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:40.729157 table@build exiting
+12:21:40.729161 table@build revert @5677
+12:21:40.729439 db@close done T·14.260909ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:40.851412 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:40.852227 version@stat F·[4 452] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:40.852250 db@open opening
+12:21:40.852871 journal@recovery F·1
+12:21:40.852912 journal@recovery recovering @5674
+12:21:40.854053 memdb@flush created L0@5677 N·2 S·2KiB "Ed6..441,v4996":"Ld6..441,v4995"
+12:21:40.854593 version@stat F·[5 452] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:40.858373 db@janitor F·459 G·0
+12:21:40.858406 db@open done T·6.141106ms
+12:21:40.858481 table@compaction expanding L0+L1 (F·1 S·2KiB)+(F·1 S·1MiB) -> (F·2 S·3KiB)+(F·1 S·1MiB)
+12:21:40.858490 table@compaction L0·2 -> L1·1 S·1MiB Q·4997
+12:21:40.859429 db@close closing
+12:21:40.872384 table@build created L1@5680 N·2281 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:40.872395 table@build exiting
+12:21:40.872409 table@build revert @5680
+12:21:40.872680 db@close done T·13.249787ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:40.931589 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:40.932248 version@stat F·[5 452] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:40.932273 db@open opening
+12:21:40.932844 journal@recovery F·1
+12:21:40.932885 journal@recovery recovering @5678
+12:21:40.933800 memdb@flush created L0@5680 N·2 S·2KiB "Ed6..441,v4999":"Ld6..441,v4998"
+12:21:40.934137 version@stat F·[6 452] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:40.937100 db@janitor F·460 G·0
+12:21:40.937131 db@open done T·4.842986ms
+12:21:40.937186 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:40.937307 table@compaction L0·3 -> L1·1 S·1MiB Q·5000
+12:21:40.937381 db@close closing
+12:21:40.951090 table@build created L1@5683 N·2281 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:40.951113 table@build exiting
+12:21:40.951118 table@build revert @5683
+12:21:40.951389 db@close done T·14.006616ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:40.983687 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:40.984324 version@stat F·[6 452] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:40.984349 db@open opening
+12:21:40.984917 journal@recovery F·1
+12:21:40.984961 journal@recovery recovering @5681
+12:21:40.985395 version@stat F·[6 452] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:40.988807 db@janitor F·460 G·0
+12:21:40.988843 db@open done T·4.47679ms
+12:21:40.988893 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:40.988929 table@compaction L0·3 -> L1·1 S·1MiB Q·5000
+12:21:41.003432 table@build created L1@5685 N·2281 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:41.003527 version@stat F·[3 452] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:41.003935 table@compaction committed F-3 S-4KiB Ke·0 D·4 T·14.987798ms
+12:21:41.004012 table@remove removed @5680
+12:21:41.004051 table@remove removed @5677
+12:21:41.004106 table@remove removed @5676
+12:21:41.004273 table@remove removed @5673
+12:21:41.232460 memdb@flush N·1 S·376B
+12:21:41.233334 memdb@flush created L0@5687 N·1 S·525B "Cb6..deb,v5001":"Cb6..deb,v5001"
+12:21:41.233372 version@stat F·[4 452] S·1MiB[2KiB 1MiB] Sc·[1.00 0.02]
+12:21:41.234158 memdb@flush committed F·1 T·1.667709ms
+12:21:41.234210 journal@remove removed @5683
+12:21:41.234409 table@move L0@5687 -> L1
+12:21:41.234475 version@stat F·[3 453] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:41.236712 transaction@flush created L0@5688 N·4 S·1KiB "Par..ec9,v5002":"xFP..ec9,v5003"
+12:21:41.236729 version@stat F·[4 453] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:41.237223 table@compaction L0·1 -> L1·1 S·1MiB Q·5005
+12:21:41.237278 db@close closing
+12:21:41.237385 db@close done T·104.814µs
+=============== Sep 7, 2026 (UTC) ===============
+12:21:41.359381 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:41.360073 version@stat F·[4 453] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:41.360094 db@open opening
+12:21:41.360678 journal@recovery F·1
+12:21:41.360720 journal@recovery recovering @5686
+12:21:41.361733 memdb@flush created L0@5689 N·2 S·2KiB "Ed6..441,v5007":"Ld6..441,v5006"
+12:21:41.362060 version@stat F·[5 453] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:41.366076 db@janitor F·460 G·0
+12:21:41.366120 db@open done T·6.006976ms
+12:21:41.366163 table@compaction expanding L0+L1 (F·1 S·2KiB)+(F·1 S·1MiB) -> (F·2 S·3KiB)+(F·1 S·1MiB)
+12:21:41.366172 table@compaction L0·2 -> L1·1 S·1MiB Q·5008
+12:21:41.367452 db@close closing
+12:21:41.380871 table@build created L1@5692 N·2285 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:41.380881 table@build exiting
+12:21:41.380885 table@build revert @5692
+12:21:41.381123 db@close done T·13.669172ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:41.439307 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:41.440117 version@stat F·[5 453] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:41.440140 db@open opening
+12:21:41.440706 journal@recovery F·1
+12:21:41.440746 journal@recovery recovering @5690
+12:21:41.441556 memdb@flush created L0@5692 N·2 S·2KiB "Ed6..441,v5010":"Ld6..441,v5009"
+12:21:41.441871 version@stat F·[6 453] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:41.445232 db@janitor F·461 G·0
+12:21:41.445268 db@open done T·5.112751ms
+12:21:41.445338 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:41.445350 table@compaction L0·3 -> L1·1 S·1MiB Q·5011
+12:21:41.445576 db@close closing
+12:21:41.459369 table@build created L1@5695 N·2285 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:41.459385 table@build exiting
+12:21:41.459390 table@build revert @5695
+12:21:41.459653 db@close done T·14.074929ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:41.488238 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:41.488966 version@stat F·[6 453] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:41.488988 db@open opening
+12:21:41.489580 journal@recovery F·1
+12:21:41.489623 journal@recovery recovering @5693
+12:21:41.489751 version@stat F·[6 453] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:41.492782 db@janitor F·461 G·0
+12:21:41.492805 db@open done T·3.811805ms
+12:21:41.492873 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:41.493095 table@compaction L0·3 -> L1·1 S·1MiB Q·5011
+12:21:41.508521 table@build created L1@5697 N·2285 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:41.508561 version@stat F·[3 453] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:41.509014 table@compaction committed F-3 S-6KiB Ke·0 D·4 T·15.906687ms
+12:21:41.509091 table@remove removed @5692
+12:21:41.509132 table@remove removed @5689
+12:21:41.509188 table@remove removed @5688
+12:21:41.509361 table@remove removed @5685
+12:21:41.754561 memdb@flush N·1 S·385B
+12:21:41.756132 memdb@flush created L0@5699 N·1 S·557B "Cd6..deb,v5012":"Cd6..deb,v5012"
+12:21:41.756176 version@stat F·[4 453] S·1MiB[2KiB 1MiB] Sc·[1.00 0.02]
+12:21:41.756668 memdb@flush committed F·1 T·2.076952ms
+12:21:41.756714 journal@remove removed @5695
+12:21:41.756754 table@move L0@5699 -> L1
+12:21:41.756790 version@stat F·[3 454] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:41.758068 transaction@flush created L0@5700 N·4 S·1KiB "Pam..820,v5013":"xFP..820,v5014"
+12:21:41.758084 version@stat F·[4 454] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:41.758628 table@compaction L0·1 -> L1·1 S·1MiB Q·5016
+12:21:41.758749 db@close closing
+12:21:41.772759 table@build created L1@5701 N·2289 S·1MiB "E0a..004,v4951":"xFP..456,v3493"
+12:21:41.772769 table@build exiting
+12:21:41.772772 table@build revert @5701
+12:21:41.773031 db@close done T·14.280418ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:41.896598 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:41.897361 version@stat F·[4 454] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:41.897381 db@open opening
+12:21:41.898046 journal@recovery F·1
+12:21:41.898093 journal@recovery recovering @5698
+12:21:41.898954 memdb@flush created L0@5701 N·2 S·2KiB "E0a..004,v5018":"L0a..004,v5017"
+12:21:41.899321 version@stat F·[5 454] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:41.902847 db@janitor F·461 G·0
+12:21:41.902880 db@open done T·5.481284ms
+12:21:41.902947 table@compaction expanding L0+L1 (F·1 S·2KiB)+(F·1 S·1MiB) -> (F·2 S·3KiB)+(F·1 S·1MiB)
+12:21:41.902957 table@compaction L0·2 -> L1·1 S·1MiB Q·5019
+12:21:41.904007 db@close closing
+12:21:41.917326 table@build created L1@5704 N·2289 S·1MiB "E0a..004,v5018":"xFP..456,v3493"
+12:21:41.917341 table@build exiting
+12:21:41.917345 table@build revert @5704
+12:21:41.917634 db@close done T·13.625661ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:41.977562 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:41.978204 version@stat F·[5 454] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:41.978222 db@open opening
+12:21:41.978809 journal@recovery F·1
+12:21:41.978851 journal@recovery recovering @5702
+12:21:41.979778 memdb@flush created L0@5704 N·2 S·2KiB "E0a..004,v5021":"L0a..004,v5020"
+12:21:41.980105 version@stat F·[6 454] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:41.984036 db@janitor F·462 G·0
+12:21:41.984074 db@open done T·5.835691ms
+12:21:41.984133 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:41.984144 table@compaction L0·3 -> L1·1 S·1MiB Q·5022
+12:21:41.984612 db@close closing
+12:21:41.998247 table@build created L1@5707 N·2289 S·1MiB "E0a..004,v5021":"xFP..456,v3493"
+12:21:41.998259 table@build exiting
+12:21:41.998263 table@build revert @5707
+12:21:41.998550 db@close done T·13.93677ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:42.027178 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:42.027889 version@stat F·[6 454] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:42.027912 db@open opening
+12:21:42.028463 journal@recovery F·1
+12:21:42.028532 journal@recovery recovering @5705
+12:21:42.028788 version@stat F·[6 454] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:42.031800 db@janitor F·462 G·0
+12:21:42.031824 db@open done T·3.905981ms
+12:21:42.031878 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:42.031908 table@compaction L0·3 -> L1·1 S·1MiB Q·5022
+12:21:42.048044 table@build created L1@5709 N·2289 S·1MiB "E0a..004,v5021":"xFP..456,v3493"
+12:21:42.048095 version@stat F·[3 454] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:42.048586 table@compaction committed F-3 S-5KiB Ke·0 D·4 T·16.662115ms
+12:21:42.048668 table@remove removed @5704
+12:21:42.048706 table@remove removed @5701
+12:21:42.048758 table@remove removed @5700
+12:21:42.048939 table@remove removed @5697
+12:21:42.278484 memdb@flush N·1 S·385B
+12:21:42.279337 memdb@flush created L0@5711 N·1 S·535B "C63..deb,v5023":"C63..deb,v5023"
+12:21:42.279400 version@stat F·[4 454] S·1MiB[2KiB 1MiB] Sc·[1.00 0.02]
+12:21:42.279974 memdb@flush committed F·1 T·1.425715ms
+12:21:42.280034 journal@remove removed @5707
+12:21:42.280080 table@move L0@5711 -> L1
+12:21:42.280128 version@stat F·[3 455] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:42.281309 transaction@flush created L0@5712 N·4 S·1KiB "Par..57a,v5024":"xFP..57a,v5025"
+12:21:42.281326 version@stat F·[4 455] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:42.281714 table@compaction L0·1 -> L1·1 S·1MiB Q·5027
+12:21:42.281931 db@close closing
+12:21:42.296000 table@build created L1@5713 N·2293 S·1MiB "E0a..004,v5021":"xFP..456,v3493"
+12:21:42.296013 table@build exiting
+12:21:42.296017 table@build revert @5713
+12:21:42.296277 db@close done T·14.34439ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:42.422299 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:42.423002 version@stat F·[4 455] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:42.423024 db@open opening
+12:21:42.423624 journal@recovery F·1
+12:21:42.423667 journal@recovery recovering @5710
+12:21:42.424647 memdb@flush created L0@5713 N·2 S·2KiB "E0a..004,v5029":"L0a..004,v5028"
+12:21:42.425081 version@stat F·[5 455] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:42.428139 db@janitor F·462 G·0
+12:21:42.428171 db@open done T·5.134615ms
+12:21:42.428227 table@compaction expanding L0+L1 (F·1 S·2KiB)+(F·1 S·1MiB) -> (F·2 S·3KiB)+(F·1 S·1MiB)
+12:21:42.428251 table@compaction L0·2 -> L1·1 S·1MiB Q·5030
+12:21:42.429390 db@close closing
+12:21:42.442333 table@build created L1@5716 N·2293 S·1MiB "E0a..004,v5029":"xFP..456,v3493"
+12:21:42.442344 table@build exiting
+12:21:42.442348 table@build revert @5716
+12:21:42.442605 db@close done T·13.213711ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:42.502211 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:42.503730 version@stat F·[5 455] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:42.503756 db@open opening
+12:21:42.504352 journal@recovery F·1
+12:21:42.504393 journal@recovery recovering @5714
+12:21:42.505366 memdb@flush created L0@5716 N·2 S·2KiB "E0a..004,v5032":"L0a..004,v5031"
+12:21:42.505464 version@stat F·[6 455] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:42.508208 db@janitor F·463 G·0
+12:21:42.508245 db@open done T·4.477454ms
+12:21:42.508418 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:42.508427 table@compaction L0·3 -> L1·1 S·1MiB Q·5033
+12:21:42.508617 db@close closing
+12:21:42.523305 table@build created L1@5719 N·2293 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:42.523315 table@build exiting
+12:21:42.523319 table@build revert @5719
+12:21:42.523579 db@close done T·15.030972ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:42.552975 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:42.553678 version@stat F·[6 455] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:42.553705 db@open opening
+12:21:42.554265 journal@recovery F·1
+12:21:42.554307 journal@recovery recovering @5717
+12:21:42.554675 version@stat F·[6 455] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:42.558199 db@janitor F·463 G·0
+12:21:42.558239 db@open done T·4.516987ms
+12:21:42.558276 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:42.558285 table@compaction L0·3 -> L1·1 S·1MiB Q·5033
+12:21:42.576500 table@build created L1@5721 N·2293 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:42.576588 version@stat F·[3 455] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:42.577162 table@compaction committed F-3 S-5KiB Ke·0 D·4 T·18.858838ms
+12:21:42.577277 table@remove removed @5716
+12:21:42.577331 table@remove removed @5713
+12:21:42.577381 table@remove removed @5712
+12:21:42.577634 table@remove removed @5709
+12:21:42.822439 memdb@flush N·1 S·385B
+12:21:42.823443 memdb@flush created L0@5723 N·1 S·536B "C4f..deb,v5034":"C4f..deb,v5034"
+12:21:42.823470 version@stat F·[4 455] S·1MiB[2KiB 1MiB] Sc·[1.00 0.02]
+12:21:42.824017 memdb@flush committed F·1 T·1.545955ms
+12:21:42.824067 journal@remove removed @5719
+12:21:42.824406 table@move L0@5723 -> L1
+12:21:42.824467 version@stat F·[3 456] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:42.825545 transaction@flush created L0@5724 N·4 S·1KiB "Pam..761,v5035":"xFP..761,v5036"
+12:21:42.825572 version@stat F·[4 456] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:42.826002 table@compaction L0·1 -> L1·1 S·1MiB Q·5038
+12:21:42.826067 db@close closing
+12:21:42.839832 table@build created L1@5725 N·2297 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:42.839842 table@build exiting
+12:21:42.839846 table@build revert @5725
+12:21:42.840068 db@close done T·13.999381ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:42.963806 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:42.964604 version@stat F·[4 456] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:42.964628 db@open opening
+12:21:42.965278 journal@recovery F·1
+12:21:42.965325 journal@recovery recovering @5722
+12:21:42.966384 memdb@flush created L0@5725 N·2 S·2KiB "Ede..d92,v5040":"Lde..d92,v5039"
+12:21:42.966714 version@stat F·[5 456] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:42.970389 db@janitor F·463 G·0
+12:21:42.970427 db@open done T·5.781089ms
+12:21:42.970524 table@compaction expanding L0+L1 (F·1 S·2KiB)+(F·1 S·1MiB) -> (F·2 S·3KiB)+(F·1 S·1MiB)
+12:21:42.970555 table@compaction L0·2 -> L1·1 S·1MiB Q·5041
+12:21:42.971526 db@close closing
+12:21:42.984762 table@build created L1@5728 N·2297 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:42.984772 table@build exiting
+12:21:42.984775 table@build revert @5728
+12:21:42.985015 db@close done T·13.487383ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:43.044283 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:43.044967 version@stat F·[5 456] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:43.044988 db@open opening
+12:21:43.045584 journal@recovery F·1
+12:21:43.045626 journal@recovery recovering @5726
+12:21:43.046444 memdb@flush created L0@5728 N·2 S·2KiB "Ede..d92,v5043":"Lde..d92,v5042"
+12:21:43.046841 version@stat F·[6 456] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:43.050964 db@janitor F·464 G·0
+12:21:43.050993 db@open done T·5.992878ms
+12:21:43.051037 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:43.051047 table@compaction L0·3 -> L1·1 S·1MiB Q·5044
+12:21:43.051226 db@close closing
+12:21:43.064974 table@build created L1@5731 N·2297 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:43.064985 table@build exiting
+12:21:43.064989 table@build revert @5731
+12:21:43.065230 db@close done T·14.001566ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:43.094540 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:43.095280 version@stat F·[6 456] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:43.095300 db@open opening
+12:21:43.095902 journal@recovery F·1
+12:21:43.095946 journal@recovery recovering @5729
+12:21:43.096296 version@stat F·[6 456] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:43.099577 db@janitor F·464 G·0
+12:21:43.099611 db@open done T·4.297159ms
+12:21:43.099650 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:43.099659 table@compaction L0·3 -> L1·1 S·1MiB Q·5044
+12:21:43.116464 table@build created L1@5733 N·2297 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:43.116517 version@stat F·[3 456] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:43.116976 table@compaction committed F-3 S-6KiB Ke·0 D·4 T·17.301378ms
+12:21:43.117067 table@remove removed @5728
+12:21:43.117116 table@remove removed @5725
+12:21:43.117161 table@remove removed @5724
+12:21:43.117381 table@remove removed @5721
+12:21:43.344683 memdb@flush N·1 S·385B
+12:21:43.345758 memdb@flush created L0@5735 N·1 S·536B "Cd5..deb,v5045":"Cd5..deb,v5045"
+12:21:43.345800 version@stat F·[4 456] S·1MiB[2KiB 1MiB] Sc·[1.00 0.02]
+12:21:43.346196 memdb@flush committed F·1 T·1.473179ms
+12:21:43.346248 journal@remove removed @5731
+12:21:43.346280 table@move L0@5735 -> L1
+12:21:43.346304 version@stat F·[3 457] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:43.348746 transaction@flush created L0@5736 N·4 S·1KiB "Par..8a3,v5046":"xFP..8a3,v5047"
+12:21:43.348762 version@stat F·[4 457] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:43.349258 table@compaction L0·1 -> L1·1 S·1MiB Q·5049
+12:21:43.349335 db@close closing
+12:21:43.363101 table@build created L1@5737 N·2301 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:43.363111 table@build exiting
+12:21:43.363114 table@build revert @5737
+12:21:43.363361 db@close done T·14.02348ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:43.487034 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:43.487728 version@stat F·[4 457] S·1MiB[3KiB 1MiB] Sc·[1.00 0.02]
+12:21:43.487765 db@open opening
+12:21:43.488332 journal@recovery F·1
+12:21:43.488372 journal@recovery recovering @5734
+12:21:43.489368 memdb@flush created L0@5737 N·2 S·2KiB "Ede..d92,v5051":"Lde..d92,v5050"
+12:21:43.489764 version@stat F·[5 457] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:43.493731 db@janitor F·464 G·0
+12:21:43.493769 db@open done T·5.986184ms
+12:21:43.493824 table@compaction expanding L0+L1 (F·1 S·2KiB)+(F·1 S·1MiB) -> (F·2 S·3KiB)+(F·1 S·1MiB)
+12:21:43.493847 table@compaction L0·2 -> L1·1 S·1MiB Q·5052
+12:21:43.495071 db@close closing
+12:21:43.507885 table@build created L1@5740 N·2301 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:43.507898 table@build exiting
+12:21:43.507903 table@build revert @5740
+12:21:43.508158 db@close done T·13.085784ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:43.533563 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:43.534207 version@stat F·[5 457] S·1MiB[5KiB 1MiB] Sc·[1.25 0.02]
+12:21:43.534232 db@open opening
+12:21:43.534821 journal@recovery F·1
+12:21:43.534864 journal@recovery recovering @5738
+12:21:43.535705 memdb@flush created L0@5740 N·2 S·2KiB "Ede..d92,v5054":"Lde..d92,v5053"
+12:21:43.536068 version@stat F·[6 457] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:43.539277 db@janitor F·465 G·0
+12:21:43.539317 db@open done T·5.069044ms
+12:21:43.539360 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:43.539370 table@compaction L0·3 -> L1·1 S·1MiB Q·5055
+12:21:43.539656 db@close closing
+12:21:43.553543 table@build created L1@5743 N·2301 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:43.553560 table@build exiting
+12:21:43.553565 table@build revert @5743
+12:21:43.553825 db@close done T·14.166533ms
+=============== Sep 7, 2026 (UTC) ===============
+12:21:43.574482 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:21:43.575779 version@stat F·[6 457] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:43.575805 db@open opening
+12:21:43.576591 journal@recovery F·1
+12:21:43.576636 journal@recovery recovering @5741
+12:21:43.576766 version@stat F·[6 457] S·1MiB[7KiB 1MiB] Sc·[1.50 0.02]
+12:21:43.579846 db@janitor F·465 G·0
+12:21:43.579870 db@open done T·4.058971ms
+12:21:43.579954 table@compaction expanding L0+L1 (F·2 S·4KiB)+(F·1 S·1MiB) -> (F·3 S·6KiB)+(F·1 S·1MiB)
+12:21:43.579963 table@compaction L0·3 -> L1·1 S·1MiB Q·5055
+12:21:43.595658 table@build created L1@5745 N·2301 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:21:43.595739 version@stat F·[3 457] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:21:43.596126 table@compaction committed F-3 S-5KiB Ke·0 D·4 T·16.138988ms
+12:21:43.596215 table@remove removed @5740
+12:21:43.596263 table@remove removed @5737
+12:21:43.596319 table@remove removed @5736
+12:21:43.596560 table@remove removed @5733
+12:22:12.547107 db@close closing
+12:22:12.547375 db@close done T·264.519µs
+=============== Sep 7, 2026 (UTC) ===============
+12:22:12.571057 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:22:12.571756 version@stat F·[3 457] S·1MiB[1KiB 1MiB] Sc·[0.75 0.02]
+12:22:12.571785 db@open opening
+12:22:12.572363 journal@recovery F·1
+12:22:12.572405 journal@recovery recovering @5743
+12:22:12.577663 memdb@flush created L0@5746 N·4 S·374KiB "E16..ain,v5059":"xCP..8a3,v5057"
+12:22:12.577787 version@stat F·[4 457] S·2MiB[376KiB 1MiB] Sc·[1.00 0.02]
+12:22:12.581568 db@janitor F·463 G·0
+12:22:12.581609 db@open done T·9.80447ms
+12:22:12.581676 table@compaction L0·1 -> L1·1 S·1MiB Q·5060
+12:22:12.583000 db@close closing
+12:22:12.600281 table@build created L1@5749 N·2303 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:22:12.600319 table@build exiting
+12:22:12.600327 table@build revert @5749
+12:22:12.600654 db@close done T·17.651496ms
+=============== Sep 7, 2026 (UTC) ===============
+12:22:12.622121 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:22:12.622793 version@stat F·[4 457] S·2MiB[376KiB 1MiB] Sc·[1.00 0.02]
+12:22:12.622814 db@open opening
+12:22:12.623369 journal@recovery F·1
+12:22:12.623405 journal@recovery recovering @5747
+12:22:12.623743 version@stat F·[4 457] S·2MiB[376KiB 1MiB] Sc·[1.00 0.02]
+12:22:12.627826 db@janitor F·463 G·0
+12:22:12.627856 db@open done T·5.029478ms
+12:22:12.627915 table@compaction L0·1 -> L1·1 S·1MiB Q·5060
+12:22:12.646300 table@build created L1@5751 N·2303 S·1MiB "E0a..004,v5032":"xFP..456,v3493"
+12:22:12.646373 version@stat F·[3 457] S·2MiB[1KiB 2MiB] Sc·[0.75 0.02]
+12:22:12.646835 table@compaction committed F-1 S-2KiB Ke·0 D·2 T·18.678667ms
+12:22:12.646972 table@remove removed @5746
+12:22:12.647170 table@remove removed @5745
+12:22:43.618402 db@close closing
+12:22:43.618642 db@close done T·237.926µs
+=============== Sep 7, 2026 (UTC) ===============
+12:22:43.641949 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:22:43.642633 version@stat F·[3 457] S·2MiB[1KiB 2MiB] Sc·[0.75 0.02]
+12:22:43.642655 db@open opening
+12:22:43.643204 journal@recovery F·1
+12:22:43.643241 journal@recovery recovering @5749
+12:22:43.648563 memdb@flush created L0@5752 N·4 S·374KiB "E2e..ain,v5064":"xCP..57a,v5062"
+12:22:43.648729 version@stat F·[4 457] S·2MiB[376KiB 2MiB] Sc·[1.00 0.02]
+12:22:43.651859 db@janitor F·463 G·0
+12:22:43.651894 db@open done T·9.226808ms
+12:22:43.651949 table@compaction L0·1 -> L1·1 S·2MiB Q·5065
+12:22:43.652995 db@close closing
+12:22:43.671998 table@build created L1@5755 N·1945 S·2MiB "E0a..004,v5032":"xFP..188,v2591"
+12:22:43.672012 table@build revert @5755
+12:22:43.672300 db@close done T·19.302048ms
+=============== Sep 7, 2026 (UTC) ===============
+12:22:43.692694 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:22:43.693403 version@stat F·[4 457] S·2MiB[376KiB 2MiB] Sc·[1.00 0.02]
+12:22:43.693422 db@open opening
+12:22:43.694021 journal@recovery F·1
+12:22:43.694064 journal@recovery recovering @5753
+12:22:43.694407 version@stat F·[4 457] S·2MiB[376KiB 2MiB] Sc·[1.00 0.02]
+12:22:43.698527 db@janitor F·463 G·0
+12:22:43.698570 db@open done T·5.131375ms
+12:22:43.698660 table@compaction L0·1 -> L1·1 S·2MiB Q·5065
+12:22:43.719739 table@build created L1@5757 N·1945 S·2MiB "E0a..004,v5032":"xFP..188,v2591"
+12:22:43.721113 table@build created L1@5758 N·360 S·128KiB "xFP..7c1,v4434":"xFP..456,v3493"
+12:22:43.721187 version@stat F·[3 458] S·2MiB[1KiB 2MiB] Sc·[0.75 0.02]
+12:22:43.721624 table@compaction committed F~ S-1KiB Ke·0 D·2 T·22.942817ms
+12:22:43.721747 table@remove removed @5752
+12:22:43.721962 table@remove removed @5751
+12:23:14.316695 db@close closing
+12:23:14.316966 db@close done T·268.853µs
+=============== Sep 7, 2026 (UTC) ===============
+12:23:59.172639 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:23:59.173314 version@stat F·[3 458] S·2MiB[1KiB 2MiB] Sc·[0.75 0.02]
+12:23:59.173341 db@open opening
+12:23:59.173946 journal@recovery F·1
+12:23:59.173990 journal@recovery recovering @5755
+12:23:59.179397 memdb@flush created L0@5759 N·4 S·374KiB "Ec9..ain,v5069":"xCP..ec9,v5067"
+12:23:59.179525 version@stat F·[4 458] S·2MiB[375KiB 2MiB] Sc·[1.00 0.02]
+12:23:59.182434 db@janitor F·464 G·0
+12:23:59.182475 db@open done T·9.116127ms
+12:23:59.182580 table@compaction L0·1 -> L1·1 S·2MiB Q·5070
+12:23:59.183395 db@close closing
+12:23:59.183520 db@close done T·101.37µs
+=============== Sep 7, 2026 (UTC) ===============
+12:23:59.206373 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:23:59.207136 version@stat F·[4 458] S·2MiB[375KiB 2MiB] Sc·[1.00 0.02]
+12:23:59.207171 db@open opening
+12:23:59.207804 journal@recovery F·1
+12:23:59.208044 journal@recovery recovering @5760
+12:23:59.209080 version@stat F·[4 458] S·2MiB[375KiB 2MiB] Sc·[1.00 0.02]
+12:23:59.213168 db@janitor F·464 G·0
+12:23:59.213190 db@open done T·6.013794ms
+12:23:59.213247 table@compaction L0·1 -> L1·1 S·2MiB Q·5070
+12:23:59.215045 db@close closing
+12:23:59.234461 table@build created L1@5764 N·923 S·2MiB "E0a..004,v5032":"xCP..57a,v5062"
+12:23:59.234474 table@build revert @5764
+12:23:59.234733 db@close done T·19.686389ms
