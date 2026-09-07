@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>added: zig 0.16.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-07-added-zig-0.16.0-1</guid>
+<pubDate>Mon, 07 Sep 2026 09:16:23 +0000</pubDate>
+<description>Joins the archive in all three suites. (zig 0.16.0-1)</description>
+</item>
+<item>
 <title>updated: croc 11.5.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-06-updated-croc-11.5.0-1</guid>
