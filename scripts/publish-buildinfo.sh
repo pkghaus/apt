@@ -228,20 +228,28 @@ done
 # has no view of this prefix. Skipped without a token rather than failing: the
 # upload has already happened and refusing now would leave the same split state
 # with no record of it.
+#
+# The same applies when the purge is ATTEMPTED and fails: the split state is
+# identical, so both paths end in one warning naming the URLs. Letting the
+# curl's exit reach set -e instead would abort before that warning prints.
+unpurged_warning() { # reason
+    printf '::warning::%s source file(s) were replaced but the edge was not purged (%s);\n' \
+        "${#purge_list[@]}" "$1" >&2
+    printf '  some POPs will serve the superseded bytes until the 30-day rule\n' >&2
+    printf '  expires. Purge these by hand:\n' >&2
+    printf '    %s\n' "${purge_list[@]}" >&2
+}
+
 if [ "${#purge_list[@]}" -gt 0 ]; then
     if [ -n "${CLOUDFLARE_PURGE_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ZONE_ID:-}" ]; then
-        printf '%s\n' "${purge_list[@]}" | jq -R . | jq -s '{files: .}' \
-            | curl -sS --fail-with-body -X POST \
-                "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-                -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
-                -H 'Content-Type: application/json' --data @- >/dev/null
-        printf 'purged %s replaced source URL(s)\n' "${#purge_list[@]}" >&2
+        if printf '%s\n' "${purge_list[@]}" | jq -R . | jq -s '{files: .}' \
+            | cf_purge_post >/dev/null; then
+            printf 'purged %s replaced source URL(s)\n' "${#purge_list[@]}" >&2
+        else
+            unpurged_warning "the purge request failed"
+        fi
     else
-        printf '::warning::%s source file(s) were replaced but no purge token is set;\n' \
-            "${#purge_list[@]}" >&2
-        printf '  the edge will serve the superseded bytes from some POPs until the\n' >&2
-        printf '  30-day rule expires. Purge these by hand:\n' >&2
-        printf '    %s\n' "${purge_list[@]}" >&2
+        unpurged_warning "no purge token is set"
     fi
 fi
 

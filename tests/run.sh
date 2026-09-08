@@ -20,8 +20,21 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 pass=0
 fail=0
 
-ok() { printf '  ok   %s\n' "$1"; pass=$((pass + 1)); }
-no() { printf '  FAIL %s\n    %s\n' "$1" "$2"; fail=$((fail + 1)); }
+# What stops this suite reporting success for work it did not do. Groups report
+# failure by exit status, which catches an assertion that FAILS and says nothing
+# about one that never RAN -- a group returning early, a renamed helper, a
+# fixture that stopped being built. Without the count, a group that quietly
+# stops asserting still prints "all tests passed".
+#
+# The count goes through a file because a variable incremented in a subshell
+# never reaches this scope; traps reset in subshells, so the cleanup fires once.
+# Update the number deliberately: that edit is someone noticing it moved.
+EXPECTED_ASSERTIONS=123
+TALLY="$(mktemp)"
+trap 'rm -f "$TALLY"' EXIT
+
+ok() { printf '  ok   %s\n' "$1"; pass=$((pass + 1)); echo ok >> "$TALLY"; }
+no() { printf '  FAIL %s\n    %s\n' "$1" "$2"; fail=$((fail + 1)); echo no >> "$TALLY"; }
 
 eq() { # label expected actual
     if [ "$2" = "$3" ]; then ok "$1"; else no "$1" "got [$3] want [$2]"; fi
@@ -261,12 +274,14 @@ FAKE
     chmod +x "$work/bin/git"
     printf 'croc\n' > "$work/packages.txt"
 
-    # The listing used to head a pipeline, so its failure produced no output,
-    # exited 0 through tail, and was reported as "no tags": the package left the
-    # plan silently under a message blaming the upstream. The shape of that bug
-    # is what this asserts against, whatever the read is implemented as.
+    # An unreadable source and an untagged package are different answers and
+    # must not collapse into one: reporting "no tags" for a failed read drops
+    # the package from the plan under a message blaming the upstream. Asserted
+    # against that shape, whatever the read is implemented as.
+    # One attempt: the retry has its own group below, and its backoff would
+    # put six seconds of sleep inside an assertion about a message.
     out="$(PATH="$work/bin:$PATH" PACKAGES_FILE="$work/packages.txt" \
-        "$ROOT/scripts/ingest.sh" plan 2>&1)" && rc=0 || rc=$?
+        CLONE_ATTEMPTS=1 "$ROOT/scripts/ingest.sh" plan 2>&1)" && rc=0 || rc=$?
     if [ "${rc:-0}" -eq 0 ]; then
         no "an unreadable source must not be reported as untagged" "exited 0"
     elif grep -q 'no tags' <<<"${out:-}"; then
@@ -275,6 +290,15 @@ FAKE
         no "an unreadable source must not be reported as untagged" "wrong message: ${out:-}"
     else
         ok "an unreadable source must not be reported as untagged"
+    fi
+
+    # "cannot clone" names the repository and nothing else, so a revoked
+    # token, DNS, a rate limit and a rename read identically without git's own
+    # sentence beside it.
+    if grep -q 'could not read from remote' <<<"${out:-}"; then
+        ok "git's own error reaches the log"
+    else
+        no "git's own error reaches the log" "swallowed: ${out:-}"
     fi
 
     # And an unreadable source must not be mistaken for an empty fleet: the
@@ -1145,9 +1169,164 @@ echo "archive comparison"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+echo "the clone retries a transient failure and cleans up after itself"
+(
+    work="$(mktemp -d)"
+    mkdir -p "$work/bin"
+    # Fails the first two clones, succeeds on the third, and records every
+    # attempt. The success path also has to leave a real bare repo behind, or
+    # the plan has nothing to read.
+    cat > "$work/bin/git" <<FAKE
+#!/bin/sh
+if [ "\$1" = clone ]; then
+    echo attempt >> "$work/attempts"
+    n=\$(wc -l < "$work/attempts")
+    if [ "\$n" -lt 3 ]; then
+        echo "fatal: unable to access: Could not resolve host: github.com" >&2
+        # A real failed clone leaves a partial, NON-empty directory behind:
+        # git clones happily into an empty one, so an empty mkdir would not
+        # reproduce the case at all. The destination is the last argument.
+        for dest in "\$@"; do :; done
+        mkdir -p "\$dest"
+        : > "\$dest/partial-clone-debris"
+        exit 128
+    fi
+fi
+exec /usr/bin/git "\$@"
+FAKE
+    chmod +x "$work/bin/git"
+    : > "$work/attempts"
+    printf 'croc\n' > "$work/packages.txt"
+
+    # A real fleet to clone on the third attempt, so success is reachable.
+    src="$work/src"
+    mkdir -p "$src"
+    /usr/bin/git -C "$src" init -q
+    printf 'croc\n' > "$src/packages.txt"
+    /usr/bin/git -C "$src" add -A
+    /usr/bin/git -C "$src" -c user.name=t -c user.email=t@e.net commit -qm init
+
+    out="$(PATH="$work/bin:$PATH" PACKAGES_FILE="$work/packages.txt" \
+        GIT_BASE="$work/" PACKAGES_REPO="src" CLONE_RETRY_DELAY=0 \
+        "$ROOT/scripts/ingest.sh" plan 2>&1)" && rc=0 || rc=$?
+
+    eq "a transient clone failure does not fail the plan" "0" "${rc:-0}"
+    eq "it retried until it succeeded" "3" "$(wc -l < "$work/attempts")"
+    if grep -q 'Could not resolve host' <<<"${out:-}"; then
+        ok "the retried failure is still reported, not hidden"
+    else
+        no "the retried failure is still reported, not hidden" "${out:-}"
+    fi
+
+    # The partial directory a failed attempt leaves behind has to be removed,
+    # or the next clone refuses the non-empty destination and the retry is
+    # worthless. That refusal is the observable, so its absence is the
+    # assertion -- "it retried" alone would pass either way.
+    if grep -qi 'already exists and is not an empty directory' <<<"${out:-}"; then
+        no "a partial clone is cleared before the retry" "${out:-}"
+    else
+        ok "a partial clone is cleared before the retry"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "a failed purge names what is left stale rather than vanishing"
+(
+    work="$(mktemp -d)"
+    mkdir -p "$work/bin"
+    # Refuses the purge POST and answers everything else: purge-cache.sh reads
+    # the published index over the same binary to learn which pool URLs its
+    # build replaced, so a stub that failed both would leave the loop with no
+    # URLs to fail on. 400 rather than 503 because curl retries a 5xx, and a
+    # transient stub would sleep through the backoff before proving anything.
+    cat > "$work/bin/curl" <<FAKE
+#!/bin/sh
+for a in "\$@"; do
+    case "\$a" in
+        *purge_cache*)
+            echo '{"success":false,"errors":[{"code":1012,"message":"bad token"}]}'
+            exit 22
+            ;;
+    esac
+done
+gzip -c "$work/Packages"
+FAKE
+    chmod +x "$work/bin/curl"
+    cat > "$work/Packages" <<'IDX'
+Package: croc
+Version: 11.2.4-1~haus13+1
+Filename: pool/main/c/croc/croc_11.2.4-1~haus13+1_amd64.deb
+IDX
+
+    # publish-buildinfo.sh: the upload has already happened, so a failed purge
+    # must warn with the list and let the run finish.
+    #
+    # The block under test is EXTRACTED from the real script rather than
+    # restated here. Restating it tests a copy: the call site could stop
+    # calling unpurged_warning and this would still pass. Running the whole
+    # script instead would need R2 credentials and a directory of records.
+    src="$ROOT/scripts/publish-buildinfo.sh"
+    block="$(awk '/^unpurged_warning\(\) \{/,/^fi$/' "$src")"
+    # A guard on the extraction itself, so a rename upstream fails loudly
+    # rather than silently testing an empty string.
+    case "$block" in
+        *unpurged_warning*cf_purge_post*)
+            ok "the purge block extracts from the real script" ;;
+        *)
+            no "the purge block extracts from the real script" "got [${block:-empty}]" ;;
+    esac
+    out="$(
+        PATH="$work/bin:$PATH" CLOUDFLARE_PURGE_TOKEN=t CLOUDFLARE_ZONE_ID=z \
+        bash -c '
+            set -euo pipefail
+            . "'"$ROOT"'/scripts/aptly-lib.sh"
+            purge_list=(https://buildinfos.pkg.haus/a.dsc)
+            '"$block"'
+            printf "REACHED-END\n" >&2
+        ' 2>&1)" && rc=0 || rc=$?
+
+    eq "a failed purge does not abort the publisher" "0" "${rc:-0}"
+    if grep -q 'REACHED-END' <<<"${out:-}"; then
+        ok "the run continues past a failed purge"
+    else
+        no "the run continues past a failed purge" "${out:-}"
+    fi
+    eq "the stale URL is named so it can be purged by hand" "1" \
+       "$(grep -c 'buildinfos.pkg.haus/a.dsc' <<<"${out:-}")"
+
+    # purge-cache.sh is the opposite policy on purpose: purging IS its job, so
+    # it fails. What it must not do is fail without saying how far it got.
+    export BUILD_DIR="$work/build" ARCHIVE_DIR="$work/public"
+    mkdir -p "$BUILD_DIR" "$ARCHIVE_DIR"
+    : > "$BUILD_DIR/croc_11.2.4-1~haus13+1_amd64.deb"
+    pout="$(PATH="$work/bin:$PATH" CLOUDFLARE_PURGE_TOKEN=t CLOUDFLARE_ZONE_ID=z \
+        SUITES="trixie" ARCHES="amd64" BASE_URL="https://apt.pkg.haus" \
+        "$ROOT/scripts/purge-cache.sh" 2>&1)" && prc=0 || prc=$?
+
+    eq "a failed purge fails purge-cache.sh" "1" "${prc:-0}"
+    if grep -q 'of 1' <<<"${pout:-}"; then
+        ok "the failure says which URLs are left"
+    else
+        no "the failure says which URLs are left" "${pout:-}"
+    fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 echo
+ran="$(wc -l < "$TALLY")"
+if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
+    echo "FAIL: $ran assertions ran, expected $EXPECTED_ASSERTIONS."
+    echo "      An assertion was skipped, not failed -- look for a group that"
+    echo "      exited early, a renamed helper, or a fixture that stopped being"
+    echo "      built. If the change was deliberate, update EXPECTED_ASSERTIONS."
+    exit 1
+fi
 if [ "$fail" -eq 0 ]; then
-    echo "all tests passed"
+    echo "all $ran assertions passed"
 else
     echo "$fail failing test group(s)"
 fi

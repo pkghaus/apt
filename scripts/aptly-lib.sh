@@ -194,3 +194,26 @@ publish_suite() {
             "$repo" "$PUBLISH_TARGET"
     fi
 }
+
+# One POST to Cloudflare's purge-by-URL endpoint, JSON body on stdin. Shared by
+# both callers: purge-cache.sh for the pool, publish-buildinfo.sh for replaced
+# source files. Both already source this file.
+#
+# --max-time bounds each ATTEMPT, not the operation, so a hung API call is
+# capped by --retry-max-time at roughly three minutes rather than sitting on
+# the publish job until the job timeout.
+#
+# --retry, because the purge runs after the archive is published and a
+# transient failure leaves the edge serving superseded bytes. curl's own retry
+# covers the right set with no header parsing: verified against a local server,
+# it retries 429 and 5xx and does NOT retry a 400, so a bad token still fails
+# on the first attempt. Intermediate failures print to stderr, which is what
+# makes a recovered purge visible rather than silent.
+cf_purge_post() {
+    curl -sS --fail-with-body -X POST \
+        --max-time 60 --retry 3 --retry-delay 2 --retry-max-time 120 \
+        "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+        -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
+        -H 'Content-Type: application/json' \
+        --data @-
+}

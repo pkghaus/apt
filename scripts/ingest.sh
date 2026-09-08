@@ -101,13 +101,47 @@ MIRROR="$SCRATCH/packages.git"
 # Clone the packages repository once per run, into MIRROR.
 #
 # Existence is a directory test, not a variable, and that is load-bearing:
-# every caller below reads its result through a command substitution, and a
-# variable set in that subshell is gone when it returns. The filesystem is the
-# only state a subshell can leave behind, so whichever call arrives first does
-# the clone and the rest find it already there.
+# callers read this through a command substitution, and a variable set in that
+# subshell is gone when it returns. The filesystem is the only state a subshell
+# leaves behind, so the first call clones and the rest find it there.
+#
+# The plan's one indispensable network call. git's own message is the whole
+# diagnosis -- a bad credential, DNS, a rate limit and a rename are otherwise
+# indistinguishable -- so it is kept and printed. Retried like the builder's
+# clones: a transient failure here fails the entire ingest.
+#
+# Both knobs are overridable for the reason PACKAGES_REPO and GIT_BASE are: so
+# the tests exercise the retry without paying its backoff.
+CLONE_ATTEMPTS="${CLONE_ATTEMPTS:-3}"
+CLONE_RETRY_DELAY="${CLONE_RETRY_DELAY:-2}"
+
 ensure_packages_mirror() {
     [ -d "$MIRROR" ] && return 0
-    git clone -q --bare -- "${GIT_BASE}${PACKAGES_REPO}" "$MIRROR" 2>/dev/null
+
+    local attempt=1 delay="$CLONE_RETRY_DELAY" err="$SCRATCH/clone.err"
+
+    while true; do
+        if git clone -q --bare -- \
+            "${GIT_BASE}${PACKAGES_REPO}" "$MIRROR" 2>"$err"; then
+            return 0
+        fi
+
+        # A failed clone can leave the target behind, where it would look like
+        # a finished mirror to every later caller.
+        rm -rf "$MIRROR"
+
+        if [ "$attempt" -ge "$CLONE_ATTEMPTS" ]; then
+            log "cloning ${GIT_BASE}${PACKAGES_REPO} failed after $CLONE_ATTEMPTS attempts:"
+            sed 's/^/    /' "$err" >&2
+            return 1
+        fi
+
+        log "clone attempt $attempt/$CLONE_ATTEMPTS failed, retrying in ${delay}s:"
+        sed 's/^/    /' "$err" >&2
+        sleep "$delay"
+        attempt=$((attempt + 1))
+        delay=$((delay * 2))
+    done
 }
 
 # Non-zero when the repository could not be read, empty output when it has no

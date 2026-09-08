@@ -106,14 +106,19 @@ fi
 
 mapfile -t urls < <(purge_urls | LC_ALL=C sort -u)
 
+# 30 URLs per call, so this is several requests and any one can fail. Failing
+# is right here (purging is the whole job), but the message has to say how far
+# it got or a re-run is a guess about what is already done.
 for ((i = 0; i < ${#urls[@]}; i += 30)); do
-    printf '%s\n' "${urls[@]:i:30}" \
+    batch_end=$(( i + 30 > ${#urls[@]} ? ${#urls[@]} : i + 30 ))
+    if ! printf '%s\n' "${urls[@]:i:30}" \
         | jq -R . | jq -s '{files: .}' \
-        | curl -sS --fail-with-body -X POST \
-            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-            -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
-            -H 'Content-Type: application/json' \
-            --data @- >/dev/null
+        | cf_purge_post >/dev/null; then
+        printf 'FATAL: purge failed on URLs %s-%s of %s; the first %s are purged\n' \
+            "$((i + 1))" "$batch_end" "${#urls[@]}" "$i" >&2
+        printf '  a re-run repeats the whole list from the start\n' >&2
+        exit 1
+    fi
 done
 
 echo "purged ${#urls[@]} URLs" >&2
