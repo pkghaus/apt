@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.5.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-08-updated-croc-11.5.1-1</guid>
+<pubDate>Tue, 08 Sep 2026 21:20:02 +0000</pubDate>
+<description>Updated from 11.5.0-1. (croc 11.5.1-1)</description>
+</item>
+<item>
 <title>added: rainfrog 0.4.5-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-08-added-rainfrog-0.4.5-1</guid>
