@@ -78,3 +78,5 @@
 {"ts":"2026-09-07T12:23:59Z","type":"updated","title":"updated: zig 0.16.0-2","detail":"Updated from 0.16.0-1.","pkgs":"zig=0.16.0-2"}
 {"ts":"2026-09-07T17:54:49Z","type":"updated","title":"updated: zig 0.16.0-3","detail":"Updated from 0.16.0-2.","pkgs":"zig=0.16.0-3"}
 {"ts":"2026-09-08T04:43:37Z","type":"updated","title":"updated: d2 0.9.0-1","detail":"Updated from 0.8.2-2.","pkgs":"d2=0.9.0-1"}
+{"ts":"2026-09-08T10:17:55Z","type":"added","title":"added: netscanner 0.6.43-1","detail":"Joins the archive in all three suites.","pkgs":"netscanner=0.6.43-1"}
+{"ts":"2026-09-08T10:17:55Z","type":"added","title":"added: rainfrog 0.4.5-1","detail":"Joins the archive in all three suites.","pkgs":"rainfrog=0.4.5-1"}

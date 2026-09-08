@@ -7,6 +7,20 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>added: rainfrog 0.4.5-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-08-added-rainfrog-0.4.5-1</guid>
+<pubDate>Tue, 08 Sep 2026 10:17:55 +0000</pubDate>
+<description>Joins the archive in all three suites. (rainfrog 0.4.5-1)</description>
+</item>
+<item>
+<title>added: netscanner 0.6.43-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-08-added-netscanner-0.6.43-1</guid>
+<pubDate>Tue, 08 Sep 2026 10:17:55 +0000</pubDate>
+<description>Joins the archive in all three suites. (netscanner 0.6.43-1)</description>
+</item>
+<item>
 <title>updated: d2 0.9.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-08-updated-d2-0.9.0-1</guid>
