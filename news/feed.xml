@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: d2 0.9.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-08-updated-d2-0.9.0-1</guid>
+<pubDate>Tue, 08 Sep 2026 04:43:37 +0000</pubDate>
+<description>Updated from 0.8.2-2. (d2 0.9.0-1)</description>
+</item>
+<item>
 <title>updated: zig 0.16.0-3</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-07-updated-zig-0.16.0-3</guid>
