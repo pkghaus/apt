@@ -36,12 +36,31 @@ set -euo pipefail
 
 IN="${1:?usage: $0 <dir holding .buildinfo, .dsc and tarballs>}"
 IN="$(cd "$IN" && pwd)"
-IMAGE="${VERIFY_IMAGE:-pkghaus-verify}"
-
 buildinfo="$(find "$IN" -maxdepth 1 -name '*.buildinfo' -print -quit)"
 [ -n "$buildinfo" ] || { echo "FATAL: no .buildinfo in $IN" >&2; exit 1; }
 
-docker build --quiet --tag "$IMAGE" "$(dirname "$0")" >/dev/null
+# The image base has to match the suite the record was built for. debrebuild
+# installs the exact versions the record names, so verifying a trixie record
+# from a sid image downgrades libc6 -- and sid's perl-base is linked against a
+# newer glibc than trixie's provides, so perl stops loading POSIX.so and every
+# maintainer script dies at dependency install. See verify/Dockerfile.
+#
+# Read from the version qualifier, which is where this archive puts the suite:
+# `~haus13+1` stable, `~testing1` testing, unqualified unstable.
+version="$(awk '/^Version: /{print $2; exit}' "$buildinfo")"
+[ -n "$version" ] || { echo "FATAL: no Version in $buildinfo" >&2; exit 1; }
+case "$version" in
+    *~haus*)    BASE=trixie ;;
+    *~testing*) BASE=testing ;;
+    *)          BASE=sid ;;
+esac
+
+# Tagged per base, or the three suites clobber one shared tag and a run picks up
+# whichever image the last one left behind.
+IMAGE="${VERIFY_IMAGE:-pkghaus-verify:$BASE}"
+echo "verifying $version against a $BASE image ($IMAGE)" >&2
+
+docker build --quiet --build-arg "BASE=$BASE" --tag "$IMAGE" "$(dirname "$0")" >/dev/null
 
 out="$IN/rebuilt"
 mkdir -p "$out"
