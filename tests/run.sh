@@ -122,14 +122,11 @@ echo "purge scope"
     eq "a package the run did not build is never purged" "0" \
         "$(pool_paths | grep -c zola)"
 
-    # One URL per pool path, in the literal spelling.
-    #
-    # This emitted three spellings per path until 2026-09-03 -- literal,
-    # %7e/%2b and %7E/%2B -- from when Pages was the origin and the CDN keyed
-    # its cache on the request URL. The Worker keys on the DECODED path, so all
-    # three collapse to one entry and the encoded two addressed keys that
-    # cannot exist. Asserted here because the count is now load-bearing: adding
-    # a spelling back is waste, and dropping the literal one purges nothing.
+    # One URL per pool path, in the literal spelling. The Worker keys its cache
+    # on the DECODED path, so the literal, %7e/%2b and %7E/%2B forms all collapse
+    # to one entry and purging the encoded two addresses keys that cannot exist.
+    # The count is load-bearing: adding a spelling back is waste, and dropping
+    # the literal one purges nothing.
     eq "each pool path yields exactly one purge URL" "2" \
         "$(purge_urls | wc -l)"
     eq "the URL is the literal spelling, not percent-encoded" \
@@ -318,13 +315,13 @@ echo "the news reader parses JSON and keeps its fields aligned"
     unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
     mkdir -p "$ARCHIVE_DIR/news"
 
-    # Three things this file has got wrong. An escaped quote is ordinary JSON
-    # and the old regex reader stopped at it, truncating the sentence. An empty
-    # field is ordinary too, and reading the parsed record back over a tab
-    # delimiter folded it away, shifting the package list into the detail column
-    # and dropping the package links. And a notice writes markup on purpose --
-    # the feed strips tags precisely because the page renders them -- so
-    # escaping the detail broke a link that had been live for weeks.
+    # Three shapes that break a naive reader. An escaped quote is ordinary JSON
+    # and a regex reader stops at it, truncating the sentence. An empty field is
+    # ordinary too, and reading the parsed record back over a tab delimiter
+    # folds it away, shifting the package list into the detail column and
+    # dropping the links. And a notice writes markup on purpose -- the feed
+    # strips tags precisely because the page renders them -- so escaping the
+    # detail breaks the link.
     cat > "$ARCHIVE_DIR/news/news.jsonl" <<'NEWS'
 {"ts":"2026-08-20T10:00:00Z","type":"notice","title":"T","detail":"He said \"run it\" and <a href='/stats'>linked</a>","pkgs":""}
 {"ts":"2026-08-19T10:00:00Z","type":"added","title":"added: vale","detail":"","pkgs":"vale=3.17.1-1"}
@@ -371,9 +368,9 @@ echo "the pool mirror will not read a failed listing as an empty bucket"
     export R2_BUCKET=pkghaus-apt R2_BACKUP_BUCKET=pkghaus-apt-backup
 
     # An aws that fails every listing: expired credentials, a bad endpoint, R2
-    # down. The counts used to come back 0 because the pipeline swallowed it,
-    # and 0 is also what a genuinely empty bucket returns, so the safety check
-    # compared two meaningless numbers and passed.
+    # down. A pipeline that swallows the failure returns 0, which is also what a
+    # genuinely empty bucket returns, so the safety check compares two
+    # meaningless numbers and passes.
     mkdir -p "$work/bin"
     cat > "$work/bin/aws" <<'FAKE'
 #!/bin/sh

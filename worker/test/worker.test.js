@@ -58,10 +58,10 @@ test("contentType names what the archive publishes", () => {
 });
 
 test("resolveRange reads R2's values, never its keys", () => {
-  // The shape live R2 actually returns, measured 2026-09-02 across all four
-  // request forms: offset and length resolved, `suffix` present and undefined.
-  // A range object without that third key is one R2 never produces, and it is
-  // what the old fixtures asserted against while production served NaN.
+  // The shape live R2 actually returns, across all four request forms: offset
+  // and length resolved, `suffix` present and undefined. A range object without
+  // that third key is one R2 never produces, so a fixture missing it passes
+  // while production serves NaN.
   assert.deepEqual(resolveRange({ offset: 100, length: 50, suffix: undefined }, 1000),
     [100, 149]);
   assert.deepEqual(resolveRange({ offset: 900, length: 100, suffix: undefined }, 1000),

@@ -16,11 +16,9 @@ updates:
   # serving pool/ and dists/. Pinning is what stops it changing on its own;
   # this is what stops it going stale.
   #
-  # The directory is /worker, not /. This entry was simply missing until
-  # 2026-09-02, and the two repos in the estate that lacked npm coverage were
-  # exactly the two whose package.json is not at the root -- a config saying
-  # `directory: /` there finds nothing and reports nothing, so the gap is
-  # silent either way.
+  # The directory is /worker, not /. A config saying `directory: /` where the
+  # package.json is not at the root finds nothing and reports nothing, so the
+  # gap reads exactly like coverage. Check the path, not the presence.
   - package-ecosystem: npm
     directory: /worker
     schedule:

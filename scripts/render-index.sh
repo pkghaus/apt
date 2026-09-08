@@ -532,7 +532,7 @@ PY
 # starting with "lib", which take the first four characters so that the
 # thousands of lib packages fan out instead of piling into pool/main/l/.
 #
-# Verified against Debian itself 2026-09-03:
+# Verified against Debian itself:
 #   pool/main/libg/libgcrypt20/  200
 #   pool/main/l/libgcrypt20/     404
 #

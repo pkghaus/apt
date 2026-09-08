@@ -13,14 +13,12 @@ APTLY_CONF="${APTLY_CONF:-$APTLY_ROOT/aptly.conf}"
 # The empty prefix is load-bearing, not a default, and it now has two reasons
 # rather than one.
 #
-# The original was an aptly bug: it cached published objects under a key that
-# omitted the publish prefix, then looked them up under a key that included it,
-# so any prefix meant the cache never hit and every package fell back to the
-# local pool. FIXED UPSTREAM in aptly 1.6.3 (PR #1480, issue #1475, reported by
-# someone else against 1.6.2 with the same diagnosis reached here
-# independently), so it is no longer what forces this.
+# Not the aptly cache bug that first forced it -- objects cached under a key
+# omitting the publish prefix and looked up with it, so any prefix meant the
+# cache never hit. That is fixed upstream in aptly 1.6.3 (PR #1480, issue
+# #1475).
 #
-# What forces it now is the Worker. worker/src/worker.js derives the R2 object
+# What forces it is the Worker. worker/src/worker.js derives the R2 object
 # key straight from the request path -- `const key = path.slice(1)` -- so the
 # archive has to sit at the bucket root for every pool and dists URL to map to
 # an object. Publishing under a prefix would require rewriting that mapping and

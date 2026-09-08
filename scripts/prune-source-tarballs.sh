@@ -18,16 +18,15 @@
 # twice as fast.
 #
 # So they are kept for as long as they can be afforded rather than for as long
-# as the .deb is served. Deleting on the narrower rule was the first design and
-# it was wrong on the facts: a version leaving the pool does not make its
-# tarball useless, because the .deb it describes is still installed on machines,
-# still in apt caches, still in container layers, and "is what I have what you
-# claim" is the question a rebuild answers. It also left the .buildinfo and .dsc
-# we keep forever pointing at bytes that no longer exist, which is the same
-# readable-but-not-actionable failure that publishing the source was meant to
-# end.
+# as the .deb is served. Deleting on the narrower rule is wrong on the facts: a
+# version leaving the pool does not make its tarball useless, because the .deb
+# it describes is still installed on machines, still in apt caches, still in
+# container layers, and "is what I have what you claim" is the question a
+# rebuild answers. It would also leave the .buildinfo and .dsc we keep forever
+# pointing at bytes that are gone, the same readable-but-not-actionable failure
+# publishing the source exists to end.
 #
-# What survives from that design is the safety: nothing a published version
+# What the narrower rule does contribute is the safety: nothing a published version
 # needs is ever deleted, whatever the budget says. If the bucket cannot be
 # brought under budget without touching a live tarball, this says so and stops.
 #

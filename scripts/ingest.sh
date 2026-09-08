@@ -74,18 +74,15 @@ qualifier() {
     esac
 }
 
-# One clone of the packages repository, made on first use and reused.
+# One clone of the packages repository, made on first use and reused. Every
+# read after it is local.
 #
-# plan() used to do a full `git ls-remote --tags` AND a
-# `git clone --depth 1 --branch <tag>` per enrolled package: at 25 packages
-# that is 25 tag listings and 25 clones, measured at ~30 seconds and ~52 MB
-# transferred, to read two small files out of each. The entire repository with
-# every tag and every blob is 448 KB and clones in under a second, because what
-# made the old clones expensive was checking out a working tree. Every read
-# after this is local.
-#
-# Bare: nothing here needs a worktree, and `git show <tag>:<path>` does not
-# want one.
+# One bare clone of everything beats a tag listing and a shallow clone per
+# package: the whole repository with every tag and blob is 448 KB and under a
+# second, against ~30 seconds and ~52 MB for 25 packages read two files at a
+# time. Checking out a working tree is what costs; bare needs none, and
+# `git show <tag>:<path>` does not want one.
+
 # Scratch space for this run, and the one place anything temporary goes. Made
 # in the shell that sources this file so the trap belongs to that shell: a
 # mktemp and a trap set inside a command substitution are both undone the
@@ -144,14 +141,15 @@ ensure_packages_mirror() {
     done
 }
 
-# Non-zero when the repository could not be read, empty output when it has no
-# tags. Those are different answers and the caller treats them differently: the
-# listing used to be the head of a pipeline, so a failed read produced no
-# output, exited 0 through tail, and was reported as "no tags" -- a network blip
-# silently dropping a package from the plan under a message saying the upstream
-# had never tagged anything.
+# The newest tag belonging to one package.
 #
-# The newest tag belonging to one package. Tags are namespaced by package
+# Non-zero when the repository could not be read, empty output when it has no
+# tags. The caller treats those differently, so they must not collapse: heading
+# a pipeline with the listing sends a failed read through tail as exit 0 and no
+# output, which reports as "no tags" and drops the package from the plan under
+# a message blaming the upstream.
+#
+# Tags are namespaced by package
 # (croc/v11.3.4-1), so the package's own tags are the ones under its prefix and
 # every other package's are noise.
 #

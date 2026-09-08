@@ -2,10 +2,10 @@ name: Prune source tarballs
 
 # Reconciles the bucket against its budget, on its own cadence.
 #
-# This used to be a step in the ingest's publish job, where it cost 26 seconds
-# of every publish to delete nothing: the measured headroom is years, and the
-# step's other job is printing what the bucket is using. Latency on the ingest
-# is what a person waits for after a package lands; this is not.
+# Its own workflow rather than a step in the ingest's publish job, where it
+# costs 26 seconds of every publish to delete nothing: the measured headroom is
+# years. Ingest latency is what a person waits for after a package lands; this
+# is not.
 #
 # It reconciles rather than reacting to an event, so it is unconditional and a
 # failed run is repaired by the next one. That is the same reasoning the pool

@@ -23,9 +23,9 @@ function r2Object({ body = BODY, size = BODY.length, range } = {}) {
   };
   if (body !== null) o.body = body;
   // Real R2 puts all three keys on the range object with `suffix` always
-  // undefined (measured 2026-09-02). A hand-built {offset, length} is a shape
-  // R2 never returns, and testing against it is how the NaN in Content-Range
-  // reached production and stayed there.
+  // undefined. A hand-built {offset, length} is a shape R2 never returns, and
+  // testing against it is how a NaN in Content-Range reaches production
+  // unnoticed.
   if (range) o.range = { suffix: undefined, ...range };
   return o;
 }
@@ -251,11 +251,10 @@ test("a failure outside the archive prefixes still falls through", async () => {
 });
 
 // The bug this file exists to prevent recurring. apt sends a Range when it
-// resumes a partial download; if the file changed size the offset can land past
-// the end, R2 throws, and the worker used to answer 404 -- which told apt the
-// Release file was gone and failed `apt update` outright. Measured in
-// production 2026-09-04: 55 range errors against 59 dists/ 404s in six hours,
-// every one from a Debian APT-HTTP agent.
+// resumes a partial download; if the file changed size the offset lands past
+// the end and R2 throws. Answering that 404 tells apt the Release file is gone
+// and fails `apt update` outright -- measured in production at 55 range errors
+// against 59 dists/ 404s in six hours, every one a Debian APT-HTTP agent.
 test("a range past the end is 416 with the real length, not 404", async () => {
   const h = harness({ rangeError: true, headObject: { size: 6066 } });
   const res = await worker.fetch(

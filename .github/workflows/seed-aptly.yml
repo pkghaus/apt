@@ -20,9 +20,8 @@ on:
 permissions:
   contents: read
 
-# archive-write, not `ingest`: this republishes the whole archive, and the
-# group it used to name stopped being the ingest's when that workflow started
-# deploying the Worker. See ingest.yml.
+# archive-write, not `ingest`: this republishes the whole archive, and that
+# group is shared with every other writer to it. See ingest.yml.
 concurrency:
   group: archive-write
   cancel-in-progress: false

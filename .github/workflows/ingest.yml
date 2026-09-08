@@ -26,7 +26,7 @@ run-name: >-
 # action-debian-build's notify job), on manual dispatch, and on pushes that
 # change the archive's own configuration.
 #
-# Enrolment is no longer a trigger here: packages.txt lives in pkghaus/packages.
+# Enrolment is not a trigger here: packages.txt lives in pkghaus/packages.
 # Enrolling a package takes effect on the next ingest, and the tag that releases
 # it dispatches one.
 

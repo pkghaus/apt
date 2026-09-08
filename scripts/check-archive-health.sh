@@ -30,8 +30,7 @@
 #   5. A ranged request for one architecture-specific .deb per architecture
 #      reaches R2 and agrees with the index about the object's total size.
 #
-# Why 4 does not subsume 5, which is what this file claimed until 2026-09-03.
-# Two separate reasons, and each alone is enough:
+# Why 4 does not subsume 5. Two separate reasons, either one enough:
 #
 #   - The smallest .deb in every index is pkghaus-archive-keyring, which is
 #     Architecture: all. It is the SAME OBJECT in all six indices, so no
@@ -129,12 +128,11 @@ unsatisfiable_probe() { # url start-offset -> "status total"
         "$(printf '%s' "$hdrs" | content_range_total)"
 }
 
-# What a client with a stale partial download sends, and the one shape no check
-# here used to make. R2 THROWS for a range it cannot satisfy; until 2026-09-04
-# the Worker rendered that throw as a fallthrough 404, which told apt the file
-# was gone and failed `apt update` for real clients in fifteen countries, for
-# weeks, while every check above passed. The bug was invisible precisely because
-# nothing sent a Range past the end.
+# What a client with a stale partial download sends. R2 THROWS for a range it
+# cannot satisfy, and rendering that throw as a 404 tells apt the file is gone
+# and fails `apt update` outright. That reached real clients in fifteen
+# countries for weeks while every check above passed, because nothing sent a
+# Range past the end. This is the check that does.
 assert_bad_range_is_416() { # label url size
     local status total
     read -r status total <<<"$(unsatisfiable_probe "$2" "$3")"
