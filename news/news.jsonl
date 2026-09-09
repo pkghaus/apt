@@ -81,3 +81,4 @@
 {"ts":"2026-09-08T10:17:55Z","type":"added","title":"added: netscanner 0.6.43-1","detail":"Joins the archive in all three suites.","pkgs":"netscanner=0.6.43-1"}
 {"ts":"2026-09-08T10:17:55Z","type":"added","title":"added: rainfrog 0.4.5-1","detail":"Joins the archive in all three suites.","pkgs":"rainfrog=0.4.5-1"}
 {"ts":"2026-09-08T21:20:02Z","type":"updated","title":"updated: croc 11.5.1-1","detail":"Updated from 11.5.0-1.","pkgs":"croc=11.5.1-1"}
+{"ts":"2026-09-09T11:33:34Z","type":"updated","title":"updated: croc 11.5.2-1","detail":"Updated from 11.5.1-1.","pkgs":"croc=11.5.2-1"}
