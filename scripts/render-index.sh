@@ -221,7 +221,7 @@ page_close() {
     <a href="https://pkg.haus">pkg.haus</a>
     <a href="https://buildinfos.pkg.haus">buildinfos.pkg.haus</a>
     <a href="https://github.com/pkghaus">github.com/pkghaus</a>
-    <span>rendered by the ingest
+    <span>rendered
     <time datetime="$(date -u +%Y-%m-%dT%H:%M:%SZ)">$(date -u '+%Y-%m-%d %H:%M:%S UTC')</time></span>
     <span>Apache-2.0</span>
   </footer>
@@ -462,14 +462,16 @@ render_listings() {
 }
 
 render_404() {
-    # GitHub Pages serves /404.html for any missing path.
+    # The asset layer answers any missing path from this file, through
+    # not_found_handling. The message belongs in the tagline, where the other
+    # hosts put theirs, so the title and the tagline both say "not found"
+    # rather than repeating the archive's front page.
     {
-        page_open "apt.pkg.haus" \
+        page_open "Not found - apt.pkg.haus" \
             '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a>' 80 \
-            "The signed APT archive behind pkg.haus."
+            "404. This path is not in the archive."
         cat <<'EOF'
   <div class="tablewrap">
-    <p>404. This path is not in the archive.</p>
     <p>Start from the <a href="/">pool listing</a>, the
     <a href="https://pkg.haus">setup instructions</a>, or the
     <a href="/stats">download stats</a>.</p>
