@@ -67,6 +67,7 @@ STYLE='<style>
   h1 a { color: inherit; text-decoration: none; }
   h1 a:hover { color: var(--accent); }
   .tablewrap { overflow-x: auto; padding: 1.5rem 0; }
+  .tablewrap:has(+ footer) { padding-bottom: 0; }
   table { border-collapse: collapse; width: 100%; font-size: .92rem; }
   th, td { text-align: left; padding: .5rem .75rem .5rem 0; border-bottom: 1px dashed var(--line); vertical-align: top; }
   th {
@@ -139,7 +140,7 @@ STYLE='<style>
   .empty { display: none; color: var(--muted); font-size: .9rem; padding: 1.5rem 0; }
   .empty.on { display: block; }
   footer {
-    border-top: 3px solid var(--ink); margin-top: 3rem;
+    border-top: 3px solid var(--ink); margin-top: 2rem;
     padding-top: 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap;
     font-size: .85rem; color: var(--muted);
   }
