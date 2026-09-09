@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=123
+EXPECTED_ASSERTIONS=127
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1011,6 +1011,91 @@ echo "ingest plan"
         *"cannot clone"*) ok "an unreadable packages repo fails rather than planning nothing" ;;
         *) no "an unreadable packages repo fails rather than planning nothing" "got [$out]" ;;
     esac
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+# --- ingest.sh plan(): the per-suite work must stay per-suite -----------------
+#
+# The plan asks two questions it must ask once per suite: which stable release
+# the builder image is (a container start) and what the archive already carries
+# (an aptly start plus a leveldb open). Both used to be asked once per package,
+# because qualifier() and archived_version() are read through command
+# substitutions and a substitution is a subshell, so the cache each keeps died
+# with every call. 35 packages cost 35 container starts and 420 aptly starts.
+#
+# Absolute counts would pin the fixture rather than the invariant, and they
+# would have to be rewritten whenever suite_contents changes how many calls it
+# makes. What must hold is that adding packages does not add calls: the same
+# plan over three times the fleet has to cost the same.
+echo "ingest plan: per-suite work does not scale with the fleet"
+(
+    work="$(mktemp -d)"
+    fleet="$work/fleet"
+    mkdir -p "$fleet" "$work/bin"
+    git -C "$fleet" init -q
+    git -C "$fleet" config user.email t@example.invalid
+    git -C "$fleet" config user.name t
+    git -C "$fleet" config commit.gpgsign false
+
+    # Tally every call rather than answering from a real database or image.
+    # The shims answer the way the real tools do for a suite that exists and
+    # carries nothing, which is the path the plan takes for a new package.
+    cat > "$work/bin/docker" <<SHIM
+#!/usr/bin/env bash
+echo call >> "$work/docker.calls"
+printf '13'
+SHIM
+    cat > "$work/bin/aptly" <<SHIM
+#!/usr/bin/env bash
+echo call >> "$work/aptly.calls"
+exit 0
+SHIM
+    chmod +x "$work/bin/docker" "$work/bin/aptly"
+
+    for n in 1 2 3 4 5 6; do
+        mkdir -p "$fleet/p$n/debian"
+        printf 'p%s (1.0-1) unstable; urgency=medium\n\n  * x\n' "$n" \
+            > "$fleet/p$n/debian/changelog"
+        printf 'Source: p%s\n\nPackage: p%s\nArchitecture: any\n' "$n" "$n" \
+            > "$fleet/p$n/debian/control"
+    done
+    git -C "$fleet" add -A
+    git -C "$fleet" commit -q -m one
+    for n in 1 2 3 4 5 6; do git -C "$fleet" tag "p$n/v1.0-1"; done
+
+    printf 'p1\np2\n' > "$work/small.txt"
+    printf 'p1\np2\np3\np4\np5\np6\n' > "$work/big.txt"
+
+    # trixie is in the list on purpose: it is the only suite whose qualifier
+    # reaches for the builder image at all.
+    run_plan() { # packages-file
+        : > "$work/docker.calls"; : > "$work/aptly.calls"
+        PATH="$work/bin:$PATH" SUITES="trixie testing unstable" \
+        GIT_BASE="$work/" PACKAGES_REPO=fleet PACKAGES_FILE="$1" \
+            bash "$ROOT/scripts/ingest.sh" plan >/dev/null 2>&1 || true
+        printf '%s %s' "$(wc -l < "$work/docker.calls")" "$(wc -l < "$work/aptly.calls")"
+    }
+
+    small="$(run_plan "$work/small.txt")"
+    big="$(run_plan "$work/big.txt")"
+
+    eq "the builder image is read once, whatever the fleet size" \
+       "1" "${small%% *}"
+    eq "tripling the fleet does not add a container start" \
+       "${small%% *}" "${big%% *}"
+    eq "tripling the fleet does not add an aptly start" \
+       "${small##* }" "${big##* }"
+
+    # A ceiling as well as a comparison: equal-but-huge would pass the two
+    # above. Three suites cannot need more than a couple of calls each.
+    if [ "${big##* }" -le 6 ]; then
+        ok "aptly is started a handful of times, not once per package and arch"
+    else
+        no "aptly is started a handful of times, not once per package and arch" \
+           "got ${big##* } calls for 6 packages"
+    fi
 
     rm -rf "$work"
     exit $((fail > 0))
