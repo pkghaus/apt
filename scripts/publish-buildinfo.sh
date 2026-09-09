@@ -9,7 +9,7 @@
 # installed build dependency with its version, the architecture, the toolchain
 # dpkg could see. It is what makes "built from source" checkable by someone
 # else, and it is the input a rebuilder needs. dpkg-buildpackage emits one
-# beside every .deb; until now it expired with the build runner.
+# beside every .deb, and this is what keeps it past the build runner.
 #
 # The source package ships with it, and that is what makes the record
 # actionable rather than merely readable. Given a .buildinfo alone, debrebuild
@@ -133,8 +133,8 @@ shopt -u nullglob
 # start. Publishing it anyway puts a file on a host whose entire claim is "check
 # our builds" that cannot be used to check anything.
 #
-# This is not hypothetical: 36 such records, from builds made before the builder
-# emitted source packages, were served for a day and then deleted. The invariant
+# Not hypothetical: 36 such records, from builds predating source publication,
+# reached the host and had to be deleted. The invariant
 # is enforced here rather than left to the builder so that a future change to
 # what gets collected fails loudly instead of quietly halving the value of every
 # record it publishes.
@@ -156,19 +156,17 @@ done
 # construction; an orig tarball is keyed on the UPSTREAM version, so every
 # revision of one upstream version writes the same key.
 #
-# That was supposed to be harmless -- the comment at the top of this file says
-# re-uploading a name is "either identical or a bug elsewhere" -- and it was the
-# bug. The tarball was stamped with the changelog's timestamp, so each revision
-# produced different bytes, and this overwrote the previous one under a URL the
-# zone caches for 30 days. Measured 2026-09-06: buildinfos.pkg.haus served two
-# different tarballs for i3status-rust_0.36.1.orig.tar.gz depending on the POP
-# (BRU held the superseded copy at age 1174 while CDG, FRA and AMS had the new
-# one), and every superseded .dsc named a checksum that no longer existed.
+# Re-uploading a name is "either identical or a bug elsewhere" per the comment
+# at the top of this file, and an orig tarball is where that goes wrong: an
+# overwrite lands under a URL the zone caches for 30 days, so the edge serves
+# two different tarballs by POP and every superseded .dsc names a checksum that
+# exists nowhere. Measured on i3status-rust_0.36.1.orig.tar.gz: BRU held the
+# superseded copy at age 1174 while CDG, FRA and AMS had the new one.
 #
-# action-debian-build now stamps the tarball with upstream's commit date, so
-# the bytes no longer move. This is the detector for when they do anyway: it
-# cannot be fatal, because the first build of each package after that change
-# legitimately replaces the published tarball exactly once.
+# action-debian-build stamps the tarball with upstream's commit date, which is
+# what keeps the bytes still. This is the detector for when they move anyway,
+# and it cannot be fatal: a package's first build after that change legitimately
+# replaces its published tarball exactly once.
 orig_needs_purge() {
     local f="$1" key="$2" remote
 
@@ -228,20 +226,28 @@ done
 # has no view of this prefix. Skipped without a token rather than failing: the
 # upload has already happened and refusing now would leave the same split state
 # with no record of it.
+#
+# The same applies when the purge is ATTEMPTED and fails: the split state is
+# identical, so both paths end in one warning naming the URLs. Letting the
+# curl's exit reach set -e instead would abort before that warning prints.
+unpurged_warning() { # reason
+    printf '::warning::%s source file(s) were replaced but the edge was not purged (%s);\n' \
+        "${#purge_list[@]}" "$1" >&2
+    printf '  some POPs will serve the superseded bytes until the 30-day rule\n' >&2
+    printf '  expires. Purge these by hand:\n' >&2
+    printf '    %s\n' "${purge_list[@]}" >&2
+}
+
 if [ "${#purge_list[@]}" -gt 0 ]; then
     if [ -n "${CLOUDFLARE_PURGE_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ZONE_ID:-}" ]; then
-        printf '%s\n' "${purge_list[@]}" | jq -R . | jq -s '{files: .}' \
-            | curl -sS --fail-with-body -X POST \
-                "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-                -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
-                -H 'Content-Type: application/json' --data @- >/dev/null
-        printf 'purged %s replaced source URL(s)\n' "${#purge_list[@]}" >&2
+        if printf '%s\n' "${purge_list[@]}" | jq -R . | jq -s '{files: .}' \
+            | cf_purge_post >/dev/null; then
+            printf 'purged %s replaced source URL(s)\n' "${#purge_list[@]}" >&2
+        else
+            unpurged_warning "the purge request failed"
+        fi
     else
-        printf '::warning::%s source file(s) were replaced but no purge token is set;\n' \
-            "${#purge_list[@]}" >&2
-        printf '  the edge will serve the superseded bytes from some POPs until the\n' >&2
-        printf '  30-day rule expires. Purge these by hand:\n' >&2
-        printf '    %s\n' "${purge_list[@]}" >&2
+        unpurged_warning "no purge token is set"
     fi
 fi
 

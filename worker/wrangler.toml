@@ -8,12 +8,20 @@ compatibility_date = "2026-08-01"
 # *pkg.haus/zk/*, whose wildcard host against this pattern's exact host is a
 # precedence case Cloudflare does not document.
 #
-# Both routes are set to "Fail open" (dashboard: Workers & Pages ->
-# pkghaus-archive -> Settings). That is the least bad option rather than a
-# save: a bypassed request reaches an origin that does not carry these paths,
-# so apt gets a 404 instead of a 500. What actually keeps the archive up is
-# staying under the Workers Free daily limit of 100,000 requests; the archive
-# serves three orders of magnitude less than that.
+# Fail CLOSED, and it must stay that way. There is no origin behind this route:
+# every pkg.haus host is AAAA 100::, the discard prefix, so fail open is a
+# thirty-second hang ending in 504 and apt sees the 504. Fail closed errors
+# immediately and apt can retry.
+#
+# No wrangler field for it. `request_limit_fail_open` lives on the route
+# object, set with PUT /zones/<id>/workers/routes/<route-id>; that PUT carries
+# the WHOLE object, so send pattern and script too or the route is reassigned,
+# and diff every field afterwards. It survives a CI deploy that reconciles
+# routes from this file.
+#
+# What keeps the archive under the Workers Free limit of 100k requests/day is
+# volume, not the failure mode: the zone last measured around 5,000/day, a
+# twentieth of the limit.
 #
 # Cloudflare route patterns only allow wildcards at the end of the path (API
 # error 10022 rejects dists/*/InRelease), so the dists route is broader than

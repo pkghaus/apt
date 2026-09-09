@@ -13,14 +13,12 @@ APTLY_CONF="${APTLY_CONF:-$APTLY_ROOT/aptly.conf}"
 # The empty prefix is load-bearing, not a default, and it now has two reasons
 # rather than one.
 #
-# The original was an aptly bug: it cached published objects under a key that
-# omitted the publish prefix, then looked them up under a key that included it,
-# so any prefix meant the cache never hit and every package fell back to the
-# local pool. FIXED UPSTREAM in aptly 1.6.3 (PR #1480, issue #1475, reported by
-# someone else against 1.6.2 with the same diagnosis reached here
-# independently), so it is no longer what forces this.
+# Not the aptly cache bug that first forced it -- objects cached under a key
+# omitting the publish prefix and looked up with it, so any prefix meant the
+# cache never hit. That is fixed upstream in aptly 1.6.3 (PR #1480, issue
+# #1475).
 #
-# What forces it now is the Worker. worker/src/worker.js derives the R2 object
+# What forces it is the Worker. worker/src/worker.js derives the R2 object
 # key straight from the request path -- `const key = path.slice(1)` -- so the
 # archive has to sit at the bucket root for every pool and dists URL to map to
 # an object. Publishing under a prefix would require rewriting that mapping and
@@ -193,4 +191,27 @@ publish_suite() {
             -architectures="$PUBLISH_ARCHES" -origin="$ORIGIN" -label="$LABEL" \
             "$repo" "$PUBLISH_TARGET"
     fi
+}
+
+# One POST to Cloudflare's purge-by-URL endpoint, JSON body on stdin. Shared by
+# both callers: purge-cache.sh for the pool, publish-buildinfo.sh for replaced
+# source files. Both already source this file.
+#
+# --max-time bounds each ATTEMPT, not the operation, so a hung API call is
+# capped by --retry-max-time at roughly three minutes rather than sitting on
+# the publish job until the job timeout.
+#
+# --retry, because the purge runs after the archive is published and a
+# transient failure leaves the edge serving superseded bytes. curl's own retry
+# covers the right set with no header parsing: verified against a local server,
+# it retries 429 and 5xx and does NOT retry a 400, so a bad token still fails
+# on the first attempt. Intermediate failures print to stderr, which is what
+# makes a recovered purge visible rather than silent.
+cf_purge_post() {
+    curl -sS --fail-with-body -X POST \
+        --max-time 60 --retry 3 --retry-delay 2 --retry-max-time 120 \
+        "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+        -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
+        -H 'Content-Type: application/json' \
+        --data @-
 }

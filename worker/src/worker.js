@@ -4,8 +4,7 @@
 // read, so this is what makes apt.pkg.haus an archive rather than a bucket.
 // Counting rides along because it has to: it is the one place every download
 // passes through. A bucket exposed on its own hostname would serve the same
-// bytes and count none of them, which is why that arrangement was tried and
-// removed.
+// bytes and count none of them.
 //
 // The /stats page is NOT here. It reads the same D1 database and is served by
 // pkghaus-stats on a more specific route, so a bad deploy of a page cannot
@@ -13,7 +12,7 @@
 //
 // Serving must never break for counting's sake: every read is wrapped, the
 // database write happens after the response via waitUntil, and a request the
-// bucket has no object for falls through to the origin.
+// bucket has no object for falls through to the asset layer.
 //
 // Privacy: aggregate counters only. No IPs, no user agents, nothing
 // per-client is stored or forwarded.
@@ -66,11 +65,10 @@ export default {
       }
     }
 
-    // The asset layer, not the origin. It holds the listing tree, /news/ and
-    // the keyring, and answers everything else from the archive's own 404.html
-    // through not_found_handling. This host therefore has no origin at all: no
-    // request reaches past this Worker, which is what lets its DNS record stop
-    // naming a GitHub Pages site that serves none of it.
+    // The asset layer, not an origin. It holds the listing tree, /news/ and the
+    // keyring, and answers everything else from the archive's own 404.html
+    // through not_found_handling. This host has no origin at all: nothing
+    // reaches past this Worker, which is why its DNS record names none.
     //
     // Guarded because the binding exists only where [assets] is configured. A
     // Worker deployed without them keeps serving whatever is behind its route
@@ -79,10 +77,9 @@ export default {
   },
 };
 
-// Whether an answer the archive gave counts as the event `hit` describes.
-// The two metrics need different rules and used to share one, which is how
-// update checks came to undercount: a 304 is not a download, but it is the
-// ordinary shape of an update check.
+// Whether an answer the archive gave counts as the event `hit` describes. The
+// two metrics need different rules: a 304 is not a download, but it is the
+// ordinary shape of an update check, so one shared rule undercounts them.
 export function shouldCount(hit, status) {
   if (status === 200) return true;
   return hit.kind === "heartbeat" && status === 304;
@@ -90,11 +87,12 @@ export function shouldCount(hit, status) {
 
 // Anything under these prefixes is the archive proper and is answered from the
 // bucket. Everything else on the routes -- the listing pages that share the
-// pool/ path space -- is left to Pages.
-// The build records used to be served here too, under /buildinfo/. They moved
-// to buildinfos.pkg.haus, which is a separate script on a separate host: that
-// layout is Debian's source pool, which apt never fetches and no Release file
-// references, and this Worker is what answers `apt update`.
+// pool/ path space -- is left to the asset layer.
+//
+// The build records are NOT here: they live on buildinfos.pkg.haus, a separate
+// script on a separate host. Their layout is Debian's source pool, which apt
+// never fetches and no Release file references, and this Worker is what answers
+// `apt update`.
 const ARCHIVE_PREFIXES = ["/pool/", "/dists/"];
 
 // A pool file is immutable by the archive's own rule -- a version, once
@@ -102,10 +100,6 @@ const ARCHIVE_PREFIXES = ["/pool/", "/dists/"];
 // suite indices are the opposite: they change on every publish and apt must
 // see the change immediately, so they are only ever revalidated.
 const POOL_MAX_AGE = 2592000;
-
-// Content types the archive actually publishes. apt does not care, but a
-// browser following a link from a listing page does, and "download the
-// Packages file to read it" should not mean "download" literally.
 
 // Content types the archive actually publishes. apt does not care, but a
 // browser following a link from a listing page does, and "download the
@@ -118,7 +112,7 @@ export function contentType(key) {
   return "text/plain; charset=utf-8";
 }
 
-// The bucket's answer for this request, or null to let Pages answer.
+// The bucket's answer for this request, or null to let the asset layer answer.
 //
 // The path arrives percent-decoded, which is what R2 keys are: apt asks for
 // pool files with '~' and '+' encoded (%7e/%2b), and the object is stored
@@ -135,20 +129,15 @@ async function archive(request, env, ctx, path) {
   const immutable = path.startsWith("/pool/");
 
   // A response the worker builds itself never reaches the CDN cache the zone's
-  // cache rules configure -- those govern origin fetches, and there is no
-  // origin here any more. Without this the 30-day pool cache silently became
-  // "read R2 on every download". Only plain full GETs are cached: a 206 is a
-  // fragment and a conditional answer is not the object.
-  // Not just !range. A precondition or a revalidation can only be answered by
-  // R2, because only R2 knows the object as it is now, so a cached copy must
-  // not intercept either. Without this the cache returned a full 200 to a
-  // request carrying If-None-Match -- 6.3 MB of .deb where a 304 was correct
-  // -- and a cached 200 to a failed If-Match, which made the 412 below
-  // unreachable for any object the cache held.
+  // cache rules configure: those govern origin fetches and there is no origin
+  // here. Without the Cache API the 30-day pool cache is "read R2 on every
+  // download".
   //
-  // Measured live before the fix: one 304 with no cf-cache-status, then five
-  // 200s with cf-cache-status: HIT. pkghaus-buildinfos had the same defect and
-  // was fixed first; this is the same shape in the worker that serves apt.
+  // Only plain full GETs are cached. A 206 is a fragment, and every
+  // conditional has to reach R2 because only R2 knows the object as it is now
+  // -- a cached copy answering If-None-Match returns 6.3 MB of .deb where a
+  // 304 is correct, and a cached 200 to a failed If-Match makes the 412 below
+  // unreachable for anything the cache holds.
   const conditional =
     range ||
     request.headers.has("if-none-match") ||
@@ -174,15 +163,12 @@ async function archive(request, env, ctx, path) {
     });
   } catch (e) {
     // R2 THROWS for a range it cannot satisfy rather than returning null, and
-    // the caller's catch treats any throw as "the bucket does not carry this
-    // path" -- so a stale partial download was being answered 404. To apt that
-    // means the Release file is gone and `apt update` fails outright, when the
-    // client's only problem was a resume offset past the current end of file.
-    //
-    // Measured in production 2026-09-04: 55 of these in six hours against 59
-    // dists/ 404s, every one of them from a Debian APT-HTTP user agent, across
-    // fifteen countries. Reproducible: `Range: bytes=6066-` on the 6066-byte
-    // InRelease returned 404.
+    // the caller's catch reads any throw as "the bucket does not carry this
+    // path". Answering 404 tells apt the Release file is gone and fails
+    // `apt update` outright, when the client's only problem is a resume offset
+    // past the current end of file. Measured in production: 55 of these in six
+    // hours against 59 dists/ 404s, every one a Debian APT-HTTP agent, across
+    // fifteen countries.
     //
     // RFC 9110 says 416 with the object's real length, which is what tells apt
     // to throw its partial away and start again.
@@ -201,7 +187,7 @@ async function archive(request, env, ctx, path) {
     });
   }
 
-  if (object === null) return null; // no such object: Pages may have a page here
+  if (object === null) return null; // no such object: the asset layer may have a page
 
   const headers = new Headers();
   object.writeHttpMetadata(headers);
@@ -242,6 +228,10 @@ async function archive(request, env, ctx, path) {
   return response;
 }
 
+// This function and resolveRange below are identical in pkghaus/buildinfos
+// worker/src/worker.js. A bug in either is a bug in both: the NaN content-range
+// was. Fix them together.
+//
 // R2 signals an unsatisfiable range by throwing. There is no typed error to
 // match on, so this matches the message and the code R2 actually emits -- both,
 // because either alone is one upstream wording change away from silently
@@ -253,17 +243,17 @@ export function isUnsatisfiableRange(e) {
   return msg.includes("range is not satisfiable") || msg.includes("10039");
 }
 
-// Measured against live R2 on 2026-09-02: the result's range is always
-// {offset, length}, both resolved to numbers, whatever the request asked for --
-// a suffix range arrives already converted to an offset, an open-ended one with
-// its length filled in. There are not three shapes, there is one.
+// Measured against live R2: the result's range is always {offset, length},
+// both resolved to numbers, whatever the request asked for. A suffix range
+// arrives already converted to an offset, an open-ended one with its length
+// filled in. There are not three shapes, there is one.
 //
-// But all three keys are own properties and `suffix` is always undefined, so
-// `"suffix" in range` is true on EVERY result. The old key-presence branch
-// therefore fired every time and computed `size - undefined`: this Worker has
-// answered ranged requests with `content-range: bytes NaN-<size-1>/<size>`
-// since the R2 cutover. The bytes were always right, which is why apt never
-// complained -- it fetches whole .debs and reads no Content-Range.
+// The trap is that all three keys are own properties and `suffix` is always
+// undefined, so `"suffix" in range` is true on EVERY result. Branching on key
+// presence therefore takes the suffix path every time and computes
+// `size - undefined`, serving `content-range: bytes NaN-<size-1>/<size>`. The
+// bytes stay right, so apt never complains: it fetches whole .debs and reads
+// no Content-Range. Test the values, never the keys.
 export function resolveRange(range, size) {
   // Guarded on the VALUE, not the key. Unreached by live R2, one typeof, and it
   // keeps the function total if R2 ever reports a suffix it has not resolved.

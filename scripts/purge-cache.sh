@@ -33,10 +33,9 @@ ARCHES="${ARCHES:-amd64 arm64}"
 # which is the whole of what this run wrote, so that directory is the purge
 # list.
 #
-# Purging the entire pool instead, as this did until 2026-08-23, empties the
-# 30-day pool cache on every publish. That was merely wasteful while Pages was
-# the origin; now that the worker builds these responses from R2, every purged
-# URL is an R2 read on its next request.
+# Purging the entire pool instead would empty the 30-day pool cache on every
+# publish, and behind a worker that builds these responses from R2 each purged
+# URL costs an R2 read on its next request.
 #
 # Paths come from the indices rather than from the filename, so the pool
 # layout stays aptly's business: Filename is the archive-root-relative path,
@@ -68,18 +67,13 @@ pool_paths() {
 
 # The URLs to purge, one per pool path.
 #
-# This used to emit three spellings of every path -- literal, %7e/%2b and
-# %7E/%2B -- because apt requests pool files percent-encoded and, with Pages as
-# the origin, the CDN keyed its cache on the request URL. A literal-only purge
-# then missed the encoded entry, and that was a real incident: a POP kept
-# serving pre-rebuild mandown bytes and apt failed on the hash.
+# One spelling, the literal one. apt requests pool files percent-encoded
+# (%7e/%2b), but worker.js keys its cache on the DECODED path, so every
+# spelling collapses to one entry and purging the encoded forms would address
+# keys that cannot exist.
 #
-# The R2 cutover ended it. worker.js derives its cache key from the DECODED
-# path, so every spelling collapses to one entry under the literal form. The
-# other two addressed keys that cannot exist.
-#
-# Measured 2026-09-03, two ways, because each colo has its own cache and the
-# naive test cannot tell "different spelling" from "different POP":
+# Measured two ways, because each colo has its own cache and the naive test
+# cannot tell "different spelling" from "different POP":
 #
 #   1. Connection reuse pins the colo -- one curl invocation, several URLs.
 #      Fill through either spelling and the other HITs the same entry.
@@ -106,14 +100,19 @@ fi
 
 mapfile -t urls < <(purge_urls | LC_ALL=C sort -u)
 
+# 30 URLs per call, so this is several requests and any one can fail. Failing
+# is right here (purging is the whole job), but the message has to say how far
+# it got or a re-run is a guess about what is already done.
 for ((i = 0; i < ${#urls[@]}; i += 30)); do
-    printf '%s\n' "${urls[@]:i:30}" \
+    batch_end=$(( i + 30 > ${#urls[@]} ? ${#urls[@]} : i + 30 ))
+    if ! printf '%s\n' "${urls[@]:i:30}" \
         | jq -R . | jq -s '{files: .}' \
-        | curl -sS --fail-with-body -X POST \
-            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-            -H "Authorization: Bearer ${CLOUDFLARE_PURGE_TOKEN}" \
-            -H 'Content-Type: application/json' \
-            --data @- >/dev/null
+        | cf_purge_post >/dev/null; then
+        printf 'FATAL: purge failed on URLs %s-%s of %s; the first %s are purged\n' \
+            "$((i + 1))" "$batch_end" "${#urls[@]}" "$i" >&2
+        printf '  a re-run repeats the whole list from the start\n' >&2
+        exit 1
+    fi
 done
 
 echo "purged ${#urls[@]} URLs" >&2

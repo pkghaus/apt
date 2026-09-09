@@ -74,18 +74,15 @@ qualifier() {
     esac
 }
 
-# One clone of the packages repository, made on first use and reused.
+# One clone of the packages repository, made on first use and reused. Every
+# read after it is local.
 #
-# plan() used to do a full `git ls-remote --tags` AND a
-# `git clone --depth 1 --branch <tag>` per enrolled package: at 25 packages
-# that is 25 tag listings and 25 clones, measured at ~30 seconds and ~52 MB
-# transferred, to read two small files out of each. The entire repository with
-# every tag and every blob is 448 KB and clones in under a second, because what
-# made the old clones expensive was checking out a working tree. Every read
-# after this is local.
-#
-# Bare: nothing here needs a worktree, and `git show <tag>:<path>` does not
-# want one.
+# One bare clone of everything beats a tag listing and a shallow clone per
+# package: the whole repository with every tag and blob is 448 KB and under a
+# second, against ~30 seconds and ~52 MB for 25 packages read two files at a
+# time. Checking out a working tree is what costs; bare needs none, and
+# `git show <tag>:<path>` does not want one.
+
 # Scratch space for this run, and the one place anything temporary goes. Made
 # in the shell that sources this file so the trap belongs to that shell: a
 # mktemp and a trap set inside a command substitution are both undone the
@@ -101,23 +98,58 @@ MIRROR="$SCRATCH/packages.git"
 # Clone the packages repository once per run, into MIRROR.
 #
 # Existence is a directory test, not a variable, and that is load-bearing:
-# every caller below reads its result through a command substitution, and a
-# variable set in that subshell is gone when it returns. The filesystem is the
-# only state a subshell can leave behind, so whichever call arrives first does
-# the clone and the rest find it already there.
+# callers read this through a command substitution, and a variable set in that
+# subshell is gone when it returns. The filesystem is the only state a subshell
+# leaves behind, so the first call clones and the rest find it there.
+#
+# The plan's one indispensable network call. git's own message is the whole
+# diagnosis -- a bad credential, DNS, a rate limit and a rename are otherwise
+# indistinguishable -- so it is kept and printed. Retried like the builder's
+# clones: a transient failure here fails the entire ingest.
+#
+# Both knobs are overridable for the reason PACKAGES_REPO and GIT_BASE are: so
+# the tests exercise the retry without paying its backoff.
+CLONE_ATTEMPTS="${CLONE_ATTEMPTS:-3}"
+CLONE_RETRY_DELAY="${CLONE_RETRY_DELAY:-2}"
+
 ensure_packages_mirror() {
     [ -d "$MIRROR" ] && return 0
-    git clone -q --bare -- "${GIT_BASE}${PACKAGES_REPO}" "$MIRROR" 2>/dev/null
+
+    local attempt=1 delay="$CLONE_RETRY_DELAY" err="$SCRATCH/clone.err"
+
+    while true; do
+        if git clone -q --bare -- \
+            "${GIT_BASE}${PACKAGES_REPO}" "$MIRROR" 2>"$err"; then
+            return 0
+        fi
+
+        # A failed clone can leave the target behind, where it would look like
+        # a finished mirror to every later caller.
+        rm -rf "$MIRROR"
+
+        if [ "$attempt" -ge "$CLONE_ATTEMPTS" ]; then
+            log "cloning ${GIT_BASE}${PACKAGES_REPO} failed after $CLONE_ATTEMPTS attempts:"
+            sed 's/^/    /' "$err" >&2
+            return 1
+        fi
+
+        log "clone attempt $attempt/$CLONE_ATTEMPTS failed, retrying in ${delay}s:"
+        sed 's/^/    /' "$err" >&2
+        sleep "$delay"
+        attempt=$((attempt + 1))
+        delay=$((delay * 2))
+    done
 }
 
-# Non-zero when the repository could not be read, empty output when it has no
-# tags. Those are different answers and the caller treats them differently: the
-# listing used to be the head of a pipeline, so a failed read produced no
-# output, exited 0 through tail, and was reported as "no tags" -- a network blip
-# silently dropping a package from the plan under a message saying the upstream
-# had never tagged anything.
+# The newest tag belonging to one package.
 #
-# The newest tag belonging to one package. Tags are namespaced by package
+# Non-zero when the repository could not be read, empty output when it has no
+# tags. The caller treats those differently, so they must not collapse: heading
+# a pipeline with the listing sends a failed read through tail as exit 0 and no
+# output, which reports as "no tags" and drops the package from the plan under
+# a message blaming the upstream.
+#
+# Tags are namespaced by package
 # (croc/v11.3.4-1), so the package's own tags are the ones under its prefix and
 # every other package's are noise.
 #

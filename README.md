@@ -85,9 +85,8 @@ rebuildable from their tags but not retained.
   debsnap, which has never heard of this archive. aptly cannot carry any of them
   - its pool is addressed by package identity - so they are written beside it
   rather than through it, the way Debian keeps buildinfos.debian.net separate
-  from the archive. They moved off this host on 2026-09-02: the layout is a
-  source pool, not an archive path, and the Worker serving it is the one that
-  answers `apt update`.
+  from the archive. They are not on this host: the layout is a source pool, not
+  an archive path, and the Worker here is the one that answers `apt update`.
 - Those records are what make the archive verifiable with `debrebuild` rather
   than only readable, and `verify/rebuild.sh` is the whole procedure. Given a
   `.buildinfo`, it resolves every build dependency from snapshot.debian.org at
@@ -104,7 +103,7 @@ rebuildable from their tags but not retained.
   cd .. && verify/rebuild.sh mandown
   ```
 
-  Proven end to end on 2026-09-02 against a freshly published record:
+  Proven end to end against a freshly published record:
   `checking mandown_1.0.5.2-2~haus13+1_amd64.deb: size... sha256... md5...
   sha1... all OK`, and the rebuilt `.deb` byte-identical to the one the archive
   serves.

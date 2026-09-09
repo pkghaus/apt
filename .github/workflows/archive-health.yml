@@ -15,11 +15,10 @@ name: Archive health
 # leaves the keyring answering 200 while every package and index 404s, which
 # the expiry check next door cannot see.
 #
-# Upstream drift used to live here too. It moved to pkghaus/packages on
-# 2026-08-29, where the same detection opens a verified pull request instead of
-# describing the work in an issue. Two resolvers asking GitHub the same
-# question every six hours, with no rule for which wins when they disagree, is
-# not redundancy.
+# Upstream drift is NOT here. It belongs to pkghaus/packages, where the same
+# detection opens a verified pull request rather than describing the work in an
+# issue. Two resolvers asking GitHub the same question every six hours, with no
+# rule for which wins when they disagree, is not redundancy.
 
 on:
   schedule:

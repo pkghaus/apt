@@ -46,10 +46,10 @@ source_index() { # suite arch
 # qualifier: the source is the authority on which suite carries what.
 #
 # The reader is an argument for the same reason compare-archives.sh takes one:
-# it is the seam the tests reach through. This is the recovery path -- the only
-# one, since R2 has no object versioning -- and until now the parse that decides
-# which suite gets which bytes had never been exercised anywhere but a real
-# rebuild of the live archive.
+# it is the seam the tests reach through. This is the recovery path, and the
+# only one since R2 has no object versioning, so the parse deciding which suite
+# gets which bytes needs exercising somewhere other than a real rebuild of the
+# live archive.
 build_manifest() { # reader
     local reader="$1" suite arch
     for suite in $SUITES; do
