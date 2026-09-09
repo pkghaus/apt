@@ -55,6 +55,9 @@ STYLE='<style>
     display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
     padding: 2.25rem 0 1.25rem; border-bottom: 3px solid var(--ink);
   }
+  /* The clear space under the header rule: the same on every page of every
+     host, and the same as the space above the footer rule. */
+  header + * { margin-top: 0; padding-top: 2rem; }
   .tagline { flex-basis: 100%; color: var(--muted); margin: .75rem 0 0; max-width: 38rem; }
   h1 {
     font-family: ui-monospace, Menlo, Consolas, monospace;
@@ -91,7 +94,8 @@ STYLE='<style>
   .chip {
     display: inline-block; font-family: ui-monospace, Menlo, Consolas, monospace;
     font-size: .72rem; font-weight: 600; border: 1px solid var(--line);
-    padding: .1rem .5rem; color: var(--muted); white-space: nowrap;
+    padding: .1rem .5rem; margin-right: .35rem; color: var(--muted);
+    white-space: nowrap;
     background: color-mix(in srgb, var(--muted) 8%, var(--paper));
   }
   .chip.added { color: var(--ok); border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); }
