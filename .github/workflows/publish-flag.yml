@@ -91,7 +91,7 @@ jobs:
         with:
           workdir: aptly-state
           branch: aptly
-          message: Acquire-By-Hash ${{ inputs.state }}
+          message: ${{ inputs.field }} ${{ inputs.state }}
           token: ${{ github.token }}
 
       - name: Purge the metadata from the edge
