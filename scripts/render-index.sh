@@ -68,7 +68,10 @@ STYLE='<style>
   h1 .path { font-size: .65em; }
   h1 .gap { color: var(--muted); }
   h1 a { color: inherit; text-decoration: none; }
-  h1 a:hover { color: var(--accent); }
+  h1 a:hover {
+    text-decoration: underline; text-decoration-color: var(--accent);
+    text-underline-offset: .18em; text-decoration-thickness: .07em;
+  }
   .tablewrap { overflow-x: auto; padding: 1.5rem 0; }
   .tablewrap:has(+ footer) { padding-bottom: 0; }
   table { border-collapse: collapse; width: 100%; font-size: .92rem; }
@@ -437,7 +440,7 @@ EOF
 render_root() {
     {
         page_open "apt.pkg.haus" \
-            'apt<span class="dot">.</span>pkg<span class="dot">.</span>haus' 80 \
+            '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a>' 80 \
             "The signed APT archive behind pkg.haus."
         listing_table "$ARCHIVE_DIR" noparent
         page_close
