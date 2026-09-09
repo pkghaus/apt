@@ -190,15 +190,72 @@ arch_all_only() { # tag pkg
 # What the archive already carries. An Architecture: all package is filed once
 # as _all and satisfies every architecture, which is what reprepro's per-arch
 # listing expressed differently.
-archived_version() {
-    suite_contents "$1" "Name ($2)" \
-        | awk -F'\t' -v want="$3" '$3 == want || $3 == "all" { print $2 }' \
-        | head -n1
+#
+# Answers are loaded once per suite, not once per question. Every aptly call is
+# a process start plus a leveldb open, and that is essentially the whole cost:
+# against the live 68-package database, searching for one package takes 74ms
+# and searching for all of them takes 79ms. Asking once per package x arch
+# meant 420 aptly starts to read three databases.
+declare -A _archived_loaded=()
+declare -A _archived=()          # "<suite>|<name>" -> "<arch>\t<version>" lines
+
+load_archived() { # suite
+    local suite="$1" name version arch key
+    [ -n "${_archived_loaded[$suite]:-}" ] && return 0
+    _archived_loaded[$suite]=1
+    while IFS=$'\t' read -r name version arch; do
+        [ -n "$name" ] || continue
+        key="$suite|$name"
+        _archived[$key]="${_archived[$key]:-}${arch}"$'\t'"${version}"$'\n'
+    done < <(suite_contents "$suite")
+    return 0
+}
+
+archived_version() { # suite pkg arch
+    local suite="$1" want="$3" key arch version
+    load_archived "$suite"
+    key="$suite|$2"
+    # The rule the awk applied, over the same lines in the same order: the
+    # first entry whose architecture matches, with "all" matching any.
+    while IFS=$'\t' read -r arch version; do
+        [ -n "$arch" ] || continue
+        if [ "$arch" = "$want" ] || [ "$arch" = "all" ]; then
+            printf '%s' "$version"
+            return 0
+        fi
+    done <<< "${_archived[$key]:-}"
+    # A package the suite does not carry is an ordinary answer, not a failure.
+    # Under inherit_errexit a non-zero return here would abort the whole plan
+    # instead of recording a missing version.
+    return 0
 }
 
 plan() {
     local arches="${1:-amd64 arm64}"
     local repo tag header pkg version suite arch expected have all_only missing
+    local -A qual=()
+
+    # Dropped rather than trusted. Nothing calls plan() twice in one shell
+    # today, and a table left over from a previous call would answer for a
+    # database that has since been written to.
+    _archived_loaded=()
+    _archived=()
+
+    # Both of these are hoisted for the same reason, and it is the reason
+    # ensure_packages_mirror keys its cache off the filesystem: the loop below
+    # reads them through command substitutions, and a substitution is a
+    # subshell, so anything it caches dies with it.
+    #
+    # qualifier() caches STABLE_ID and cannot benefit from it from in there --
+    # called per package it ran the deb-builder container 35 times to read one
+    # VERSION_ID. archived_version() has the same shape, so its per-suite table
+    # is filled HERE, in plan's own shell, where the subshells fork from and
+    # therefore inherit it. Filling it lazily from inside them instead is worse
+    # than no cache at all: 210 full suite reads rather than 420 targeted ones.
+    for suite in $SUITES; do
+        qual[$suite]="$(qualifier "$suite")"
+        load_archived "$suite"
+    done
 
     # Not in a command substitution: this is what puts the clone on disk for
     # every subshell below to find.
@@ -227,7 +284,7 @@ plan() {
         version="${header#* }"
 
         for suite in $SUITES; do
-            expected="${version}$(qualifier "$suite")"
+            expected="${version}${qual[$suite]}"
 
             if [ "$all_only" = 1 ]; then
                 # One leg; a single includedeb serves every architecture, so
