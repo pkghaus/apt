@@ -896,3 +896,20 @@
 15:38:54.985671 table@remove removed @6373
 15:39:27.168289 db@close closing
 15:39:27.168491 db@close done T·201.055µs
+=============== Sep 9, 2026 (UTC) ===============
+15:44:32.510466 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:44:32.511506 version@stat F·[3 494] S·3MiB[1KiB 3MiB] Sc·[0.75 0.04]
+15:44:32.511542 db@open opening
+15:44:32.512501 journal@recovery F·1
+15:44:32.512681 journal@recovery recovering @6391
+15:44:32.514384 memdb@flush created L0@6394 N·2 S·2KiB "E16..ain,v5549":"Us3..ing,v5548"
+15:44:32.514776 version@stat F·[4 494] S·3MiB[4KiB 3MiB] Sc·[1.00 0.04]
+15:44:32.520346 db@janitor F·500 G·0
+15:44:32.520382 db@open done T·8.834619ms
+15:44:32.520473 table@compaction L0·1 -> L1·1 S·2MiB Q·5550
+15:44:32.545570 table@build created L1@6397 N·989 S·2MiB "E0a..004,v5509":"xCP..3b7,v4981"
+15:44:32.545647 version@stat F·[3 494] S·3MiB[1KiB 3MiB] Sc·[0.75 0.04]
+15:44:32.546046 table@compaction committed F-1 S-2KiB Ke·0 D·2 T·25.547028ms
+15:44:32.546320 table@remove removed @6393
+15:45:21.161854 db@close closing
+15:45:21.162022 db@close done T·168.95µs
