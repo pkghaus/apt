@@ -139,8 +139,8 @@ STYLE='<style>
   .empty { display: none; color: var(--muted); font-size: .9rem; padding: 1.5rem 0; }
   .empty.on { display: block; }
   footer {
-    border-top: 3px solid var(--ink); padding-top: 1.5rem;
-    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    border-top: 3px solid var(--ink); margin-top: 3rem;
+    padding-top: 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap;
     font-size: .85rem; color: var(--muted);
   }
   footer a { color: inherit; }
