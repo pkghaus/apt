@@ -228,6 +228,10 @@ async function archive(request, env, ctx, path) {
   return response;
 }
 
+// This function and resolveRange below are identical in pkghaus/buildinfos
+// worker/src/worker.js. A bug in either is a bug in both: the NaN content-range
+// was. Fix them together.
+//
 // R2 signals an unsatisfiable range by throwing. There is no typed error to
 // match on, so this matches the message and the code R2 actually emits -- both,
 // because either alone is one upstream wording change away from silently
