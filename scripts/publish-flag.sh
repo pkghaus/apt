@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 #
-# Turn Acquire-By-Hash on or off for published suites.
+# Turn a boolean publish-point flag on or off for published suites.
 #
-#   acquire-by-hash.sh <on|off> [suite ...]
+#   publish-flag.sh <field> <on|off> [suite ...]
+#
+# <field> is a boolean field of aptly's publish point, as the API spells it:
+# AcquireByHash or SkipContents. Both are persisted in the database and both
+# are settable only through the API, so both need this.
 #
 # Acquire-By-Hash lets apt fetch an index at a content-addressed URL
 # (by-hash/SHA256/<hash>) instead of a mutable one. A client that has read
@@ -24,7 +28,15 @@ set -euo pipefail
 # called as x="$(f)" keeps running after a failure instead of aborting.
 shopt -s inherit_errexit
 
-STATE="${1:?usage: acquire-by-hash.sh <on|off> [suite ...]}"
+FIELD="${1:?usage: publish-flag.sh <field> <on|off> [suite ...]}"
+case "$FIELD" in
+    AcquireByHash|SkipContents) ;;
+    # Refused rather than passed through: aptly answers an unknown field with
+    # 200 and ignores it, so a typo would report success and change nothing.
+    *) printf 'FATAL: unknown field %s (AcquireByHash or SkipContents)\n' "$FIELD" >&2; exit 1 ;;
+esac
+shift
+STATE="${1:?usage: publish-flag.sh <field> <on|off> [suite ...]}"
 shift
 SUITES_ARG=("$@")
 
@@ -65,12 +77,12 @@ curl -fsS "$BASE/api/version" >/dev/null 2>&1 || { log "FATAL: aptly api did not
 published_flag() {  # suite -> true/false/absent
     curl -fsS "$BASE/api/publish" 2>/dev/null | python3 -c "
 import json,sys
-want = sys.argv[1]
+want, field = sys.argv[1], sys.argv[2]
 for p in json.load(sys.stdin):
     if p.get('Distribution') == want:
-        print(str(p.get('AcquireByHash')).lower()); break
+        print(str(p.get(field)).lower()); break
 else:
-    print('absent')" "$1"
+    print('absent')" "$1" "$FIELD"
 }
 
 # The API addresses a publish point by <storage>:<prefix> with slashes written
@@ -104,7 +116,7 @@ for suite in "${SUITES_ARG[@]}"; do
     log "$suite: $before -> $WANT"
     curl -sS --fail-with-body -X PUT \
         -H 'Content-Type: application/json' \
-        --data "{\"AcquireByHash\": $WANT, \"Signing\": {\"GpgKey\": \"$SIGN_KEY\", \"Batch\": true}}" \
+        --data "{\"$FIELD\": $WANT, \"Signing\": {\"GpgKey\": \"$SIGN_KEY\", \"Batch\": true}}" \
         "$BASE/api/publish/$(publish_path "$suite")/$suite" >/dev/null
 
     # The PUT queues the publish as a background task, so the database write
@@ -117,6 +129,6 @@ for suite in "${SUITES_ARG[@]}"; do
         sleep 1
     done
     got="$(published_flag "$suite")"
-    [ "$got" = "$WANT" ] || { log "FATAL: $suite still reports AcquireByHash=$got"; exit 1; }
+    [ "$got" = "$WANT" ] || { log "FATAL: $suite still reports $FIELD=$got"; exit 1; }
     log "$suite: confirmed $got"
 done
