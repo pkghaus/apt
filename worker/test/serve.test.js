@@ -381,3 +381,42 @@ test("a conditional request is never stored under the plain GET's key", async ()
   await h.settle();
   assert.equal(h.cacheStore.size, 0, "a 304 is not the object");
 });
+
+// Our own pipeline fetches published debs for real reasons -- betterlockscreen's
+// DEP-8 testbed installs i3lock-color beside it, on all six legs of a release --
+// and those landed in the published statistics next to real downloads. Serving
+// must be untouched; only the counting stops.
+//
+// The unmarked case is asserted in the same test on purpose. A skip that fired
+// for everything would satisfy the first half alone, and this file's whole
+// subject is rules that are silent when they are wrong.
+test("a fetch marked as ours is served normally and counted for nobody", async () => {
+  const marked = new Request("https://apt.pkg.haus" + DEB, {
+    headers: { "user-agent": "Debian APT-HTTP/1.3 (3.0.3) pkghaus-ci" },
+  });
+  const h = harness();
+  const res = await worker.fetch(marked, h.env, h.ctx);
+  await h.settle();
+  assert.equal(res.status, 200, "the deb is still served");
+  assert.equal(res.headers.get("content-length"), String(BODY.length));
+  assert.equal(h.writes.length, 0, "and nothing about it reaches the counters");
+
+  const plain = harness();
+  const res2 = await worker.fetch(new Request("https://apt.pkg.haus" + DEB), plain.env, plain.ctx);
+  await plain.settle();
+  assert.equal(res2.status, 200);
+  assert.equal(plain.writes.length, 1, "an unmarked fetch of the same deb still counts");
+});
+
+test("the marker suppresses an update check too, not only a download", async () => {
+  const h = harness();
+  const res = await worker.fetch(
+    new Request("https://apt.pkg.haus" + REL, {
+      headers: { "user-agent": "Debian APT-HTTP/1.3 pkghaus-ci" },
+    }),
+    h.env, h.ctx,
+  );
+  await h.settle();
+  assert.equal(res.status, 200, "the index is still served");
+  assert.equal(h.writes.length, 0, "and no heartbeat is recorded");
+});

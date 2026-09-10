@@ -89,7 +89,9 @@ mkdir -p "$cache"
 while read -r _ rel sha; do
     dest="$cache/$(basename "$rel")"
     [ -f "$dest" ] && continue
-    curl -fsSL --max-time 300 -o "$dest.part" "$SOURCE_URL/$rel"
+    # Marked as ours: a seed downloads every published .deb, and unmarked that
+    # is the single largest block of "downloads" the archive has ever recorded.
+    curl -fsSL --max-time 300 -A "$ARCHIVE_SELF_UA" -o "$dest.part" "$SOURCE_URL/$rel"
     got="$(sha256sum "$dest.part" | cut -d' ' -f1)"
     if [ -n "$sha" ] && [ "$got" != "$sha" ]; then
         log "FATAL: $rel: index says $sha, download is $got"

@@ -25,8 +25,13 @@ export default {
       path = decodeURIComponent(new URL(request.url).pathname);
 
       // Full downloads only: no Range header (apt resume sends one and a
-      // resumed download would double-count), GET only.
-      if (request.method === "GET" && !request.headers.has("range")) {
+      // resumed download would double-count), GET only, and not one of our
+      // own automated fetches.
+      if (
+        request.method === "GET" &&
+        !request.headers.has("range") &&
+        !isSelfTraffic(request)
+      ) {
         hit = parse(path);
       }
 
@@ -76,6 +81,27 @@ export default {
     return env.ASSETS ? env.ASSETS.fetch(request) : fetch(request);
   },
 };
+
+// Our own automation fetching from the archive, which is nobody's download.
+// The pipeline has real reasons to fetch published debs -- betterlockscreen's
+// DEP-8 testbed needs i3lock-color installed beside it, six times per release
+// -- and those fetches land in the published statistics next to real ones.
+// They have already distorted it once: eight runs of a single unit test put 48
+// downloads on i3lock-color and carried it above every real user that day,
+// which is why that test is offline now. The production path was left.
+//
+// A User-Agent marker rather than an address range, because this Worker stores
+// nothing per-client and should not start; at an edge the client address is
+// the closest thing to identity there is. All this does is decline to count,
+// so a spoofed marker costs one counter increment and nothing else.
+//
+// Substring, not equality: apt sends its own product token and the marker is
+// appended to it via Acquire::http::User-Agent.
+export const SELF_MARKER = "pkghaus-ci";
+
+export function isSelfTraffic(request) {
+  return (request.headers.get("user-agent") ?? "").includes(SELF_MARKER);
+}
 
 // Whether an answer the archive gave counts as the event `hit` describes. The
 // two metrics need different rules: a 304 is not a download, but it is the

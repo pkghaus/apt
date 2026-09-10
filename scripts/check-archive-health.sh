@@ -63,7 +63,7 @@ fail() { echo "FATAL: $*" >&2; exit 1; }
 note() { echo "  $*"; }
 
 fetch() { # url dest
-    curl --fail-with-body -sS --max-time 60 -o "$2" "$1" \
+    curl --fail-with-body -sS --max-time 60 -A "$ARCHIVE_SELF_UA" -o "$2" "$1" \
         || fail "cannot fetch $1"
 }
 

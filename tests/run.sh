@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=130
+EXPECTED_ASSERTIONS=132
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1456,6 +1456,25 @@ IDX
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# The self-traffic marker spans two languages: the Worker decides what to count
+# and the shell decides what to send. A rename on either side is silent -- the
+# archive simply resumes counting its own health probes and seed rebuilds as
+# downloads, which is the state this pair exists to end.
+(
+    ua="$(awk -F'"' '/^ARCHIVE_SELF_UA=/{print $2; exit}' "$ROOT/scripts/aptly-lib.sh")"
+    marker="$(awk -F'"' '/^export const SELF_MARKER =/{print $2; exit}' "$ROOT/worker/src/worker.js")"
+    if [ -n "$marker" ]; then
+        ok "the Worker names a self-traffic marker"
+    else
+        no "the Worker names a self-traffic marker" "SELF_MARKER not found in worker.js"
+    fi
+    case "$ua" in
+        *"$marker"*) ok "the shell User-Agent carries the marker the Worker matches" ;;
+        *) no "the shell User-Agent carries the marker the Worker matches" \
+              "ARCHIVE_SELF_UA=[$ua] does not contain [$marker]" ;;
+    esac
+)
+
 echo
 ran="$(wc -l < "$TALLY")"
 if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
@@ -1465,6 +1484,7 @@ if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
     echo "      built. If the change was deliberate, update EXPECTED_ASSERTIONS."
     exit 1
 fi
+
 if [ "$fail" -eq 0 ]; then
     echo "all $ran assertions passed"
 else
