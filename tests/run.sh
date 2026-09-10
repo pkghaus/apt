@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=127
+EXPECTED_ASSERTIONS=130
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -709,6 +709,65 @@ DSC
     else
         ok "the guard passes once the source package is beside the record"
     fi
+    # The uploads run in the background now, so a failure no longer reaches
+    # set -e on its own: `wait` is guarded with || so the script can report
+    # every failure rather than dying on the first. That makes the explicit
+    # check the only thing standing between a failed upload and a publisher
+    # that reports success on an incomplete record set.
+    out="$(R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_BUCKET=x R2_ENDPOINT=x \
+        "$ROOT/scripts/publish-buildinfo.sh" "$recs" 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -ne 0 ] && printf '%s' "$out" | grep -q 'record set is incomplete'; then
+        ok "a failed upload fails the run rather than reporting success"
+    else
+        no "a failed upload fails the run rather than reporting success" \
+            "rc=${rc:-0} out=$(printf '%s' "$out" | tail -3)"
+    fi
+
+
+    # The regression the parallel upload opened: a replaced orig tarball whose
+    # upload SUCCEEDS while another file's fails. Exiting on the failure before
+    # the purge block would skip the only warning naming that URL, leaving the
+    # edge serving superseded bytes with no record of it -- the exact state the
+    # purge block was written to prevent. Serially this barely existed, because
+    # the tarball went last; four at a time, anything can fail after it.
+    mkdir -p "$work/bin"
+    cat > "$work/bin/aws" <<'AWS'
+#!/usr/bin/env bash
+# Drop the endpoint flag so the subcommand is argv[0].
+args=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --endpoint-url) shift 2 ;;
+        *) args+=("$1"); shift ;;
+    esac
+done
+case "${args[0]:-} ${args[1]:-}" in
+    "s3api head-object")
+        # The key is already published and has a size, so the replaced-tarball
+        # check goes on to compare bytes.
+        printf '12345\n' ;;
+    "s3 cp")
+        if [ "${args[2]#s3://}" != "${args[2]}" ]; then
+            # Reading the published copy back: different bytes, so it needs a purge.
+            printf 'superseded\n' > "${args[3]}"
+        else
+            printf 'stub: upload refused\n' >&2
+            exit 1
+        fi ;;
+esac
+AWS
+    chmod +x "$work/bin/aws"
+    out="$(PATH="$work/bin:$PATH" \
+        R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_BUCKET=x R2_ENDPOINT=x \
+        "$ROOT/scripts/publish-buildinfo.sh" "$recs" 2>&1)" && rc=0 || rc=$?
+    eq "a failed upload still fails the run when a tarball was replaced" "1" "${rc:-0}"
+    if printf '%s' "$out" | grep -q 'buildinfo-pool/d/demo/demo_1.0.orig.tar.gz'; then
+        ok "a replaced tarball is still named for hand-purging when an upload fails"
+    else
+        no "a replaced tarball is still named for hand-purging when an upload fails" \
+            "$(printf '%s' "$out" | tail -4)"
+    fi
+
     rm -rf "$recs"
 
     # Same bytes, wrong size: catches a .dsc paired with the wrong tarball when
