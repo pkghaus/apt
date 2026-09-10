@@ -289,10 +289,27 @@ breadcrumb_for() {
 #
 # Restores browsing that reprepro's on-disk tree gave for free. apt never reads
 # these pages, but the archive was navigable before the move and has to stay so.
+# Nine objects, three per suite. Each archive_object is an aws process start
+# plus a round trip, and fetched one at a time they were most of the render
+# step: 15 reads across both manifest builders against well under a second of
+# actual rendering. Fetched together instead, then read from disk in the same
+# order as before. A failed fetch still leaves an empty file and drops out
+# below, which is what the empty-manifest guard in the main body exists for.
 dists_manifest() {
-    local suite release path bytes
+    local suite release path bytes d
+    d="$(mktemp -d)"
     for suite in $SUITES; do
-        release="$(archive_object "dists/$suite/Release")"
+        for path in Release InRelease Release.gpg; do
+            { archive_object "dists/$suite/$path" > "$d/$suite.$path"; } || true &
+        done
+    done
+    wait
+
+    for suite in $SUITES; do
+        # Still through a command substitution: ${#release} counts what that
+        # strips, so reading the file with wc -c instead would change every
+        # Release size in the manifest by its trailing newline.
+        release="$(cat "$d/$suite.Release" 2>/dev/null || true)"
         [ -n "$release" ] || continue
 
         printf '%s' "$release" \
@@ -305,21 +322,32 @@ dists_manifest() {
             if [ "$path" = Release ]; then
                 bytes="${#release}"
             else
-                bytes="$(archive_object "dists/$suite/$path" | wc -c)"
+                bytes="$(wc -c < "$d/$suite.$path" 2>/dev/null || echo 0)"
             fi
             [ "$bytes" -gt 0 ] && printf 'dists/%s/%s\t%s\n' "$suite" "$path" "$bytes"
         done
     done | LC_ALL=C sort -u
+    rm -rf "$d"
 }
 
+# Six index reads, one per suite and architecture, parallel for the reason
+# dists_manifest is. The output is sorted afterwards exactly as before, so the
+# order the fetches finish in cannot reach the manifest.
 pool_manifest() {
-    local suite arch
+    local suite arch d
+    d="$(mktemp -d)"
     for suite in $SUITES; do
         for arch in $ARCHES; do
-            index_text "$suite" "$arch" \
-                | awk '/^Filename: /{f=$2} /^Size: /{if(f!=""){print f "\t" $2; f=""}}'
+            {
+                index_text "$suite" "$arch" \
+                    | awk '/^Filename: /{f=$2} /^Size: /{if(f!=""){print f "\t" $2; f=""}}' \
+                    > "$d/pool.$suite.$arch"
+            } || true &
         done
-    done | LC_ALL=C sort -u
+    done
+    wait
+    { cat "$d"/pool.* 2>/dev/null || true; } | LC_ALL=C sort -u
+    rm -rf "$d"
 }
 
 # Materialise listing pages for the synthetic pool tree. Only index.html files
