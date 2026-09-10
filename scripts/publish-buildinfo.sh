@@ -242,11 +242,14 @@ for f in "${files[@]}" "${extras[@]}"; do
     published=$((published + 1))
 done
 
-# Four at a time, matching the bound used elsewhere for the same reason: every
-# upload is a process start plus a round trip, and a release publishes around
-# twenty files of which one, the orig tarball, carries nearly all the bytes.
-# Unbounded would open a connection per file on a fleet-wide wave.
-UPLOAD_CONCURRENCY="${UPLOAD_CONCURRENCY:-4}"
+# Four at a time. Every upload is a process start plus a round trip, and a
+# release publishes around twenty files of which one, the orig tarball, carries
+# nearly all the bytes. Four is not a measured optimum; having a bound at all is
+# the point, because unbounded would open a connection per file on a fleet-wide
+# wave. Fixed rather than read from the environment until something needs to
+# set it: nothing does, and a non-integer there would silently disable the
+# bound rather than fail.
+upload_concurrency=4
 
 _t="$(now_ms)"
 upload_pids=()
@@ -263,17 +266,9 @@ drain_uploads() {
 for i in ${upload_src+"${!upload_src[@]}"}; do
     aws_ s3 cp "${upload_src[$i]}" "s3://$R2_BUCKET/${upload_key[$i]}" --only-show-errors &
     upload_pids+=("$!")
-    [ "${#upload_pids[@]}" -ge "$UPLOAD_CONCURRENCY" ] && drain_uploads
+    [ "${#upload_pids[@]}" -ge "$upload_concurrency" ] && drain_uploads
 done
 drain_uploads
-
-# Checked rather than left to set -e: a backgrounded failure does not reach it,
-# and a half-published record set is exactly what the publisher must not report
-# as success.
-if [ "$upload_failed" -ne 0 ]; then
-    printf 'FATAL: at least one buildinfo upload failed; the record set is incomplete\n' >&2
-    exit 1
-fi
 ms_upload=$(( $(now_ms) - _t ))
 
 # Purged here rather than left to purge-cache.sh, which walks the apt pool and
@@ -303,6 +298,21 @@ if [ "${#purge_list[@]}" -gt 0 ]; then
     else
         unpurged_warning "no purge token is set"
     fi
+fi
+
+# Checked rather than left to set -e: a backgrounded failure does not reach it,
+# and a half-published record set is exactly what the publisher must not report
+# as success.
+#
+# After the purge, not before. An upload that failed alongside a replaced orig
+# tarball that SUCCEEDED still leaves the edge serving superseded bytes, and
+# exiting first would skip the one warning naming those URLs -- the split state
+# with no record of it that the block above exists to prevent. Serially this
+# barely existed, because the tarball was uploaded last and little could fail
+# after it; four at a time, anything can.
+if [ "$upload_failed" -ne 0 ]; then
+    printf 'FATAL: at least one buildinfo upload failed; the record set is incomplete\n' >&2
+    exit 1
 fi
 
 printf 'published %s file(s) under %s/\n' "$published" "$PREFIX" >&2
