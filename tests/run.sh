@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=127
+EXPECTED_ASSERTIONS=128
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -709,6 +709,20 @@ DSC
     else
         ok "the guard passes once the source package is beside the record"
     fi
+    # The uploads run in the background now, so a failure no longer reaches
+    # set -e on its own: `wait` is guarded with || so the script can report
+    # every failure rather than dying on the first. That makes the explicit
+    # check the only thing standing between a failed upload and a publisher
+    # that reports success on an incomplete record set.
+    out="$(R2_ACCESS_KEY_ID=x R2_SECRET_ACCESS_KEY=x R2_BUCKET=x R2_ENDPOINT=x \
+        "$ROOT/scripts/publish-buildinfo.sh" "$recs" 2>&1)" && rc=0 || rc=$?
+    if [ "${rc:-0}" -ne 0 ] && printf '%s' "$out" | grep -q 'record set is incomplete'; then
+        ok "a failed upload fails the run rather than reporting success"
+    else
+        no "a failed upload fails the run rather than reporting success" \
+            "rc=${rc:-0} out=$(printf '%s' "$out" | tail -3)"
+    fi
+
     rm -rf "$recs"
 
     # Same bytes, wrong size: catches a .dsc paired with the wrong tarball when

@@ -193,14 +193,20 @@ orig_needs_purge() {
 published=0
 purge_list=()
 
-# This step is 43s of a 281s publish job and prints nothing while it runs, so
-# there was no way to tell an upload cost from a replaced-tarball check from
-# outside. Wall clock only, accumulated per phase; nothing here changes what
-# is published.
+# Wall clock only, accumulated per phase; nothing here changes what is
+# published. This step prints nothing while it runs, so without these an
+# upload cannot be told apart from a replaced-tarball check from outside.
 ms_check=0
 ms_upload=0
 bytes_up=0
 now_ms() { date +%s%3N; }
+
+# Decided serially, uploaded together. The decisions have to happen in this
+# shell: purge_list is read after the loop, and a subshell cannot add to it.
+# The uploads do not, and one aws invocation per file, one at a time, was most
+# of this step.
+upload_src=()
+upload_key=()
 
 for f in "${files[@]}" "${extras[@]}"; do
     name="$(basename "$f")"
@@ -230,12 +236,45 @@ for f in "${files[@]}" "${extras[@]}"; do
     fi
     ms_check=$(( ms_check + $(now_ms) - _t ))
 
-    _t="$(now_ms)"
-    aws_ s3 cp "$f" "s3://$R2_BUCKET/$key" --only-show-errors
-    ms_upload=$(( ms_upload + $(now_ms) - _t ))
+    upload_src+=("$f")
+    upload_key+=("$key")
     bytes_up=$(( bytes_up + $(stat -c %s "$f") ))
     published=$((published + 1))
 done
+
+# Four at a time, matching the bound used elsewhere for the same reason: every
+# upload is a process start plus a round trip, and a release publishes around
+# twenty files of which one, the orig tarball, carries nearly all the bytes.
+# Unbounded would open a connection per file on a fleet-wide wave.
+UPLOAD_CONCURRENCY="${UPLOAD_CONCURRENCY:-4}"
+
+_t="$(now_ms)"
+upload_pids=()
+upload_failed=0
+
+drain_uploads() {
+    local pid
+    for pid in ${upload_pids+"${upload_pids[@]}"}; do
+        wait "$pid" || upload_failed=1
+    done
+    upload_pids=()
+}
+
+for i in ${upload_src+"${!upload_src[@]}"}; do
+    aws_ s3 cp "${upload_src[$i]}" "s3://$R2_BUCKET/${upload_key[$i]}" --only-show-errors &
+    upload_pids+=("$!")
+    [ "${#upload_pids[@]}" -ge "$UPLOAD_CONCURRENCY" ] && drain_uploads
+done
+drain_uploads
+
+# Checked rather than left to set -e: a backgrounded failure does not reach it,
+# and a half-published record set is exactly what the publisher must not report
+# as success.
+if [ "$upload_failed" -ne 0 ]; then
+    printf 'FATAL: at least one buildinfo upload failed; the record set is incomplete\n' >&2
+    exit 1
+fi
+ms_upload=$(( $(now_ms) - _t ))
 
 # Purged here rather than left to purge-cache.sh, which walks the apt pool and
 # has no view of this prefix. Skipped without a token rather than failing: the
