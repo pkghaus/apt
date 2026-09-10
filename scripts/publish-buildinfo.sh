@@ -192,6 +192,16 @@ orig_needs_purge() {
 
 published=0
 purge_list=()
+
+# This step is 43s of a 281s publish job and prints nothing while it runs, so
+# there was no way to tell an upload cost from a replaced-tarball check from
+# outside. Wall clock only, accumulated per phase; nothing here changes what
+# is published.
+ms_check=0
+ms_upload=0
+bytes_up=0
+now_ms() { date +%s%3N; }
+
 for f in "${files[@]}" "${extras[@]}"; do
     name="$(basename "$f")"
 
@@ -211,14 +221,19 @@ for f in "${files[@]}" "${extras[@]}"; do
 
     key="$PREFIX/$initial/$source/$name"
 
+    _t="$(now_ms)"
     if orig_needs_purge "$f" "$key"; then
         printf '::warning::%s is being REPLACED with different bytes. Its URL is\n' "$name" >&2
         printf '  cached for 30 days per zone rule, so it is purged below. Expect this\n' >&2
         printf '  once per package after the upstream-mtime change, and never again.\n' >&2
         purge_list+=("https://buildinfos.pkg.haus/${key#buildinfos/}")
     fi
+    ms_check=$(( ms_check + $(now_ms) - _t ))
 
+    _t="$(now_ms)"
     aws_ s3 cp "$f" "s3://$R2_BUCKET/$key" --only-show-errors
+    ms_upload=$(( ms_upload + $(now_ms) - _t ))
+    bytes_up=$(( bytes_up + $(stat -c %s "$f") ))
     published=$((published + 1))
 done
 
@@ -252,3 +267,7 @@ if [ "${#purge_list[@]}" -gt 0 ]; then
 fi
 
 printf 'published %s file(s) under %s/\n' "$published" "$PREFIX" >&2
+printf '  %s KB uploaded in %s.%03ds; replaced-tarball checks %s.%03ds\n' \
+    "$(( bytes_up / 1024 ))" \
+    "$(( ms_upload / 1000 ))" "$(( ms_upload % 1000 ))" \
+    "$(( ms_check / 1000 ))" "$(( ms_check % 1000 ))" >&2
