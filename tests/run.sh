@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=130
+EXPECTED_ASSERTIONS=134
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1456,6 +1456,51 @@ IDX
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# The self-traffic marker spans two languages: the Worker decides what to count
+# and the shell decides what to send. A rename on either side is silent -- the
+# archive simply resumes counting its own health probes and seed rebuilds as
+# downloads, which is the state this pair exists to end.
+(
+    marker="$(awk -F'"' '/^export const SELF_MARKER =/{print $2; exit}' "$ROOT/worker/src/worker.js")"
+    if [ -n "$marker" ]; then
+        ok "the Worker names a self-traffic marker"
+    else
+        no "the Worker names a self-traffic marker" "SELF_MARKER not found in worker.js"
+    fi
+
+    # EVERY definition, not just the library's. check-archive-health.sh keeps
+    # its own copy because it deliberately does not source aptly-lib.sh, and
+    # the first version of this assertion read the library alone -- which is
+    # how an undefined ARCHIVE_SELF_UA reached that script and would have taken
+    # the scheduled health check red under `set -u`.
+    defs=0; bad=""
+    while IFS=: read -r file val; do
+        defs=$((defs + 1))
+        case "$val" in *"$marker"*) ;; *) bad="$bad $file" ;; esac
+    done <<EOF
+$(grep -rn '^ARCHIVE_SELF_UA=' "$ROOT/scripts/" | sed 's/^\([^:]*\):[0-9]*:ARCHIVE_SELF_UA="\(.*\)"$/\1:\2/')
+EOF
+    if [ "$defs" -gt 0 ]; then
+        ok "every script defining a self-traffic User-Agent carries the marker ($defs found)"
+    else
+        no "every script defining a self-traffic User-Agent carries the marker" "no definitions found"
+    fi
+    eq "no definition is missing the marker" "" "$bad"
+
+    # Every script that SENDS it must also define it, or `set -u` kills the run
+    # at the first fetch. This is the assertion the bug above needed.
+    missing=""
+    while IFS= read -r f; do
+        [ -n "$f" ] || continue
+        grep -q '^ARCHIVE_SELF_UA=' "$f" && continue
+        grep -q 'aptly-lib\.sh"' "$f" && continue
+        missing="$missing $(basename "$f")"
+    done <<EOF
+$(grep -rl 'ARCHIVE_SELF_UA' "$ROOT/scripts/" | sort)
+EOF
+    eq "every script using the marker defines it or sources the library" "" "$missing"
+)
+
 echo
 ran="$(wc -l < "$TALLY")"
 if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
@@ -1465,6 +1510,7 @@ if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
     echo "      built. If the change was deliberate, update EXPECTED_ASSERTIONS."
     exit 1
 fi
+
 if [ "$fail" -eq 0 ]; then
     echo "all $ran assertions passed"
 else

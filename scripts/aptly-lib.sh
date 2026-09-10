@@ -133,6 +133,16 @@ aws_() {
         aws --endpoint-url "$R2_ENDPOINT" "$@"
 }
 
+# Marks a fetch as the pipeline's own so the archive Worker declines to count
+# it as a download or an update check. Our own automation has real reasons to
+# read the archive over HTTP -- a health probe, a seed rebuild, a preview
+# render without R2 credentials -- and those reads landed in the published
+# statistics beside real ones. `isSelfTraffic` in worker/src/worker.js is the
+# other half; it matches this as a SUBSTRING of the User-Agent.
+#
+# Not a secret and not a guard: all it does is decline to increment a counter.
+ARCHIVE_SELF_UA="curl pkghaus-ci"
+
 # Any published object, as bytes on stdout. Read from the bucket
 # rather than over the CDN wherever this runs seconds after the publish that
 # wrote it: an edge still holding the previous render would silently drop
@@ -151,7 +161,8 @@ archive_object() {
     if have_r2; then
         aws_ s3 cp "s3://$R2_BUCKET/$path" - --only-show-errors 2>/dev/null || true
     else
-        curl -fsSL --max-time 60 "${BASE_URL:-https://apt.pkg.haus}/$path" 2>/dev/null || true
+        curl -fsSL --max-time 60 -A "$ARCHIVE_SELF_UA" \
+            "${BASE_URL:-https://apt.pkg.haus}/$path" 2>/dev/null || true
     fi
 }
 

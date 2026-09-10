@@ -6,7 +6,7 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parse, suiteOf, contentType, resolveRange, shouldCount } from "../src/worker.js";
+import { parse, suiteOf, contentType, resolveRange, shouldCount, isSelfTraffic, SELF_MARKER } from "../src/worker.js";
 
 test("parse reads a pool download", () => {
   assert.deepEqual(
@@ -93,4 +93,16 @@ test("304 counts as an update check but never as a download", () => {
     assert.equal(shouldCount(dl, status), false, `download must not count ${status}`);
     assert.equal(shouldCount(hb, status), false, `heartbeat must not count ${status}`);
   }
+});
+
+test("isSelfTraffic reads the marker out of a User-Agent, and only that", () => {
+  const ua = (v) => new Request("https://apt.pkg.haus/", { headers: v ? { "user-agent": v } : {} });
+  // apt appends the marker to its own product token via Acquire::http::User-Agent,
+  // so this has to match on a substring rather than the whole field.
+  assert.equal(isSelfTraffic(ua("Debian APT-HTTP/1.3 (3.0.3) " + SELF_MARKER)), true);
+  assert.equal(isSelfTraffic(ua(SELF_MARKER)), true);
+  assert.equal(isSelfTraffic(ua("Debian APT-HTTP/1.3 (3.0.3)")), false);
+  assert.equal(isSelfTraffic(ua("curl/8.14.1")), false);
+  // No header at all is the shape a bare client sends, and it must not throw.
+  assert.equal(isSelfTraffic(ua(null)), false);
 });

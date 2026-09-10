@@ -62,8 +62,17 @@ SIGNING_KEY_ID="${SIGNING_KEY_ID:-62B67F3EA1FA6DEC}"
 fail() { echo "FATAL: $*" >&2; exit 1; }
 note() { echo "  $*"; }
 
+# Marks these fetches as the pipeline's own so the archive Worker declines to
+# count them: this runs on a schedule and its InRelease fetch is an update
+# check like any other. Defined here rather than taken from aptly-lib.sh
+# because this script deliberately does not source it -- it must run against
+# the published archive with nothing but curl, gpgv and the published keyring.
+# `isSelfTraffic` in worker/src/worker.js matches this as a SUBSTRING, and
+# tests/run.sh asserts every copy of it still carries that marker.
+ARCHIVE_SELF_UA="curl pkghaus-ci"
+
 fetch() { # url dest
-    curl --fail-with-body -sS --max-time 60 -o "$2" "$1" \
+    curl --fail-with-body -sS --max-time 60 -A "$ARCHIVE_SELF_UA" -o "$2" "$1" \
         || fail "cannot fetch $1"
 }
 
