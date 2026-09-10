@@ -82,3 +82,4 @@
 {"ts":"2026-09-08T10:17:55Z","type":"added","title":"added: rainfrog 0.4.5-1","detail":"Joins the archive in all three suites.","pkgs":"rainfrog=0.4.5-1"}
 {"ts":"2026-09-08T21:20:02Z","type":"updated","title":"updated: croc 11.5.1-1","detail":"Updated from 11.5.0-1.","pkgs":"croc=11.5.1-1"}
 {"ts":"2026-09-09T11:33:34Z","type":"updated","title":"updated: croc 11.5.2-1","detail":"Updated from 11.5.1-1.","pkgs":"croc=11.5.2-1"}
+{"ts":"2026-09-10T04:50:36Z","type":"updated","title":"updated: vale 3.21.0-1","detail":"Updated from 3.20.0-1.","pkgs":"vale=3.21.0-1"}
