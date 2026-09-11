@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=134
+EXPECTED_ASSERTIONS=140
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -486,6 +486,61 @@ echo "== check-key-expiry =="
     else
         no "a missing key file fails" "rc=$rc out=[$out]"
     fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+# --- keys/pkg.haus-archive.asc: the archive's published trust anchor ----------
+#
+# The ingest dearmors this file into the keyring at the archive root, which is
+# what the setup instructions curl and what the daily expiry watcher reads. It
+# used to be `gpg --export` of whatever ARCHIVE_SIGNING_KEY held, so its
+# contents were a side effect of a secret nobody can read back: a key added to
+# the certificate reached nobody, and a secret re-exported with fewer keys
+# would have shrunk it with nothing going red. Asserting the fingerprints is
+# the point -- this file is a trust anchor, and a substitution is invisible.
+echo "== published trust anchor =="
+(
+    fail=0
+    keyfile="$ROOT/keys/pkg.haus-archive.asc"
+    work="$(mktemp -d)"
+
+    colons="$(gpg --batch --show-keys --with-colons "$keyfile" 2>/dev/null)"
+
+    secret="$(printf '%s\n' "$colons" | grep -cE '^(sec|ssb):' || true)"
+    eq "no secret key material in the published anchor" 0 "$secret"
+
+    fprs="$(printf '%s\n' "$colons" | awk -F: '$1 == "fpr" {print $10}')"
+    for want in \
+        79C1BBCBE46FA8B9EBACC93020F923EB99EC1720 \
+        DD34C42E776B591FBFEB72A162B67F3EA1FA6DEC \
+        B04D491E3C0209F8C2F7B1F05B88ED4C9FF690E5
+    do
+        if printf '%s\n' "$fprs" | grep -qx "$want"; then
+            ok "the anchor carries $want"
+        else
+            no "the anchor carries $want" "present: $(printf '%s' "$fprs" | tr '\n' ' ')"
+        fi
+    done
+
+    # The workflow's own command, against the consumer that reads its output.
+    gpg --dearmor < "$keyfile" > "$work/keyring.gpg"
+    out="$("$ROOT/scripts/check-key-expiry.sh" "$work/keyring.gpg" 2>&1)"; rc=$?
+    if [ "$rc" -eq 0 ] && printf '%s' "$out" | grep -q 'expiry'; then
+        ok "the dearmored anchor parses as a keyring the expiry watcher reads"
+    else
+        no "the dearmored anchor parses" "rc=$rc out=[$out]"
+    fi
+
+    # The regression this file exists to prevent.
+    step="$(grep -F 'public/pkghaus-archive-keyring.gpg' "$ROOT/.github/workflows/ingest.yml")"
+    case "$step" in
+        *"gpg --dearmor < keys/pkg.haus-archive.asc"*)
+            ok "the ingest publishes the keyring from the checked-in key" ;;
+        *)
+            no "the ingest publishes the keyring from the checked-in key" "step: [$step]" ;;
+    esac
 
     rm -rf "$work"
     exit $((fail > 0))
