@@ -195,6 +195,18 @@ jobs:
         with:
           SUITE: ${{ matrix.suite }}
           WORKING_DIRECTORY: pkg/${{ matrix.pkg }}
+          # The key lives here rather than on pkghaus/packages because THIS is
+          # the build whose .dsc is published: the artifact below feeds
+          # publish-buildinfo.sh. The tag build in pkghaus/packages produces a
+          # .dsc too and uploads it nowhere, so a key there would sign a file
+          # that is thrown away and leave the published one unsigned.
+          #
+          # Never ARCHIVE_SIGNING_KEY. apt accepts any signing key in the
+          # keyring a Signed-By line names, and this one is handed to every
+          # build leg of every package; the two are separate subkeys, shipped
+          # in separate keyrings, precisely so a leak here cannot sign a
+          # Release.
+          SOURCE_SIGNING_KEY: ${{ secrets.SOURCE_SIGNING_KEY }}
 
       - name: Upload packages
         uses: actions/upload-artifact@v7
