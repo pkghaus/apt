@@ -319,7 +319,7 @@ jobs:
           R2_BACKUP_BUCKET: ${{ vars.R2_BACKUP_BUCKET }}
         run: scripts/backup-pool.sh
 
-      # Dearmored from the checked-in public key, not `gpg --export` of the CI
+      # Dearmored from the checked-in public keys, not `gpg --export` of the CI
       # keyring: that published whatever ARCHIVE_SIGNING_KEY happened to hold,
       # so the bootstrap keyring was a side effect of a secret nobody can read
       # back, and it drifted silently in both directions. A subkey added to the
@@ -327,8 +327,17 @@ jobs:
       # secret re-exported with fewer keys would have shrunk this file with
       # nothing going red. Same command the keyring package uses, so both
       # published copies come from an armored file a diff can review.
-      - name: Export the public keyring alongside the archive
-        run: gpg --dearmor < keys/pkg.haus-archive.asc > public/pkghaus-archive-keyring.gpg
+      #
+      # TWO keyrings, and the separation is load-bearing. apt trusts every
+      # signing-capable key in the file its Signed-By line names, so the
+      # archive keyring carries only the release-signing subkey. The
+      # source-signing key, which sits on every build leg of every package,
+      # ships beside it for verifying .dsc signatures and must never be in the
+      # anchor: a leak of it would otherwise sign a Release every client takes.
+      - name: Export the public keyrings alongside the archive
+        run: |
+          gpg --dearmor < keys/pkg.haus-archive.asc > public/pkghaus-archive-keyring.gpg
+          gpg --dearmor < keys/pkg.haus-source.asc > public/pkghaus-source-keyring.gpg
 
       # After include (so the diff sees the new state), before render
       # (so the news page reflects this publish). Runs on empty plans

@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=140
+EXPECTED_ASSERTIONS=145
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -491,41 +491,71 @@ echo "== check-key-expiry =="
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
-# --- keys/pkg.haus-archive.asc: the archive's published trust anchor ----------
+# --- keys/: the two published keyrings, and the line between them ------------
 #
-# The ingest dearmors this file into the keyring at the archive root, which is
-# what the setup instructions curl and what the daily expiry watcher reads. It
-# used to be `gpg --export` of whatever ARCHIVE_SIGNING_KEY held, so its
-# contents were a side effect of a secret nobody can read back: a key added to
-# the certificate reached nobody, and a secret re-exported with fewer keys
-# would have shrunk it with nothing going red. Asserting the fingerprints is
-# the point -- this file is a trust anchor, and a substitution is invisible.
-echo "== published trust anchor =="
+# The ingest dearmors these into the archive root. pkghaus-archive-keyring.gpg
+# is what the setup instructions curl and what an apt Signed-By line names;
+# pkghaus-source-keyring.gpg carries the key that signs .dsc files.
+#
+# They are separate files because apt trusts EVERY signing-capable key in the
+# keyring its Signed-By names. The source-signing key sits on every build leg
+# of every package, so putting it in the anchor would let a leak of it sign a
+# Release that every client accepts, which is the escalation the two-subkey
+# split exists to prevent. Measured: with both subkeys in one keyring,
+# apt-get update accepts a Release signed by either; with the split it does
+# not. So the ABSENCE assertions below are the security property, and the
+# fingerprints are spelled out because these files are trust anchors and a
+# substitution in one is invisible.
+#
+# This used to be `gpg --export` of whatever ARCHIVE_SIGNING_KEY held, which
+# made the published keyring a side effect of a secret nobody can read back.
+echo "== published keyrings =="
 (
     fail=0
-    keyfile="$ROOT/keys/pkg.haus-archive.asc"
     work="$(mktemp -d)"
+    # gpg creates a homedir on first use; keep it out of the runner's HOME.
+    export GNUPGHOME="$work/gnupg"; mkdir -p "$GNUPGHOME"; chmod 700 "$GNUPGHOME"
 
-    colons="$(gpg --batch --show-keys --with-colons "$keyfile" 2>/dev/null)"
+    primary=79C1BBCBE46FA8B9EBACC93020F923EB99EC1720
+    release_signing=DD34C42E776B591FBFEB72A162B67F3EA1FA6DEC
+    source_signing=B04D491E3C0209F8C2F7B1F05B88ED4C9FF690E5
 
-    secret="$(printf '%s\n' "$colons" | grep -cE '^(sec|ssb):' || true)"
-    eq "no secret key material in the published anchor" 0 "$secret"
+    # keyfile role must-carry must-not-carry
+    check_anchor() {
+        local keyfile="$1" role="$2" wanted="$3" forbidden="$4"
+        local colons fprs
 
-    fprs="$(printf '%s\n' "$colons" | awk -F: '$1 == "fpr" {print $10}')"
-    for want in \
-        79C1BBCBE46FA8B9EBACC93020F923EB99EC1720 \
-        DD34C42E776B591FBFEB72A162B67F3EA1FA6DEC \
-        B04D491E3C0209F8C2F7B1F05B88ED4C9FF690E5
-    do
-        if printf '%s\n' "$fprs" | grep -qx "$want"; then
-            ok "the anchor carries $want"
+        colons="$(gpg --batch --show-keys --with-colons "$keyfile" 2>/dev/null)"
+
+        eq "$role carries no secret key material" 0 \
+           "$(printf '%s\n' "$colons" | grep -cE '^(sec|ssb):')"
+
+        fprs="$(printf '%s\n' "$colons" | awk -F: '$1 == "fpr" {print $10}')"
+        local want
+        for want in "$primary" "$wanted"; do
+            if printf '%s\n' "$fprs" | grep -qx "$want"; then
+                ok "$role carries $want"
+            else
+                no "$role carries $want" "present: $(printf '%s' "$fprs" | tr '\n' ' ')"
+            fi
+        done
+
+        if printf '%s\n' "$fprs" | grep -qx "$forbidden"; then
+            no "$role keeps $forbidden out" "it is present, and apt would accept it"
         else
-            no "the anchor carries $want" "present: $(printf '%s' "$fprs" | tr '\n' ' ')"
+            ok "$role keeps $forbidden out"
         fi
-    done
+    }
 
-    # The workflow's own command, against the consumer that reads its output.
-    gpg --dearmor < "$keyfile" > "$work/keyring.gpg"
+    check_anchor "$ROOT/keys/pkg.haus-archive.asc" "the Signed-By anchor" \
+        "$release_signing" "$source_signing"
+    check_anchor "$ROOT/keys/pkg.haus-source.asc" "the source keyring" \
+        "$source_signing" "$release_signing"
+
+    # The workflow's own command, against the consumer that reads its output:
+    # archive-health fetches the published anchor and runs the expiry watcher
+    # over it.
+    gpg --dearmor < "$ROOT/keys/pkg.haus-archive.asc" > "$work/keyring.gpg"
     out="$("$ROOT/scripts/check-key-expiry.sh" "$work/keyring.gpg" 2>&1)"; rc=$?
     if [ "$rc" -eq 0 ] && printf '%s' "$out" | grep -q 'expiry'; then
         ok "the dearmored anchor parses as a keyring the expiry watcher reads"
@@ -533,14 +563,15 @@ echo "== published trust anchor =="
         no "the dearmored anchor parses" "rc=$rc out=[$out]"
     fi
 
-    # The regression this file exists to prevent.
-    step="$(grep -F 'public/pkghaus-archive-keyring.gpg' "$ROOT/.github/workflows/ingest.yml")"
-    case "$step" in
-        *"gpg --dearmor < keys/pkg.haus-archive.asc"*)
-            ok "the ingest publishes the keyring from the checked-in key" ;;
-        *)
-            no "the ingest publishes the keyring from the checked-in key" "step: [$step]" ;;
-    esac
+    # The regression these files exist to prevent, one assertion per keyring.
+    step="$(sed -n '/Export the public keyrings/,/^$/p' "$ROOT/.github/workflows/ingest.yml")"
+    for pair in "archive:pkghaus-archive-keyring.gpg" "source:pkghaus-source-keyring.gpg"; do
+        want="gpg --dearmor < keys/pkg.haus-${pair%%:*}.asc > public/${pair#*:}"
+        case "$step" in
+            *"$want"*) ok "the ingest publishes ${pair#*:} from the checked-in key" ;;
+            *) no "the ingest publishes ${pair#*:} from the checked-in key" "want [$want]" ;;
+        esac
+    done
 
     rm -rf "$work"
     exit $((fail > 0))
