@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: pkghaus-archive-keyring 2026.09.11</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-11-updated-pkghaus-archive-keyring-2026.09.11</guid>
+<pubDate>Fri, 11 Sep 2026 16:06:33 +0000</pubDate>
+<description>Updated from 2026.09.02.1. (pkghaus-archive-keyring 2026.09.11)</description>
+</item>
+<item>
 <title>added: emeraldian 0.5.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-10-added-emeraldian-0.5.0-1</guid>

@@ -84,3 +84,4 @@
 {"ts":"2026-09-09T11:33:34Z","type":"updated","title":"updated: croc 11.5.2-1","detail":"Updated from 11.5.1-1.","pkgs":"croc=11.5.2-1"}
 {"ts":"2026-09-10T04:50:36Z","type":"updated","title":"updated: vale 3.21.0-1","detail":"Updated from 3.20.0-1.","pkgs":"vale=3.21.0-1"}
 {"ts":"2026-09-10T13:02:29Z","type":"added","title":"added: emeraldian 0.5.0-1","detail":"Joins the archive in all three suites.","pkgs":"emeraldian=0.5.0-1"}
+{"ts":"2026-09-11T16:06:33Z","type":"updated","title":"updated: pkghaus-archive-keyring 2026.09.11","detail":"Updated from 2026.09.02.1.","pkgs":"pkghaus-archive-keyring=2026.09.11"}
