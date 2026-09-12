@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: zola 0.23.5-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-12-updated-zola-0.23.5-1</guid>
+<pubDate>Sat, 12 Sep 2026 04:56:12 +0000</pubDate>
+<description>Updated from 0.23.4-2. (zola 0.23.5-1)</description>
+</item>
+<item>
 <title>updated: pkghaus-archive-keyring 2026.09.11</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-11-updated-pkghaus-archive-keyring-2026.09.11</guid>
