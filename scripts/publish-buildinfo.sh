@@ -146,9 +146,53 @@ if [ "${#files[@]}" -gt 0 ] && [ ! -e "${dscs[0]}" ]; then
     exit 1
 fi
 
+# Every .buildinfo records a sha256 OF THE .dsc, and a version has one .dsc but
+# one .buildinfo per architecture. So the records cross-check each other: if two
+# legs produced different .dsc bytes, the artifact merge keeps one of them and
+# the other leg's record names a checksum no published file has.
+#
+# That divergence used to be impossible rather than merely unobserved -- a .dsc
+# is generated from the source tree and has no architecture in it. Signing gives
+# it one more input, and an OpenPGP signature that varied per leg would land
+# here silently: verify_dsc above would still pass, because the surviving .dsc
+# describes the tarballs correctly whichever leg made it.
+#
+# Cheap enough to run always, and it is the only check that compares the legs
+# against each other rather than each against itself.
+verify_record_dsc() {
+    local record="$1" dir want got name
+    dir="$(dirname "$record")"
+
+    while read -r want name; do
+        [ -n "$name" ] || continue
+        case "$name" in *.dsc) ;; *) continue ;; esac
+
+        [ -e "$dir/$name" ] || {
+            printf 'FATAL: %s records %s, which is not here\n' \
+                "$(basename "$record")" "$name" >&2
+            return 1
+        }
+
+        got="$(sha256sum "$dir/$name" | cut -d' ' -f1)"
+        [ "$got" = "$want" ] || {
+            printf 'FATAL: %s records a different %s than the one being published\n' \
+                "$(basename "$record")" "$name" >&2
+            printf '       record    %s\n       published %s\n' "$want" "$got" >&2
+            printf '       Two build legs disagree about the source package.\n' >&2
+            return 1
+        }
+    done < <(awk '/^Checksums-Sha256:/ {inblock=1; next}
+                  inblock && /^ / {print $1, $3; next}
+                  inblock {exit}' "$record")
+}
+
 for dsc in "$SRC"/*.dsc; do
     [ -e "$dsc" ] || continue
     verify_dsc "$dsc"
+done
+
+for record in "${files[@]}"; do
+    verify_record_dsc "$record"
 done
 
 # The one name that can collide. Every other file here carries the full Debian
