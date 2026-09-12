@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=145
+EXPECTED_ASSERTIONS=153
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -577,6 +577,48 @@ echo "== published keyrings =="
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
+# --- the ingest hands the builder the source-signing key ----------------------
+#
+# Losing this line is silent in a way the rest of the signing path is not. A key
+# that is present but broken fails the build; a key that is simply absent means
+# "do not sign", so every source package would publish unsigned and nothing
+# would go red until somebody opened a .dsc.
+#
+# It has to be THIS workflow. pkghaus/packages builds a .dsc on every tag and
+# uploads it nowhere; the one that reaches buildinfos.pkg.haus comes from the
+# build job below and is published by publish-buildinfo.sh in the same run.
+echo "== source signing wiring =="
+(
+    fail=0
+    # Comments stripped: the step's own comment explains why the release key is
+    # not passed, and naming it there would satisfy the second check below by
+    # accident. Only the yaml keys count.
+    step="$(sed -n "/uses: pkghaus\/action-debian-build/,/^$/p" \
+        "$ROOT/.github/workflows/ingest.yml" | grep -v '^[[:space:]]*#')"
+
+    # shellcheck disable=SC2016  # the literal ${{ }} is the point
+    case "$step" in
+        *'SOURCE_SIGNING_KEY: ${{ secrets.SOURCE_SIGNING_KEY }}'*)
+            ok "the ingest passes the source-signing secret to the builder" ;;
+        *)
+            no "the ingest passes the source-signing secret to the builder" \
+               "step: [$step]" ;;
+    esac
+
+    # The release key must never reach a build leg: apt accepts any signing key
+    # in the keyring a Signed-By line names, and this input is handed to every
+    # leg of every package.
+    case "$step" in
+        *ARCHIVE_SIGNING_KEY*)
+            no "the release-signing key is not handed to the build legs" \
+               "ingest.yml passes ARCHIVE_SIGNING_KEY to the builder" ;;
+        *)
+            ok "the release-signing key is not handed to the build legs" ;;
+    esac
+
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 # --- check-archive-health.sh: the two parsers ---------------------------------
 #
 # The health check itself needs a network, so what is tested here is the text
@@ -766,6 +808,117 @@ DSC
     else
         ok "verify_dsc rejects a checksum mismatch"
     fi
+
+    # The archive publishes a SIGNED .dsc now. Clearsigning wraps the same
+    # fields in a "Hash:" header and an armor block, and verify_dsc reads
+    # Checksums-Sha256 by position within the block -- so this asserts the
+    # wrapper did not move anything the parser depends on. A real gpg envelope
+    # rather than a hand-written one: dash-escaping and the blank line after
+    # the Hash header are exactly the details a handmade fixture gets wrong.
+    write_dsc "$good" "$size"
+    (
+        export GNUPGHOME="$work/gnupg"
+        mkdir -p "$GNUPGHOME"; chmod 700 "$GNUPGHOME"
+        gpg --batch --quiet --pinentry-mode loopback --passphrase '' \
+            --quick-generate-key 'dsc test <t@example.invalid>' ed25519 sign 1d
+        gpg --batch --yes --pinentry-mode loopback --passphrase '' \
+            --clearsign -o "$work/demo_1.0-1.signed.dsc" "$work/demo_1.0-1.dsc"
+    ) >/dev/null 2>&1
+    if head -1 "$work/demo_1.0-1.signed.dsc" 2>/dev/null | grep -q 'BEGIN PGP SIGNED' \
+        && verify_dsc "$work/demo_1.0-1.signed.dsc" 2>/dev/null; then
+        ok "verify_dsc accepts a clearsigned .dsc"
+    else
+        no "verify_dsc accepts a clearsigned .dsc" \
+            "head: $(head -1 "$work/demo_1.0-1.signed.dsc" 2>/dev/null)"
+    fi
+
+    # And the same file with a bad checksum is refused. Without this the one
+    # above passes vacuously: a parser that found no Checksums-Sha256 block at
+    # all inside the armor would iterate nothing and return zero, which reads
+    # exactly like success.
+    write_dsc "$(printf %064d 0)" "$size"
+    (
+        export GNUPGHOME="$work/gnupg"
+        gpg --batch --yes --pinentry-mode loopback --passphrase '' \
+            --clearsign -o "$work/demo_1.0-1.badsigned.dsc" "$work/demo_1.0-1.dsc"
+    ) >/dev/null 2>&1
+    if verify_dsc "$work/demo_1.0-1.badsigned.dsc" 2>/dev/null; then
+        no "verify_dsc rejects a clearsigned .dsc whose checksum is wrong" \
+            "returned zero, so the block inside the armor was never read"
+    else
+        ok "verify_dsc rejects a clearsigned .dsc whose checksum is wrong"
+    fi
+
+    # --- verify_record_dsc: the legs checked against EACH OTHER ---------------
+    #
+    # Everything else here checks one file against itself. A version has one
+    # .dsc and one .buildinfo per architecture, and each record carries the
+    # .dsc's sha256, so the records are the only thing that can catch two legs
+    # having produced different source packages. Signing is what made that
+    # reachable: it gives the .dsc an input beyond the source tree.
+    sed -n '/^verify_record_dsc() {$/,/^}$/p' "$ROOT/scripts/publish-buildinfo.sh" > "$work/fn2.sh"
+    # shellcheck source=/dev/null
+    . "$work/fn2.sh"
+
+    write_dsc "$good" "$size"
+    dsc_sha="$(sha256sum "$work/demo_1.0-1.dsc" | cut -d' ' -f1)"
+    write_record() { # <sha256 for the .dsc>
+        cat > "$work/demo_1.0-1_amd64.buildinfo" <<REC
+Format: 1.0
+Source: demo
+Version: 1.0-1
+Checksums-Sha256:
+ $1 $(stat -c %s "$work/demo_1.0-1.dsc") demo_1.0-1.dsc
+REC
+    }
+
+    write_record "$dsc_sha"
+    if verify_record_dsc "$work/demo_1.0-1_amd64.buildinfo" 2>/dev/null; then
+        ok "verify_record_dsc accepts a record matching the published .dsc"
+    else
+        no "verify_record_dsc accepts a record matching the published .dsc" "returned non-zero"
+    fi
+
+    # The failure it exists for: the surviving .dsc came from the other leg.
+    write_record "$(printf %064d 0)"
+    if verify_record_dsc "$work/demo_1.0-1_amd64.buildinfo" 2>/dev/null; then
+        no "verify_record_dsc rejects a record from a leg that built a different .dsc" \
+            "returned zero"
+    else
+        ok "verify_record_dsc rejects a record from a leg that built a different .dsc"
+    fi
+
+    # Ours are clearsigned now, so the block it reads sits inside the armor.
+    write_record "$dsc_sha"
+    (
+        export GNUPGHOME="$work/gnupg"
+        gpg --batch --yes --pinentry-mode loopback --passphrase '' \
+            --clearsign -o "$work/signed.buildinfo" "$work/demo_1.0-1_amd64.buildinfo"
+    ) >/dev/null 2>&1
+    mv "$work/signed.buildinfo" "$work/demo_1.0-1_amd64.buildinfo"
+    if head -1 "$work/demo_1.0-1_amd64.buildinfo" | grep -q 'BEGIN PGP SIGNED' \
+        && verify_record_dsc "$work/demo_1.0-1_amd64.buildinfo" 2>/dev/null; then
+        ok "verify_record_dsc reads the block inside a clearsigned record"
+    else
+        no "verify_record_dsc reads the block inside a clearsigned record" \
+            "head: $(head -1 "$work/demo_1.0-1_amd64.buildinfo")"
+    fi
+
+    # And still refuses when the signed record disagrees, so the one above
+    # cannot be passing on an empty parse.
+    write_record "$(printf %064d 0)"
+    (
+        export GNUPGHOME="$work/gnupg"
+        gpg --batch --yes --pinentry-mode loopback --passphrase '' \
+            --clearsign -o "$work/signed.buildinfo" "$work/demo_1.0-1_amd64.buildinfo"
+    ) >/dev/null 2>&1
+    mv "$work/signed.buildinfo" "$work/demo_1.0-1_amd64.buildinfo"
+    if verify_record_dsc "$work/demo_1.0-1_amd64.buildinfo" 2>/dev/null; then
+        no "verify_record_dsc rejects a clearsigned record that disagrees" "returned zero"
+    else
+        ok "verify_record_dsc rejects a clearsigned record that disagrees"
+    fi
+    rm -f "$work/demo_1.0-1_amd64.buildinfo"
 
     # A record with no source beside it. debrebuild reads the .dsc from the
     # record's own directory and falls back to debsnap, which has never heard of
