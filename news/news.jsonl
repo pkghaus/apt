@@ -86,3 +86,4 @@
 {"ts":"2026-09-10T13:02:29Z","type":"added","title":"added: emeraldian 0.5.0-1","detail":"Joins the archive in all three suites.","pkgs":"emeraldian=0.5.0-1"}
 {"ts":"2026-09-11T16:06:33Z","type":"updated","title":"updated: pkghaus-archive-keyring 2026.09.11","detail":"Updated from 2026.09.02.1.","pkgs":"pkghaus-archive-keyring=2026.09.11"}
 {"ts":"2026-09-12T04:56:12Z","type":"updated","title":"updated: zola 0.23.5-1","detail":"Updated from 0.23.4-2.","pkgs":"zola=0.23.5-1"}
+{"ts":"2026-09-13T05:09:24Z","type":"updated","title":"updated: zola 0.23.6-1","detail":"Updated from 0.23.5-1.","pkgs":"zola=0.23.6-1"}
