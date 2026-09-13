@@ -45,10 +45,22 @@ jobs:
       - name: Check signing-key expiry
         if: ${{ !cancelled() }}
         run: |
-          curl --fail-with-body -sS --max-time 30 \
+          curl --fail-with-body -sS --max-time 30 -A "curl pkghaus-ci" \
             -o published-keyring.gpg \
             https://apt.pkg.haus/pkghaus-archive-keyring.gpg
           FAIL_ON_WARN=1 scripts/check-key-expiry.sh published-keyring.gpg
+
+      # The SOURCE key, which signs every .dsc and had no expiry watcher of
+      # its own. It is a separate 2-year subkey, so it runs
+      # out on its own schedule; the check next door reads the archive keyring
+      # and would go on passing while .dsc signing failed in every build leg.
+      - name: Check source-key expiry
+        if: ${{ !cancelled() }}
+        run: |
+          curl --fail-with-body -sS --max-time 30 -A "curl pkghaus-ci" \
+            -o published-source-keyring.gpg \
+            https://apt.pkg.haus/pkghaus-source-keyring.gpg
+          FAIL_ON_WARN=1 scripts/check-key-expiry.sh published-source-keyring.gpg
 
       # The archive's critical path, which nothing else checks on a schedule.
       # The ingest is event driven, so weeks can pass with no publish and no
