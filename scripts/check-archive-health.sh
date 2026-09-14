@@ -117,10 +117,6 @@ smallest_arch_package() { # packages-file arch -> "size sha path"
     ' "$1" | sort -n | head -1
 }
 
-# The object's total size out of a Content-Range header, i.e. the number after
-# the slash in "bytes 0-1023/6307948". Parsed rather than trusted as a whole
-# string because that total is the assertion: it is R2's view of the object,
-# and it has to agree with the index's Size.
 # Long key ids of every SUBKEY in a keyring, one per line. --show-keys reads key
 # material without consulting or creating a keyring, which is the same property
 # the gpgv calls below rely on, and it reads armored and binary alike.
@@ -129,6 +125,10 @@ keyring_subkeys() { # keyring-file -> long key ids, one per line
         | awk -F: '$1 == "sub" {print $5}'
 }
 
+# The object's total size out of a Content-Range header, i.e. the number after
+# the slash in "bytes 0-1023/6307948". Parsed rather than trusted as a whole
+# string because that total is the assertion: it is R2's view of the object,
+# and it has to agree with the index's Size.
 content_range_total() { # header-block -> size
     tr -d "\r" | awk 'tolower($1) == "content-range:" { n = split($3, p, "/"); print p[n]; exit }'
 }
