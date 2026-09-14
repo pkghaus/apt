@@ -28,7 +28,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=153
+EXPECTED_ASSERTIONS=160
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -563,6 +563,27 @@ echo "== published keyrings =="
         no "the dearmored anchor parses" "rc=$rc out=[$out]"
     fi
 
+    # The source key expires on its own 2-year schedule, so it needs its own
+    # watcher: the archive keyring's check would keep passing while .dsc
+    # signing failed in every build leg.
+    gpg --dearmor < "$ROOT/keys/pkg.haus-source.asc" > "$work/source-keyring.gpg"
+    out="$("$ROOT/scripts/check-key-expiry.sh" "$work/source-keyring.gpg" 2>&1)"; rc=$?
+    if [ "$rc" -eq 0 ] && printf '%s' "$out" | grep -q 'expiry'; then
+        ok "the dearmored source key parses as a keyring the expiry watcher reads"
+    else
+        no "the dearmored source key parses" "rc=$rc out=[$out]"
+    fi
+
+    # And the scheduled workflow actually runs it over the PUBLISHED copy.
+    health="$(cat "$ROOT/.github/workflows/archive-health.yml")"
+    for k in pkghaus-archive-keyring pkghaus-source-keyring; do
+        case "$health" in
+            *"https://apt.pkg.haus/$k.gpg"*) ok "archive-health fetches $k.gpg" ;;
+            *) no "archive-health fetches $k.gpg" "no such URL in the workflow" ;; esac
+    done
+    eq "archive-health runs the expiry watcher over both published keyrings" \
+       2 "$(printf '%s\n' "$health" | grep -c 'check-key-expiry.sh')"
+
     # The regression these files exist to prevent, one assertion per keyring.
     step="$(sed -n '/Export the public keyrings/,/^$/p' "$ROOT/.github/workflows/ingest.yml")"
     for pair in "archive:pkghaus-archive-keyring.gpg" "source:pkghaus-source-keyring.gpg"; do
@@ -628,6 +649,17 @@ echo "== source signing wiring =="
 (
     # shellcheck source=scripts/check-archive-health.sh
     . "$ROOT/scripts/check-archive-health.sh"
+
+    # keyring_subkeys: the disjointness assertions in the live probe are only
+    # as good as this. Run against the checked-in armored keys, which are the
+    # same material the ingest dearmors and publishes.
+    GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; chmod 700 "$GNUPGHOME"
+    eq "keyring_subkeys finds the archive subkey, and only it" \
+       "62B67F3EA1FA6DEC" "$(keyring_subkeys "$ROOT/keys/pkg.haus-archive.asc" | tr '\n' ' ' | tr -d ' ')"
+    eq "keyring_subkeys finds the source subkey, and only it" \
+       "5B88ED4C9FF690E5" "$(keyring_subkeys "$ROOT/keys/pkg.haus-source.asc" | tr '\n' ' ' | tr -d ' ')"
+    eq "keyring_subkeys reports nothing for a file that is not key material" \
+       "" "$(keyring_subkeys /dev/null)"
 
     work="$(mktemp -d)"
     cat > "$work/Release" <<'REL'

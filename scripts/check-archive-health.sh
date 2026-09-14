@@ -58,6 +58,7 @@ BASE="${1:-https://apt.pkg.haus}"
 SUITES="${SUITES:-trixie testing unstable}"
 ARCHES="${ARCHES:-amd64 arm64}"
 SIGNING_KEY_ID="${SIGNING_KEY_ID:-62B67F3EA1FA6DEC}"
+SOURCE_KEY_ID="${SOURCE_KEY_ID:-5B88ED4C9FF690E5}"
 
 fail() { echo "FATAL: $*" >&2; exit 1; }
 note() { echo "  $*"; }
@@ -116,6 +117,14 @@ smallest_arch_package() { # packages-file arch -> "size sha path"
     ' "$1" | sort -n | head -1
 }
 
+# Long key ids of every SUBKEY in a keyring, one per line. --show-keys reads key
+# material without consulting or creating a keyring, which is the same property
+# the gpgv calls below rely on, and it reads armored and binary alike.
+keyring_subkeys() { # keyring-file -> long key ids, one per line
+    gpg --batch --show-keys --with-colons "$1" 2>/dev/null \
+        | awk -F: '$1 == "sub" {print $5}'
+}
+
 # The object's total size out of a Content-Range header, i.e. the number after
 # the slash in "bytes 0-1023/6307948". Parsed rather than trusted as a whole
 # string because that total is the assertion: it is R2's view of the object,
@@ -164,6 +173,39 @@ trap 'rm -rf "$WORK"' EXIT
 
 fetch "$BASE/pkghaus-archive-keyring.gpg" "$WORK/keyring.gpg"
 [ -s "$WORK/keyring.gpg" ] || fail "the published keyring is empty"
+
+# The source keyring, which nothing else fetches. The archive publishes signed
+# .dsc files and this file is the only way to check one, so its reachability
+# matters as much as the anchor's next door.
+fetch "$BASE/pkghaus-source-keyring.gpg" "$WORK/source-keyring.gpg"
+[ -s "$WORK/source-keyring.gpg" ] || fail "the published source keyring is empty"
+
+# And the two must stay disjoint. apt trusts EVERY signing-capable key in the
+# keyring a Signed-By line names, so the source key appearing in the archive
+# keyring would let a leak of the key that sits on every build leg forge a
+# Release. The keyring package's tests assert this on the CHECKED-IN files;
+# this asserts it on the PUBLISHED copies, which are what users fetch and which
+# have drifted from the checked-in ones before.
+archive_subs="$(keyring_subkeys "$WORK/keyring.gpg")"
+source_subs="$(keyring_subkeys "$WORK/source-keyring.gpg")"
+
+case "$archive_subs" in
+    *"$SIGNING_KEY_ID"*) ;;
+    *) fail "the published archive keyring does not carry $SIGNING_KEY_ID" ;;
+esac
+case "$source_subs" in
+    *"$SOURCE_KEY_ID"*) ;;
+    *) fail "the published source keyring does not carry $SOURCE_KEY_ID" ;;
+esac
+case "$archive_subs" in
+    *"$SOURCE_KEY_ID"*)
+        fail "the published archive keyring carries the SOURCE key $SOURCE_KEY_ID: apt would accept a Release signed by the key every build leg holds" ;;
+esac
+case "$source_subs" in
+    *"$SIGNING_KEY_ID"*)
+        fail "the published source keyring carries the ARCHIVE key $SIGNING_KEY_ID" ;;
+esac
+note "keyrings are disjoint: archive $SIGNING_KEY_ID, source $SOURCE_KEY_ID"
 
 for suite in $SUITES; do
     echo "$suite:"
