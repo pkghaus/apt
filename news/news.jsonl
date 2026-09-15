@@ -89,3 +89,4 @@
 {"ts":"2026-09-13T05:09:24Z","type":"updated","title":"updated: zola 0.23.6-1","detail":"Updated from 0.23.5-1.","pkgs":"zola=0.23.6-1"}
 {"ts":"2026-09-13T20:57:26Z","type":"updated","title":"updated: croc 11.5.3-1","detail":"Updated from 11.5.2-1.","pkgs":"croc=11.5.3-1"}
 {"ts":"2026-09-14T05:46:34Z","type":"updated","title":"updated: ouch 0.8.3-1","detail":"Updated from 0.8.2-2.","pkgs":"ouch=0.8.3-1"}
+{"ts":"2026-09-15T16:06:37Z","type":"updated","title":"updated: zola 0.23.6-2","detail":"Updated from 0.23.6-1.","pkgs":"zola=0.23.6-2"}
