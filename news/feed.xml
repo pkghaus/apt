@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: zola 0.23.6-3</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-16-updated-zola-0.23.6-3</guid>
+<pubDate>Wed, 16 Sep 2026 13:22:49 +0000</pubDate>
+<description>Updated from 0.23.6-2. (zola 0.23.6-3)</description>
+</item>
+<item>
 <title>updated: xplr 1.1.2-2</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-16-updated-xplr-1.1.2-2</guid>
