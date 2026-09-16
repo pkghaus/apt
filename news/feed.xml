@@ -7,6 +7,34 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: xplr 1.1.2-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-16-updated-xplr-1.1.2-2</guid>
+<pubDate>Wed, 16 Sep 2026 13:08:51 +0000</pubDate>
+<description>Updated from 1.1.2-1. (xplr 1.1.2-2)</description>
+</item>
+<item>
+<title>updated: ouch 0.8.3-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-16-updated-ouch-0.8.3-2</guid>
+<pubDate>Wed, 16 Sep 2026 13:08:51 +0000</pubDate>
+<description>Updated from 0.8.3-1. (ouch 0.8.3-2)</description>
+</item>
+<item>
+<title>updated: d2 0.9.0-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-16-updated-d2-0.9.0-2</guid>
+<pubDate>Wed, 16 Sep 2026 13:08:51 +0000</pubDate>
+<description>Updated from 0.9.0-1. (d2 0.9.0-2)</description>
+</item>
+<item>
+<title>updated: croc 11.5.3-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-16-updated-croc-11.5.3-2</guid>
+<pubDate>Wed, 16 Sep 2026 13:08:51 +0000</pubDate>
+<description>Updated from 11.5.3-1. (croc 11.5.3-2)</description>
+</item>
+<item>
 <title>updated: xplr 1.1.2-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-15-updated-xplr-1.1.2-1</guid>
