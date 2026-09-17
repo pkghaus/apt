@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: vale 3.22.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-17-updated-vale-3.22.0-1</guid>
+<pubDate>Thu, 17 Sep 2026 17:09:09 +0000</pubDate>
+<description>Updated from 3.21.0-1. (vale 3.22.0-1)</description>
+</item>
+<item>
 <title>updated: zola 0.23.6-3</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-16-updated-zola-0.23.6-3</guid>
