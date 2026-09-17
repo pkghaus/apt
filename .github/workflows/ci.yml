@@ -35,6 +35,13 @@ jobs:
             koalaman/shellcheck@sha256:61862eba1fcf09a484ebcc6feea46f1782532571a34ed51fedf90dd25f925a8d \
             -x scripts/*.sh tests/*.sh verify/*.sh
 
+      - name: Install aptly
+        # The suite's pool-immutability group runs the real tool, because the
+        # guarantee it checks is aptly's rather than ours and the previous
+        # evidence was a measurement against a version no longer pinned. The
+        # group fails rather than skips when aptly is absent.
+        uses: ./.github/actions/install-aptly
+
       - name: Test
         run: tests/run.sh
 

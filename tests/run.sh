@@ -2,7 +2,9 @@
 #
 # The ingest's two decisions that are dangerous to get wrong and invisible
 # when they are: which pool URLs a publish invalidates, and what an
-# unreadable archive means. Neither needs a network or a real aptly.
+# unreadable archive means. Neither needs a network. One later group does need
+# a real aptly, because it re-checks the tool's own immutability refusal against
+# whichever aptly is installed.
 #
 #   tests/run.sh
 
@@ -28,7 +30,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=160
+EXPECTED_ASSERTIONS=168
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1784,6 +1786,94 @@ $(grep -rl 'ARCHIVE_SELF_UA' "$ROOT/scripts/" | sort)
 EOF
     eq "every script using the marker defines it or sources the library" "" "$missing"
 )
+echo "pool immutability"
+(
+    # The one guarantee in this archive that is enforced by a tool rather than
+    # by our code, and the only one whose evidence was a measurement against a
+    # version no longer installed: it was taken on aptly 1.6.2 and the pin has
+    # been 1.6.3 since, with nothing re-checking it. This group is that
+    # re-check, and it runs against whatever aptly is on PATH, so a pin bump
+    # re-measures instead of silently invalidating the claim.
+    #
+    # Not skippable. A group that quietly passes because a tool is missing is
+    # the failure this suite's assertion count exists to catch.
+    if ! command -v aptly >/dev/null 2>&1; then
+        no "aptly is on PATH" "not installed; this group tests the tool's own refusal and cannot be skipped"
+        exit 1
+    fi
+
+    work="$(mktemp -d)"
+    trap 'rm -rf "$work"' EXIT
+    conf="$work/aptly.conf"
+    printf '{"rootDir": "%s/root"}\n' "$work" > "$conf"
+    aptly_() { aptly -config="$conf" "$@"; }
+
+    # Two .debs identical in name, version and architecture, differing only in
+    # payload -- which is exactly the shape a rebuild of an already-published
+    # version produces.
+    mkdeb() { # destdir name version arch payload
+        local stage="$1/stage"
+        rm -rf "$stage"
+        mkdir -p "$stage/DEBIAN" "$stage/usr/share/doc/$2"
+        printf 'Package: %s\nVersion: %s\nArchitecture: %s\nMaintainer: t <t@example.invalid>\nDescription: fixture\n' \
+            "$2" "$3" "$4" > "$stage/DEBIAN/control"
+        printf '%s\n' "$5" > "$stage/usr/share/doc/$2/payload"
+        dpkg-deb --build -Znone "$stage" "$1/$2_$3_$4.deb" >/dev/null 2>&1
+    }
+    mkdir -p "$work/a" "$work/b"
+    mkdeb "$work/a" fixture 1.0 amd64 ORIGINAL
+    mkdeb "$work/b" fixture 1.0 amd64 DIFFERENT
+    orig="$(sha256sum "$work/a/fixture_1.0_amd64.deb" | cut -d" " -f1)"
+    other="$(sha256sum "$work/b/fixture_1.0_amd64.deb" | cut -d" " -f1)"
+    eq "the two fixtures really do differ" "differ" \
+       "$([ "$orig" != "$other" ] && echo differ || echo same)"
+
+    aptly_ repo create probe >/dev/null 2>&1
+    aptly_ repo add probe "$work/a/fixture_1.0_amd64.deb" >/dev/null 2>&1
+
+    # The ingest re-adds what is already there on every run that plans no work,
+    # so identical bytes must not be an error.
+    aptly_ repo add probe "$work/a/fixture_1.0_amd64.deb" >/dev/null 2>&1
+    eq "re-adding identical bytes is accepted" "0" "$?"
+
+    out="$(aptly_ repo add probe "$work/b/fixture_1.0_amd64.deb" 2>&1)"
+    eq "different bytes under one version are refused" "1" "$?"
+    eq "and the refusal names the package" "1" \
+       "$(printf '%s' "$out" | grep -c 'package already exists and is different: fixture_1.0_amd64')"
+
+    # The load-bearing half, asserted where it actually matters. A refused add
+    # DOES leave the rejected bytes in aptly's internal pool - measured, two
+    # files after one refusal - so counting pool files proves nothing. What the
+    # archive depends on is that the repo still references the original and
+    # that publishing emits it, so this publishes and reads the index aptly
+    # writes.
+    aptly_ publish repo -distribution=test -component=main -skip-signing probe >/dev/null 2>&1
+    idx="$work/root/public/dists/test/main/binary-amd64/Packages"
+    eq "the repo still references exactly one package" "1" \
+       "$(grep -c '^Package: fixture$' "$idx")"
+    eq "the published index names the ORIGINAL bytes" "$orig" \
+       "$(awk '/^SHA256: /{print $2; exit}' "$idx")"
+    eq "and the bytes at the published path are the original" "$orig" \
+       "$(sha256sum "$work/root/public/$(awk '/^Filename: /{print $2; exit}' "$idx")" | cut -d" " -f1)"
+
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "no call site asks aptly to replace"
+(
+    # aptly's own pool is content-addressed, so a forced replace there adds a
+    # second file rather than overwriting one. The PUBLISHED layout is plain
+    # Debian and carries no hash, so a forced replace would change the bytes
+    # under a live pool URL -- edge-cached for 30 days, and apt reports it as a
+    # hash mismatch until the purge lands.
+    # ingest.sh names the flag in a comment explaining why it does not help,
+    # so this counts executable lines rather than mentions.
+    eq "no executable line passes -force-replace" "0" \
+       "$(grep -rn -- '-force-replace' "$ROOT/scripts" 2>/dev/null \
+          | grep -vc '^[^:]*:[0-9]*:[[:space:]]*#')"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
 
 echo
 ran="$(wc -l < "$TALLY")"
