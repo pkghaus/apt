@@ -61,13 +61,20 @@ keep="$(mktemp)"
 stored="$(mktemp)"
 cand="$(mktemp)"
 partial="$(mktemp)"
-trap 'rm -f "$keep" "$stored" "$cand" "$partial"' EXIT
+keys="$(mktemp)"
+trap 'rm -f "$keep" "$stored" "$cand" "$partial" "$keys"' EXIT
 
 # The whole bucket, once. It answers three questions: what the total is, which
 # tarballs exist and how old they are, and whether a .dsc that cannot be read is
 # genuinely absent or merely unreadable. Without that last distinction one
 # timed-out read would delete a live version's tarballs.
 aws_ s3 ls "s3://$R2_BUCKET/" --recursive > "$stored"
+
+# The key column, projected once. It was re-derived inside the per-version
+# loop below, so the whole listing was re-read for every published version:
+# 36 packages across 3 suites is 108 passes to extract the same column. It
+# also read like part of the per-version test, which it is not.
+awk '{print $4}' "$stored" > "$keys"
 
 total="$(awk '{s += $3} END {printf "%d", s}' "$stored")"
 
@@ -88,7 +95,7 @@ for suite in $SUITES; do
         # rather than skipping outright, because "this version contributes
         # nothing to keep" and "this version's tarballs are safe to delete" are
         # different claims and only the first one follows.
-        if ! awk '{print $4}' "$stored" | grep -qxF "$key"; then
+        if ! grep -qxF "$key" "$keys"; then
             printf '%s\n' "$PREFIX/${name:0:1}/$name/" >> "$partial"
             continue
         fi
@@ -104,11 +111,8 @@ for suite in $SUITES; do
         # Every file the .dsc references, from the checksum block dpkg always
         # writes, recorded with the same key prefix the tarballs live under so
         # the comparison below is over whole keys.
-        printf '%s\n' "$body" |
-            awk -v p="$PREFIX/${name:0:1}/$name/" \
-                '/^Checksums-Sha256:/ {inblock=1; next}
-                 inblock && /^ / {print p $3; next}
-                 inblock {exit}' >> "$keep"
+        printf '%s\n' "$body" | checksums_sha256 \
+            | awk -v p="$PREFIX/${name:0:1}/$name/" '{print p $3}' >> "$keep"
     done < <(suite_contents "$suite")
 done
 

@@ -807,6 +807,10 @@ PKG
     # sed range is the function body, terminated by its closing brace in column
     # one, which is how every function in that file is written.
     sed -n '/^verify_dsc() {$/,/^}$/p' "$ROOT/scripts/publish-buildinfo.sh" > "$work/fn.sh"
+    # The lifted body calls checksums_sha256, which lives in the library the
+    # publisher sources; lifting the function alone is no longer enough.
+    # shellcheck source=scripts/aptly-lib.sh
+    . "$ROOT/scripts/aptly-lib.sh"
     # shellcheck source=/dev/null
     . "$work/fn.sh"
 
@@ -889,6 +893,10 @@ DSC
     # having produced different source packages. Signing is what made that
     # reachable: it gives the .dsc an input beyond the source tree.
     sed -n '/^verify_record_dsc() {$/,/^}$/p' "$ROOT/scripts/publish-buildinfo.sh" > "$work/fn2.sh"
+    # The lifted body calls checksums_sha256, which lives in the library the
+    # publisher sources; lifting the function alone is no longer enough.
+    # shellcheck source=scripts/aptly-lib.sh
+    . "$ROOT/scripts/aptly-lib.sh"
     # shellcheck source=/dev/null
     . "$work/fn2.sh"
 
@@ -1119,6 +1127,11 @@ aws_() {
     esac
 }
 LIB
+    # The real Checksums-Sha256 parser, not a fourth copy: this test is one of
+    # the three call sites the hoist exists to keep in step, so it should
+    # exercise the shipped function.
+    sed -n '/^checksums_sha256() {$/,/^}$/p' "$ROOT/scripts/aptly-lib.sh" \
+        >> "$work/scripts/aptly-lib.sh"
 
     export STUB_DIR="$work"
     put() { printf '%s' "$2" > "$work/objects/$(printf '%s' "$1" | tr / '%')"; }

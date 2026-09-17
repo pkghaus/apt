@@ -60,6 +60,9 @@ urgency_of() {
 
 # Current package set; unstable carries the plain version.
 current="$(mktemp)"
+# The FATAL below exits without reaching any trailing rm, and that is the
+# branch someone re-runs while debugging an empty aptly state.
+trap 'rm -f "$current"' EXIT
 suite_contents unstable | cut -f1,2 | LC_ALL=C sort -u > "$current"
 
 known="$NEWS_DIR/known-packages.tsv"
@@ -83,7 +86,7 @@ elif [ ! -s "$current" ] && [ -s "$known" ]; then
     log "FATAL: aptly reports an empty archive but $known lists $(wc -l < "$known") packages"
     exit 1
 else
-    while IFS="$(printf '\t')" read -r pkg ver; do
+    while IFS=$'\t' read -r pkg ver; do
         [ -n "$pkg" ] || continue
         old="$(awk -F'\t' -v p="$pkg" '$1==p {print $2}' "$known")"
         if [ -z "$old" ]; then
@@ -102,7 +105,7 @@ else
         fi
     done < "$current"
 
-    while IFS="$(printf '\t')" read -r pkg ver; do
+    while IFS=$'\t' read -r pkg ver; do
         [ -n "$pkg" ] || continue
         if ! grep -q "^$pkg$(printf '\t')" "$current"; then
             emit retired "retired: $pkg" "Left the archive." "$pkg="
@@ -122,4 +125,3 @@ if [ -f "$NOTICES" ]; then
     done < "$NOTICES"
 fi
 
-rm -f "$current"
