@@ -30,7 +30,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=168
+EXPECTED_ASSERTIONS=169
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1786,6 +1786,7 @@ $(grep -rl 'ARCHIVE_SELF_UA' "$ROOT/scripts/" | sort)
 EOF
     eq "every script using the marker defines it or sources the library" "" "$missing"
 )
+
 echo "pool immutability"
 (
     # The one guarantee in this archive that is enforced by a tool rather than
@@ -1868,12 +1869,18 @@ echo "no call site asks aptly to replace"
     # hash mismatch until the purge lands.
     # ingest.sh names the flag in a comment explaining why it does not help,
     # so this counts executable lines rather than mentions.
+    #
+    # The zero below must mean "searched and found none", not "searched
+    # nothing": with $ROOT/scripts absent, grep is silenced and the count reads
+    # 0, which would pass. That is the vacuous green this suite exists to
+    # refuse, so the search space is asserted first.
+    eq "there are scripts to search" "yes" \
+       "$([ "$(find "$ROOT/scripts" -name '*.sh' 2>/dev/null | wc -l)" -gt 0 ] && echo yes || echo no)"
     eq "no executable line passes -force-replace" "0" \
        "$(grep -rn -- '-force-replace' "$ROOT/scripts" 2>/dev/null \
           | grep -vc '^[^:]*:[0-9]*:[[:space:]]*#')"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
-
 
 echo
 ran="$(wc -l < "$TALLY")"
