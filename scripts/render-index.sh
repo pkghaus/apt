@@ -266,6 +266,15 @@ EOF_ICON
 # path rides a smaller tier. Beyond two segments the middle collapses to an
 # ellipsis (../ in the listing still walks up), and <wbr> before each separator
 # lets a pathological segment wrap at a slash instead of clipping.
+# The linked wordmark, identical on every page of every host. Making it a link
+# everywhere was one estate-wide change; the next one had four edit sites in
+# this file alone, and a missed one shows as a single page whose header is
+# inert. The path tier, where a page has one, stays OUTSIDE the anchor so a
+# listing's underline reaches exactly as far as the link goes.
+wordmark() {
+    printf '%s' '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a>'
+}
+
 breadcrumb_for() {
     local rel="$1" depth path_html
     depth="$(printf '%s' "$rel" | awk -F/ '{print NF}')"
@@ -275,7 +284,7 @@ breadcrumb_for() {
     else
         path_html='<span class="sep">/</span><span class="gap">&hellip;</span><wbr><span class="sep">/</span>'"${rel##*/}"
     fi
-    printf '%s' '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path">'"$path_html"'</span>'
+    printf '%s' "$(wordmark)"'<span class="path">'"$path_html"'</span>'
 }
 
 # The pool lives in R2, so there is nothing local to walk. Its shape is fully
@@ -468,7 +477,7 @@ EOF
 render_root() {
     {
         page_open "apt.pkg.haus" \
-            '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a>' 80 \
+            "$(wordmark)" 80 \
             "The signed APT archive behind pkg.haus."
         listing_table "$ARCHIVE_DIR" noparent
         page_close
@@ -504,7 +513,7 @@ render_404() {
     # rather than repeating the archive's front page.
     {
         page_open "Not found - apt.pkg.haus" \
-            '<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a>' 80 \
+            "$(wordmark)" 80 \
             "404. This path is not in the archive."
         cat <<'EOF'
   <div class="tablewrap">
@@ -601,7 +610,7 @@ pkg_tokens() {
 
 news_rows() {
     local ts type title detail pkgs cls names
-    news_tsv "$1" | LC_ALL=C sort -r | while IFS="$(printf '\037')" read -r ts type title detail pkgs; do
+    news_tsv "$1" | LC_ALL=C sort -r | while IFS=$'\037' read -r ts type title detail pkgs; do
         [ -n "$ts" ] || continue
         case "$type" in
             added|updated|security|notice) cls="chip $type" ;;
@@ -639,7 +648,7 @@ news_feed() {
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 EOF
-    news_tsv "$1" | LC_ALL=C sort -r | while IFS="$(printf '\037')" read -r ts type title detail pkgs; do
+    news_tsv "$1" | LC_ALL=C sort -r | while IFS=$'\037' read -r ts type title detail pkgs; do
         [ -n "$ts" ] || continue
         detail="$(printf '%s' "$detail" | sed 's/<[^>]*>//g')"
         [ -n "$detail" ] || detail="$title"
@@ -672,7 +681,8 @@ render_news() {
     local news="$ARCHIVE_DIR/news/news.jsonl"
     [ -s "$news" ] || return 0
 
-    local crumbs='<a href="/">apt<span class="dot">.</span>pkg<span class="dot">.</span>haus</a><span class="path"><span class="sep">/</span>news</span>'
+    local crumbs
+    crumbs="$(wordmark)"'<span class="path"><span class="sep">/</span>news</span>'
     {
         page_open "apt.pkg.haus/news/" "$crumbs" 80 \
             "Everything the archive has shipped, changed and retired, newest first." \

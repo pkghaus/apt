@@ -79,6 +79,8 @@ fi
 if [ -n "$extra" ]; then
     printf 'in the rebuild but not the reference:\n%s\n' "$extra" >&2
 fi
-[ -z "$missing" ] && [ -z "$extra" ] || exit 1
+if [ -n "$missing" ] || [ -n "$extra" ]; then
+    exit 1
+fi
 
 printf 'the rebuild reproduces the archive exactly\n' >&2

@@ -54,12 +54,7 @@ build_manifest() { # reader
     local reader="$1" suite arch
     for suite in $SUITES; do
         for arch in $ARCHES; do
-            "$reader" "$suite" "$arch" \
-                | awk -v s="$suite" '
-                    /^Filename: /   { f = $2 }
-                    /^SHA256: /     { h = $2 }
-                    /^$/            { if (f != "") print s, f, h; f = ""; h = "" }
-                    END             { if (f != "") print s, f, h }'
+            "$reader" "$suite" "$arch" | index_stanzas "$suite"
         done
     done | LC_ALL=C sort -u
 }
@@ -76,6 +71,7 @@ if [ "$SEED_PUBLISH" = on ]; then
 fi
 
 manifest="$(mktemp)"
+trap 'rm -f "$manifest"' EXIT
 build_manifest source_index > "$manifest"
 
 [ -s "$manifest" ] || { log "FATAL: $SOURCE_URL published no packages"; exit 1; }

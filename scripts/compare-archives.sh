@@ -28,11 +28,7 @@ index_triples() {
     local reader="$1" suite arch
     for suite in $SUITES; do
         for arch in $ARCHES; do
-            "$reader" "$suite" "$arch" | awk -v k="$suite/$arch" '
-                /^Filename: / { f = $2 }
-                /^SHA256: /   { h = $2 }
-                /^$/          { if (f != "") print k, f, h; f = ""; h = "" }
-                END           { if (f != "") print k, f, h }'
+            "$reader" "$suite" "$arch" | index_stanzas "$suite/$arch"
         done
     done | LC_ALL=C sort
 }
@@ -55,6 +51,7 @@ fi
 require_r2
 
 before="$(mktemp)"; after="$(mktemp)"
+trap 'rm -f "$before" "$after"' EXIT
 index_triples source_index > "$before"
 index_triples index_text   > "$after"
 

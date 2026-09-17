@@ -115,9 +115,7 @@ verify_dsc() {
                 "$(basename "$dsc")" >&2
             return 1
         }
-    done < <(awk '/^Checksums-Sha256:/ {inblock=1; next}
-                  inblock && /^ / {print $1, $2, $3; next}
-                  inblock {exit}' "$dsc")
+    done < <(checksums_sha256 < "$dsc")
 }
 
 # Everything the builder collected that belongs beside the record. *.tar.*
@@ -138,8 +136,11 @@ shopt -u nullglob
 # is enforced here rather than left to the builder so that a future change to
 # what gets collected fails loudly instead of quietly halving the value of every
 # record it publishes.
+# files is non-empty here: an empty set exits 0 further up.
+shopt -s nullglob
 dscs=("$SRC"/*.dsc)
-if [ "${#files[@]}" -gt 0 ] && [ ! -e "${dscs[0]}" ]; then
+shopt -u nullglob
+if [ "${#dscs[@]}" -eq 0 ]; then
     printf 'FATAL: %s holds %s build record(s) and no .dsc. A record is only\n' \
         "$SRC" "${#files[@]}" >&2
     printf '       publishable beside the source package it describes.\n' >&2
@@ -163,7 +164,8 @@ verify_record_dsc() {
     local record="$1" dir want got name
     dir="$(dirname "$record")"
 
-    while read -r want name; do
+    # The shared parser emits size as well; this check has never used it.
+    while read -r want _size name; do
         [ -n "$name" ] || continue
         case "$name" in *.dsc) ;; *) continue ;; esac
 
@@ -181,13 +183,10 @@ verify_record_dsc() {
             printf '       Two build legs disagree about the source package.\n' >&2
             return 1
         }
-    done < <(awk '/^Checksums-Sha256:/ {inblock=1; next}
-                  inblock && /^ / {print $1, $3; next}
-                  inblock {exit}' "$record")
+    done < <(checksums_sha256 < "$record")
 }
 
-for dsc in "$SRC"/*.dsc; do
-    [ -e "$dsc" ] || continue
+for dsc in "${dscs[@]}"; do
     verify_dsc "$dsc"
 done
 
@@ -301,13 +300,13 @@ upload_failed=0
 
 drain_uploads() {
     local pid
-    for pid in ${upload_pids+"${upload_pids[@]}"}; do
+    for pid in "${upload_pids[@]}"; do
         wait "$pid" || upload_failed=1
     done
     upload_pids=()
 }
 
-for i in ${upload_src+"${!upload_src[@]}"}; do
+for i in "${!upload_src[@]}"; do
     aws_ s3 cp "${upload_src[$i]}" "s3://$R2_BUCKET/${upload_key[$i]}" --only-show-errors &
     upload_pids+=("$!")
     [ "${#upload_pids[@]}" -ge "$upload_concurrency" ] && drain_uploads

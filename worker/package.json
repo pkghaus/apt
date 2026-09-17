@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "ls test/*.test.js >/dev/null && node --test test/*.test.js"
   },
   "devDependencies": {
     "wrangler": "4.131.1"

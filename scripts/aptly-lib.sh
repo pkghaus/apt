@@ -226,3 +226,32 @@ cf_purge_post() {
         -H 'Content-Type: application/json' \
         --data @-
 }
+
+# One binary index's stanzas as "<key> <pool-path> <sha256>", read from stdin.
+# A stanza ends at a blank line; the END rule catches a final stanza with no
+# trailing blank, which is what a truncated index looks like. Both the seed and
+# the cutover comparison parse the same bytes, and a fix to one that missed the
+# other is how a recovery path and its proof disagree.
+index_stanzas() {
+    awk -v k="$1" '
+        /^Filename: / { f = $2 }
+        /^SHA256: /   { h = $2 }
+        /^$/          { if (f != "") print k, f, h; f = ""; h = "" }
+        END           { if (f != "") print k, f, h }'
+}
+
+# The Checksums-Sha256 block of a .dsc or .buildinfo, one "<sha256> <size>
+# <name>" line per file. The block runs from its header to the next line
+# starting in column one, which is what the `inblock {exit}` rule expresses.
+# Three copies of this state machine existed: two are the publisher's cross-leg
+# safety checks and the third decides what prune-source-tarballs may delete
+# from R2, so a change to how the block is delimited had to land in all three
+# or one of them silently read a different set of files.
+#
+# Reads stdin; a caller with a file redirects it in, so there is one calling
+# shape rather than two.
+checksums_sha256() {
+    awk '/^Checksums-Sha256:/ {inblock=1; next}
+         inblock && /^ / {print $1, $2, $3; next}
+         inblock {exit}'
+}
