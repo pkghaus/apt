@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: difftastic 0.71.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-19-updated-difftastic-0.71.0-1</guid>
+<pubDate>Sat, 19 Sep 2026 04:47:16 +0000</pubDate>
+<description>Updated from 0.70.0-2. (difftastic 0.71.0-1)</description>
+</item>
+<item>
 <title>updated: vale 3.22.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-17-updated-vale-3.22.0-1</guid>
