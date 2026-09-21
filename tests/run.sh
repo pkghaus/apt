@@ -30,7 +30,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=169
+EXPECTED_ASSERTIONS=174
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -93,6 +93,23 @@ echo "render helpers: the pool prefix follows Debian's lib rule"
     # interpolated raw while type and the name list went through it.
     eq "esc quotes what would break an attribute" '&quot;x&quot;' "$(esc '"x"')"
     eq "esc escapes markup" '&lt;b&gt;' "$(esc '<b>')"
+
+    # A sibling host is named by its label, the apex by its full name. Four
+    # full hostnames plus a <time> measured about 800px in a 736px column and
+    # wrapped, and a new host lengthens every footer in the estate at once --
+    # so the rule is enforced per host rather than left to whoever edits next.
+    footer_html="$(page_close)"
+    eq "the footer names buildinfos by label" "1" \
+       "$(printf '%s' "$footer_html" | grep -c '>buildinfos</a>')"
+    eq "  and reproducible by label" "1" \
+       "$(printf '%s' "$footer_html" | grep -c '>reproducible</a>')"
+    eq "  and the apex in full" "1" \
+       "$(printf '%s' "$footer_html" | grep -c '>pkg\.haus</a>')"
+    eq "  and github whole, being off this domain" "1" \
+       "$(printf '%s' "$footer_html" | grep -c '>github\.com/pkghaus</a>')"
+    # These pages are apt.pkg.haus, so apt is the host being read.
+    eq "  and never the host being read" "0" \
+       "$(printf '%s' "$footer_html" | grep -c 'href="https://apt\.pkg\.haus"')"
 
     rm -rf "$ARCHIVE_DIR"
     exit $((fail > 0))

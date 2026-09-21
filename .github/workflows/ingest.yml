@@ -494,3 +494,49 @@ jobs:
           R2_BUCKET: ${{ vars.R2_BUCKET }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
         run: scripts/purge-cache.sh
+
+  notify-verifier:
+    # reproducible.pkg.haus rebuilds each published package from its own build
+    # record and says whether the bytes match. It sweeps on a schedule anyway,
+    # so this only shortens the wait for a freshly released package -- which is
+    # the one time the answer is worth having quickly, because a packaging
+    # change that broke reproducibility broke it just now.
+    #
+    # Skips silently without VERIFY_DISPATCH_TOKEN, so the archive keeps
+    # working before the token exists and if it is ever revoked. Fails loudly
+    # when the token is present but the dispatch is rejected: an expired token
+    # is otherwise a verification that quietly stops happening.
+    name: notify the verifier
+    # No always(), so `needs` alone means this is skipped whenever the publish
+    # did not succeed. has_work is what keeps it off a pull-request run, where
+    # the plan job runs and nothing downstream of it does.
+    needs: [plan, publish]
+    if: needs.plan.outputs.has_work == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch a verification
+        env:
+          TOKEN: ${{ secrets.VERIFY_DISPATCH_TOKEN }}
+          # The plan's distinct package names. A publish of one package must
+          # not cue a sweep of the fleet: the verifier's throttle exists
+          # because snapshot.debian.org rations what it will serve.
+          MATRIX: ${{ needs.plan.outputs.matrix }}
+        run: |
+          if [ -z "${TOKEN}" ]; then
+            echo "VERIFY_DISPATCH_TOKEN not provided; not notifying the verifier."
+            exit 0
+          fi
+          packages="$(printf '%s' "$MATRIX" | jq -r '[.[].pkg] | unique | join(" ")')"
+          [ -n "$packages" ] || { echo "the plan named no packages"; exit 1; }
+          echo "asking reproducible.pkg.haus to verify: $packages"
+          # Retried for the same reason the packages repo retries its own
+          # dispatch: nothing re-fires this, and a lost POST is a package that
+          # waits for the sweep rather than an error anyone sees.
+          curl --fail-with-body -sS -X POST \
+            --retry 3 --retry-all-errors --retry-delay 2 \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/pkghaus/reproducible/dispatches \
+            -d "$(jq -nc --arg p "$packages" \
+                  '{event_type: "archive-published", client_payload: {packages: $p}}')"
