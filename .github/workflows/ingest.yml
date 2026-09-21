@@ -522,6 +522,16 @@ jobs:
     # working before the token exists and if it is ever revoked. Fails loudly
     # when the token is present but the dispatch is rejected: an expired token
     # is otherwise a verification that quietly stops happening.
+    #
+    # workflow_dispatch rather than repository_dispatch, and the difference
+    # is the token's power. GitHub files POST .../dispatches under Contents:
+    # write, which can push commits to the target repo, and files POST
+    # .../actions/workflows/<id>/dispatches under Actions: write, which
+    # cannot touch its contents at all. For something whose whole job is
+    # "run this workflow", the second is the right scope. The inputs are
+    # declared in verify.yml rather than being a free-form client_payload,
+    # so a mistyped name is rejected by GitHub instead of quietly sweeping
+    # the fleet.
     name: notify the verifier
     # No always(), so `needs` alone means this is skipped whenever the publish
     # did not succeed. has_work is what keeps it off a pull-request run, where
@@ -546,6 +556,11 @@ jobs:
           packages="$(printf '%s' "$MATRIX" | jq -r '[.[].pkg] | unique | join(" ")')"
           [ -n "$packages" ] || { echo "the plan named no packages"; exit 1; }
           echo "asking reproducible.pkg.haus to verify: $packages"
+          # max_per_leg is passed explicitly rather than inferred from the
+          # event type. The verifier's own default of three is for the
+          # unattended sweep, which rations snapshot.debian.org; a publish is
+          # a handful of packages and wants its answer now.
+          #
           # Retried for the same reason the packages repo retries its own
           # dispatch: nothing re-fires this, and a lost POST is a package that
           # waits for the sweep rather than an error anyone sees.
@@ -553,6 +568,6 @@ jobs:
             --retry 3 --retry-all-errors --retry-delay 2 \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/pkghaus/reproducible/dispatches \
+            https://api.github.com/repos/pkghaus/reproducible/actions/workflows/verify.yml/dispatches \
             -d "$(jq -nc --arg p "$packages" \
-                  '{event_type: "archive-published", client_payload: {packages: $p}}')"
+                  '{ref: "master", inputs: {packages: $p, max_per_leg: "12"}}')"
