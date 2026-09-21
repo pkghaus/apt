@@ -94,19 +94,19 @@ rebuildable from their tags but not retained.
   compares all four checksums:
 
   ```sh
-  B=https://buildinfos.pkg.haus/buildinfo-pool/m/mandown
-  mkdir mandown && cd mandown
-  curl -fsSLO "$B/mandown_1.0.5.2-2~haus13+1_amd64.buildinfo"
-  curl -fsSLO "$B/mandown_1.0.5.2-2~haus13+1.dsc"
-  curl -fsSLO "$B/mandown_1.0.5.2-2~haus13+1.debian.tar.xz"
-  curl -fsSLO "$B/mandown_1.0.5.2.orig.tar.gz"
-  cd .. && verify/rebuild.sh mandown
+  B=https://buildinfos.pkg.haus/buildinfo-pool/b/berry
+  mkdir berry && cd berry
+  curl -fsSLO "$B/berry_0.1.13-4~haus13+1_amd64.buildinfo"
+  curl -fsSLO "$B/berry_0.1.13-4~haus13+1.dsc"
+  curl -fsSLO "$B/berry_0.1.13-4~haus13+1.debian.tar.xz"
+  curl -fsSLO "$B/berry_0.1.13.orig.tar.gz"
+  cd .. && verify/rebuild.sh berry
   ```
 
-  Proven end to end against a freshly published record:
-  `checking mandown_1.0.5.2-2~haus13+1_amd64.deb: size... sha256... md5...
-  sha1... all OK`, and the rebuilt `.deb` byte-identical to the one the archive
-  serves.
+  Proven end to end, and now on a schedule:
+  `checking berry_0.1.13-4~haus13+1_amd64.deb: size... sha256... md5...
+  sha1... all OK`, from reproducible.pkg.haus run 35597350097 on 2026-09-21,
+  with the rebuilt `.deb` byte-identical to the one the archive serves.
 - **`verify/rebuild.sh` and `verify/Dockerfile` have a twin.**
   [pkghaus/reproducible](https://github.com/pkghaus/reproducible) runs the same
   procedure unattended across the whole fleet and publishes the verdicts at
