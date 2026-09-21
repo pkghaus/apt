@@ -107,6 +107,14 @@ rebuildable from their tags but not retained.
   `checking mandown_1.0.5.2-2~haus13+1_amd64.deb: size... sha256... md5...
   sha1... all OK`, and the rebuilt `.deb` byte-identical to the one the archive
   serves.
+- **`verify/rebuild.sh` and `verify/Dockerfile` have a twin.**
+  [pkghaus/reproducible](https://github.com/pkghaus/reproducible) runs the same
+  procedure unattended across the whole fleet and publishes the verdicts at
+  [reproducible.pkg.haus](https://reproducible.pkg.haus); it carries
+  byte-identical copies of both files, and its CI fetches these ones and diffs
+  them. Change either copy and that check goes red until both move. They are
+  duplicated rather than shared so that a maintainer can check one package here
+  without the verifier, and a verification run needs nothing from this repo.
 - The records are kept forever. So are the source tarballs, until the bucket
   approaches its budget: one generation across the fleet is 119 MB and additive
   growth is 836 MB a year, against a pool flat at 623 MB and a 10 GB free tier,
