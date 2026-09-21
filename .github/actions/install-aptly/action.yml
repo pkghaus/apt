@@ -14,8 +14,28 @@ runs:
         APTLY_SHA256: 535ed24eb706bc25a316b59d709a7e74e10165f2ffab8552097ba7e4816a3e7e
       run: |
         zip="aptly_${APTLY_VERSION}_linux_amd64"
-        curl -fsSLo /tmp/aptly.zip \
+        # --retry because GitHub's release CDN answers 504 from the runners
+        # while serving the same asset fine from elsewhere. Run 35616925121
+        # died on one on master with nothing wrong in the tree, and its
+        # re-run died the same way two minutes later (15:08:50 and 15:10:55),
+        # while five HEADs from a workstation in the same window all got 200.
+        # So the outage is runner-side and lasts minutes, not seconds: the
+        # budget is 8 retries over 300s, curl's default 1s doubling summing to
+        # 255s of waiting, sized to the window that was measured rather than
+        # to a guess.
+        #
+        # 504 is in curl's OWN transient list (with 408, 429, 500, 502, 503,
+        # 522, 524), so plain --retry covers it. --retry-all-errors is NOT
+        # wanted - it would also retry a 404, turning a mistyped
+        # APTLY_VERSION into a five-minute hang instead of an immediate
+        # answer.
+        #
+        # A retried attempt still prints "curl: (22) ... error: 504" to
+        # stderr and then exits 0, so a green log can contain that line; the
+        # exit code is what decides.
+        curl -fsSLo /tmp/aptly.zip --retry 8 --retry-max-time 300 \
             "https://github.com/aptly-dev/aptly/releases/download/v${APTLY_VERSION}/${zip}.zip"
+        # The pin is still what proves the bytes; a retry cannot smuggle any.
         echo "${APTLY_SHA256}  /tmp/aptly.zip" | sha256sum -c -
         sudo unzip -q -j -o /tmp/aptly.zip "${zip}/aptly" -d /usr/local/bin
         sudo chmod +x /usr/local/bin/aptly

@@ -30,7 +30,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=174
+EXPECTED_ASSERTIONS=179
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1896,6 +1896,40 @@ echo "no call site asks aptly to replace"
     eq "no executable line passes -force-replace" "0" \
        "$(grep -rn -- '-force-replace' "$ROOT/scripts" 2>/dev/null \
           | grep -vc '^[^:]*:[0-9]*:[[:space:]]*#')"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "the pinned-tool downloads retry a transient CDN failure"
+(
+    act="$ROOT/.github/actions/install-aptly/action.yml"
+    eq "the install-aptly action exists" "yes" \
+       "$([ -f "$act" ] && echo yes || echo no)"
+
+    # 504 from GitHub's release CDN failed a lint job on master (run
+    # 35616925121) with nothing wrong in the tree. curl counts 504 as a
+    # transient error, so --retry alone fixes it.
+    curl_line="$(grep -n 'releases/download' -B2 "$act" | grep 'curl ' || true)"
+    case "$curl_line" in
+        *--retry\ [1-9]*) ok "the aptly download passes --retry" ;;
+        *) no "the aptly download passes --retry" "curl line was [$curl_line]" ;;
+    esac
+    case "$curl_line" in
+        *--retry-max-time*) ok "and bounds the total retry time" ;;
+        *) no "and bounds the total retry time" "no --retry-max-time in [$curl_line]" ;;
+    esac
+
+    # --retry-all-errors would retry a 404 too, so a mistyped APTLY_VERSION
+    # would hang for the whole retry budget instead of failing at once.
+    case "$curl_line" in
+        *--retry-all-errors*) no "the download does not retry every error" \
+                                 "--retry-all-errors would also retry a 404" ;;
+        *) ok "the download does not retry every error" ;;
+    esac
+
+    # A retry must not become the thing that proves the bytes. The checksum
+    # runs after the download, on the downloaded file, whatever attempt won.
+    eq "the pin is still verified after the download" "1" \
+       "$(grep -c 'sha256sum -c -' "$act")"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
