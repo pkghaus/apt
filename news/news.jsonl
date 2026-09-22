@@ -98,3 +98,4 @@
 {"ts":"2026-09-16T13:22:49Z","type":"updated","title":"updated: zola 0.23.6-3","detail":"Updated from 0.23.6-2.","pkgs":"zola=0.23.6-3"}
 {"ts":"2026-09-17T17:09:09Z","type":"updated","title":"updated: vale 3.22.0-1","detail":"Updated from 3.21.0-1.","pkgs":"vale=3.22.0-1"}
 {"ts":"2026-09-19T04:47:16Z","type":"updated","title":"updated: difftastic 0.71.0-1","detail":"Updated from 0.70.0-2.","pkgs":"difftastic=0.71.0-1"}
+{"ts":"2026-09-22T01:21:08Z","type":"updated","title":"updated: zola 0.23.6-4","detail":"Updated from 0.23.6-3.","pkgs":"zola=0.23.6-4"}
