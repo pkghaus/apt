@@ -5,6 +5,8 @@ name: Ingest and publish
 run-name: >-
   ${{ github.event_name == 'repository_dispatch'
       && format('Ingest {0} {1}', github.event.client_payload.repository, github.event.client_payload.tag)
+      || github.event_name == 'workflow_dispatch' && inputs.tag != ''
+      && format('Ingest {0} {1}', inputs.repository, inputs.tag)
       || '' }}
 
 # Builds whatever the fleet's newest tags provide that the archive does not yet
@@ -22,9 +24,11 @@ run-name: >-
 #                committed back. Kept off the archive branch because that whole
 #                branch becomes the published asset set.
 #
-# Runs when pkghaus/packages reports a validated tag (repository_dispatch from
-# action-debian-build's notify job), on manual dispatch, and on pushes that
-# change the archive's own configuration.
+# Runs when pkghaus/packages reports a validated tag, on manual dispatch, and on
+# pushes that change the archive's own configuration. packages reports a tag as
+# a workflow_dispatch carrying `repository` and `tag`; repository_dispatch is
+# still accepted until every sender has moved over, and then goes, because
+# GitHub files it under Contents: write, which can push to this repo.
 #
 # Enrolment is not a trigger here: packages.txt lives in pkghaus/packages.
 # Enrolling a package takes effect on the next ingest, and the tag that releases
@@ -34,6 +38,18 @@ on:
   repository_dispatch:
     types: [package-tagged]
   workflow_dispatch:
+    # These name the run and do nothing else. The ingest re-plans from the
+    # fleet's newest tags every time, so a dispatch naming croc builds whatever
+    # is missing, croc or not, and an empty pair is an ordinary manual run.
+    inputs:
+      repository:
+        description: Repository whose tag cued this run (run title only).
+        required: false
+        default: ''
+      tag:
+        description: Tag that cued this run (run title only).
+        required: false
+        default: ''
   push:
     branches: [master, main]
     paths:
@@ -518,10 +534,15 @@ jobs:
     # the one time the answer is worth having quickly, because a packaging
     # change that broke reproducibility broke it just now.
     #
-    # Skips silently without VERIFY_DISPATCH_TOKEN, so the archive keeps
-    # working before the token exists and if it is ever revoked. Fails loudly
-    # when the token is present but the dispatch is rejected: an expired token
-    # is otherwise a verification that quietly stops happening.
+    # The token comes from the org's pkghaus-dispatch GitHub App, minted per
+    # run, scoped to pkghaus/reproducible with Actions: write and nothing else,
+    # and revoked when the job ends. Skips silently when the App's ID is not
+    # visible to this repo, so a fork keeps working. Fails loudly when the
+    # ID is there but minting or the dispatch is rejected: a key that stopped
+    # working is otherwise a verification that quietly stops happening. After
+    # a delete and recreate of reproducible the mint step fails with "at least
+    # one repository ... is not accessible" until the recreated repo is
+    # re-selected on the App's installation.
     #
     # workflow_dispatch rather than repository_dispatch, and the difference
     # is the token's power. GitHub files POST .../dispatches under Contents:
@@ -541,16 +562,31 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
+      - name: Mint a token for the verifier
+        id: app
+        if: vars.PKGHAUS_DISPATCH_APP_ID != ''
+        uses: actions/create-github-app-token@v3
+        # app-id, not the client-id the action's README now prefers: v3.2
+        # accepts both, but actionlint 1.7.12 (the newest release) still
+        # describes v3.0, where app-id was required and client-id did not
+        # exist, and fails the workflow on client-id.
+        with:
+          app-id: ${{ vars.PKGHAUS_DISPATCH_APP_ID }}
+          private-key: ${{ secrets.PKGHAUS_DISPATCH_APP_PRIVATE_KEY }}
+          owner: pkghaus
+          repositories: reproducible
+          permission-actions: write
+
       - name: Dispatch a verification
         env:
-          TOKEN: ${{ secrets.VERIFY_DISPATCH_TOKEN }}
+          TOKEN: ${{ steps.app.outputs.token }}
           # The plan's distinct package names. A publish of one package must
           # not cue a sweep of the fleet: the verifier's throttle exists
           # because snapshot.debian.org rations what it will serve.
           MATRIX: ${{ needs.plan.outputs.matrix }}
         run: |
           if [ -z "${TOKEN}" ]; then
-            echo "VERIFY_DISPATCH_TOKEN not provided; not notifying the verifier."
+            echo "No dispatch App configured; not notifying the verifier."
             exit 0
           fi
           packages="$(printf '%s' "$MATRIX" | jq -r '[.[].pkg] | unique | join(" ")')"
