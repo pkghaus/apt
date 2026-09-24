@@ -1,8 +1,8 @@
-# apt.pkg.haus
+# apt
 
-APT archive for [pkg.haus](https://pkg.haus) packages: current upstream
-releases, built from source for Debian stable, testing and unstable, on amd64
-and arm64.
+The signed APT archive at [apt.pkg.haus](https://apt.pkg.haus) for
+[pkg.haus](https://pkg.haus) packages: current upstream releases, built from
+source for Debian stable, testing and unstable, on amd64 and arm64.
 
 ## Using the archive
 
@@ -105,7 +105,7 @@ rebuildable from their tags but not retained.
 
   Proven end to end, and now on a schedule:
   `checking berry_0.1.13-4~haus13+1_amd64.deb: size... sha256... md5...
-  sha1... all OK`, from reproducible.pkg.haus run 35597350097 on 2026-09-21,
+  sha1... all OK`, from a reproducible.pkg.haus rebuild on 2026-09-21,
   with the rebuilt `.deb` byte-identical to the one the archive serves.
 - **`verify/rebuild.sh` and `verify/Dockerfile` have a twin.**
   [pkghaus/reproducible](https://github.com/pkghaus/reproducible) runs the same
