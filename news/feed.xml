@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: vale 3.23.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-25-updated-vale-3.23.0-1</guid>
+<pubDate>Fri, 25 Sep 2026 21:43:08 +0000</pubDate>
+<description>Updated from 3.22.0-1. (vale 3.23.0-1)</description>
+</item>
+<item>
 <title>updated: rainfrog 0.4.6-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-24-updated-rainfrog-0.4.6-1</guid>
