@@ -3,9 +3,7 @@ name: Ingest and publish
 # Dispatch runs are named after the package that cued them; every other
 # event keeps GitHub's default title (the empty fallback string does that).
 run-name: >-
-  ${{ github.event_name == 'repository_dispatch'
-      && format('Ingest {0} {1}', github.event.client_payload.repository, github.event.client_payload.tag)
-      || github.event_name == 'workflow_dispatch' && inputs.tag != ''
+  ${{ github.event_name == 'workflow_dispatch' && inputs.tag != ''
       && format('Ingest {0} {1}', inputs.repository, inputs.tag)
       || '' }}
 
@@ -26,17 +24,14 @@ run-name: >-
 #
 # Runs when pkghaus/packages reports a validated tag, on manual dispatch, and on
 # pushes that change the archive's own configuration. packages reports a tag as
-# a workflow_dispatch carrying `repository` and `tag`; repository_dispatch is
-# still accepted until every sender has moved over, and then goes, because
-# GitHub files it under Contents: write, which can push to this repo.
+# a workflow_dispatch carrying `repository` and `tag`. Not repository_dispatch:
+# GitHub files that under Contents: write, which can push to this repo.
 #
 # Enrolment is not a trigger here: packages.txt lives in pkghaus/packages.
 # Enrolling a package takes effect on the next ingest, and the tag that releases
 # it dispatches one.
 
 on:
-  repository_dispatch:
-    types: [package-tagged]
   workflow_dispatch:
     # These name the run and do nothing else. The ingest re-plans from the
     # fleet's newest tags every time, so a dispatch naming croc builds whatever
