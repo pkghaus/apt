@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: emeraldian 0.6.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-26-updated-emeraldian-0.6.0-1</guid>
+<pubDate>Sat, 26 Sep 2026 21:20:39 +0000</pubDate>
+<description>Updated from 0.5.0-1. (emeraldian 0.6.0-1)</description>
+</item>
+<item>
 <title>updated: vale 3.23.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-25-updated-vale-3.23.0-1</guid>
