@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.5.4-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-09-27-updated-croc-11.5.4-1</guid>
+<pubDate>Sun, 27 Sep 2026 05:26:04 +0000</pubDate>
+<description>Updated from 11.5.3-2. (croc 11.5.4-1)</description>
+</item>
+<item>
 <title>updated: emeraldian 0.6.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-26-updated-emeraldian-0.6.0-1</guid>
