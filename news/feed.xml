@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: vale 3.24.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-01-updated-vale-3.24.0-1</guid>
+<pubDate>Thu, 01 Oct 2026 22:50:14 +0000</pubDate>
+<description>Updated from 3.23.0-1. (vale 3.24.0-1)</description>
+</item>
+<item>
 <title>added: tincan 0.3.2-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-09-28-added-tincan-0.3.2-1</guid>
