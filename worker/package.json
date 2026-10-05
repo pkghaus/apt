@@ -6,6 +6,6 @@
     "test": "ls test/*.test.js >/dev/null && node --test test/*.test.js"
   },
   "devDependencies": {
-    "wrangler": "4.141.0"
+    "wrangler": "4.147.0"
   }
 }
