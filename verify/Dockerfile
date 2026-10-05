@@ -28,3 +28,16 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq 
       devscripts mmdebstrap libstring-shellquote-perl libfile-homedir-perl \
       python3-requests python3-debian python3-apt apt-utils ca-certificates curl equivs dpkg-dev \
       build-essential sbuild uidmap gpgv debian-archive-keyring >/dev/null
+
+# trixie's devscripts 2.25 crashes in debootsnap on a record naming a version
+# only debian-security has (metasnap's 404 says arch "all"); 2.26 handles it.
+# The source goes again so the rebuild's apt sources stay as they were.
+ARG BASE
+RUN if [ "$BASE" = trixie ]; then \
+      echo 'deb http://deb.debian.org/debian trixie-backports main' \
+        > /etc/apt/sources.list.d/backports.list \
+      && apt-get update -qq \
+      && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+           -t trixie-backports devscripts >/dev/null \
+      && rm /etc/apt/sources.list.d/backports.list; \
+    fi
