@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: difftastic 0.71.0-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-05-updated-difftastic-0.71.0-2</guid>
+<pubDate>Mon, 05 Oct 2026 17:40:53 +0000</pubDate>
+<description>Updated from 0.71.0-1. (difftastic 0.71.0-2)</description>
+</item>
+<item>
 <title>updated: monolith 2.11.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-05-updated-monolith-2.11.0-1</guid>
