@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: rathole 0.5.0-3</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-06-updated-rathole-0.5.0-3</guid>
+<pubDate>Tue, 06 Oct 2026 07:10:51 +0000</pubDate>
+<description>Updated from 0.5.0-2. (rathole 0.5.0-3)</description>
+</item>
+<item>
 <title>updated: monolith 2.11.1-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-06-updated-monolith-2.11.1-1</guid>
