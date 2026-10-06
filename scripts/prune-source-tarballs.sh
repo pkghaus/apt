@@ -153,8 +153,8 @@ while read -r _stamp size key; do
     [ -n "$key" ] || continue
 
     grep -qxF "$key" "$keep" && continue
-    # Substring is enough: every $partial line is a whole directory with its
-    # trailing slash, and a looser match here can only keep more.
+    # Substring is enough: the pattern and every $partial line end in /, so only
+    # the key's own directory can match, and a looser match only keeps more.
     grep -qF "$(dirname "$key")/" "$partial" && continue
 
     if [ "$DRY_RUN" = 1 ]; then
