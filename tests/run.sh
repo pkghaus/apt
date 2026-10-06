@@ -30,7 +30,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=179
+EXPECTED_ASSERTIONS=180
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1171,8 +1171,13 @@ LIB
     put buildinfos/buildinfo-pool/c/croc/croc_0.8.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' m)"
     dated buildinfos/buildinfo-pool/c/croc/croc_0.8.orig.tar.gz "2024-01-01 00:00:00"
     dated buildinfos/buildinfo-pool/c/croc/croc_0.9.orig.tar.gz "2025-01-01 00:00:00"
+    # Published with no .dsc, as everything before source packages was, so its
+    # directory is partial. The name extends croc's, so a directory match that
+    # lost its trailing slash would shield croc's tarballs as well.
+    put buildinfos/buildinfo-pool/c/croc-extra/croc-extra_1.9.orig.tar.gz "$(head -c 400 /dev/zero | tr '\0' x)"
+    dated buildinfos/buildinfo-pool/c/croc-extra/croc-extra_1.9.orig.tar.gz "2023-01-01 00:00:00"
 
-    printf 'croc\t1.0-1\tamd64\n' > "$work/contents.unstable"
+    printf 'croc\t1.0-1\tamd64\ncroc-extra\t2.0-1\tamd64\n' > "$work/contents.unstable"
     printf 'croc\t1.0-1~haus13+1\tamd64\n' > "$work/contents.trixie"
     : > "$work/contents.testing"
 
@@ -1224,6 +1229,12 @@ LIB
     else
         no "unreachable budget fails rather than deleting live tarballs" \
            "deleted $(tr '\n' ' ' < "$work/deleted")"
+    fi
+
+    if [ -e "$work/objects/$(printf 'buildinfos/buildinfo-pool/c/croc-extra/croc-extra_1.9.orig.tar.gz' | tr / '%')" ]; then
+        ok "a published source with no .dsc keeps its tarballs at any budget"
+    else
+        no "a published source with no .dsc keeps its tarballs at any budget" "it was deleted"
     fi
 
     # --- stored but unreadable is not the same as absent ----------------------
