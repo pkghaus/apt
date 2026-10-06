@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: fx 40.0.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-06-updated-fx-40.0.0-1</guid>
+<pubDate>Tue, 06 Oct 2026 00:12:00 +0000</pubDate>
+<description>Updated from 39.2.0-2. (fx 40.0.0-1)</description>
+</item>
+<item>
 <title>updated: difftastic 0.71.0-2</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-05-updated-difftastic-0.71.0-2</guid>
