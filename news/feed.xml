@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: monolith 2.11.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-06-updated-monolith-2.11.1-1</guid>
+<pubDate>Tue, 06 Oct 2026 00:19:02 +0000</pubDate>
+<description>Updated from 2.11.0-1. (monolith 2.11.1-1)</description>
+</item>
+<item>
 <title>updated: fx 40.0.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-06-updated-fx-40.0.0-1</guid>
