@@ -74,7 +74,7 @@ permissions:
   contents: read
 
 # Everything that writes the archive shares this group: this workflow,
-# deploy-worker.yml, seed-aptly.yml, acquire-by-hash.yml and prune.yml. Two of
+# deploy-worker.yml, seed-aptly.yml, publish-flag.yml and prune.yml. Two of
 # them interleaving would race the archive and aptly branches, the R2 bucket,
 # or the Worker deploy. One at a time, never cancelled mid-publish.
 #
