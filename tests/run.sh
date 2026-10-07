@@ -30,7 +30,7 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=180
+EXPECTED_ASSERTIONS=184
 TALLY="$(mktemp)"
 trap 'rm -f "$TALLY"' EXIT
 
@@ -1941,6 +1941,50 @@ echo "the pinned-tool downloads retry a transient CDN failure"
     # runs after the download, on the downloaded file, whatever attempt won.
     eq "the pin is still verified after the download" "1" \
        "$(grep -c 'sha256sum -c -' "$act")"
+    exit $((fail > 0))
+) || fail=$((fail + 1))
+
+echo "resolve-d1: the D1 id goes into wrangler.toml, or the step fails"
+(
+    # Byte-identical in pkghaus/stats. Driven against a stub npx and a copy of
+    # the real config, as the deploy and the ingest's inventory sync run it.
+    work="$(mktemp -d)"
+    mkdir -p "$work/bin"
+    resolve() { # <list-json|FAIL>; exit code in $rc, output in $work/out
+        cp "$ROOT/worker/wrangler.toml" "$work/wrangler.toml"
+        printf '%s' "$1" > "$work/list.json"
+        cat > "$work/bin/npx" <<STUB
+#!/bin/sh
+[ "\$*" = "wrangler d1 list --json" ] || { echo "unexpected: \$*" >&2; exit 9; }
+[ "\$(cat "$work/list.json")" = FAIL ] && { echo "Authentication error [code: 10000]" >&2; exit 1; }
+cat "$work/list.json"
+STUB
+        chmod +x "$work/bin/npx"
+        rc=0
+        ( cd "$work" && PATH="$work/bin:$PATH" "$ROOT/scripts/resolve-d1.sh" ) >"$work/out" 2>&1 || rc=$?
+    }
+    uuid=0b7e5c1a-3f2d-4e6b-9a8c-1d2e3f4a5b6c
+
+    eq "the config carries the placeholder the script replaces" 1 \
+       "$(grep -c '^database_id = "PLACEHOLDER_RESOLVED_IN_CI"$' "$ROOT/worker/wrangler.toml")"
+
+    resolve '[{"name":"pkghaus-stats-old","uuid":"x"},{"name":"pkghaus-stats","uuid":"'"$uuid"'"}]'
+    eq "the id of the database named exactly pkghaus-stats is substituted" \
+       "0 1" "$rc $(grep -c "^database_id = \"$uuid\"\$" "$work/wrangler.toml")"
+
+    resolve '[{"name":"other","uuid":"y"}]'
+    case "$rc $(cat "$work/out")" in
+        "1 "*"::error title=D1 database missing::"*) ok "a missing database fails the step and says so" ;;
+        *) no "a missing database fails the step and says so" "rc=$rc out: $(cat "$work/out")" ;;
+    esac
+
+    resolve FAIL
+    case "$rc $(cat "$work/out")" in
+        0*|*"D1 database missing"*)
+            no "a failing wrangler fails as itself, not as a missing database" "rc=$rc out: $(cat "$work/out")" ;;
+        *) ok "a failing wrangler fails as itself, not as a missing database" ;;
+    esac
+    rm -rf "$work"
     exit $((fail > 0))
 ) || fail=$((fail + 1))
 
