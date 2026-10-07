@@ -1817,7 +1817,8 @@ EOF
 $(grep -rl 'ARCHIVE_SELF_UA' "$ROOT/scripts/" | sort)
 EOF
     eq "every script using the marker defines it or sources the library" "" "$missing"
-)
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
 
 echo "pool immutability"
 (
@@ -2002,9 +2003,12 @@ if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
     exit 1
 fi
 
-if [ "$failed_groups" -eq 0 ]; then
+# The tally as well as the groups: a group that forgets its closing line still
+# records its failures there.
+failed_asserts="$(grep -c '^no$' "$TALLY" || true)"
+if [ "$failed_groups" -eq 0 ] && [ "$failed_asserts" -eq 0 ]; then
     echo "all $ran assertions passed"
 else
-    echo "$failed_groups failing test group(s)"
+    echo "$failed_asserts failing assertion(s), $failed_groups failing test group(s)"
 fi
-exit $((failed_groups > 0))
+exit $((failed_groups > 0 || failed_asserts > 0))
