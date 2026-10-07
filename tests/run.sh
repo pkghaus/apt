@@ -19,7 +19,10 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Assertions count into each group's own `fail`; this counts the groups that
+# failed. A shared name would hand every later group an earlier one's failures.
 fail=0
+failed_groups=0
 
 # What stops this suite reporting success for work it did not do. Groups report
 # failure by exit status, which catches an assertion that FAILS and says nothing
@@ -30,9 +33,13 @@ fail=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=180
+EXPECTED_ASSERTIONS=184
+# Every mktemp below, the scripts' own included, lands here and goes with the
+# suite, however a group exits.
+SCRATCH="$(mktemp -d)"
+trap 'rm -rf "$SCRATCH"' EXIT
+export TMPDIR="$SCRATCH"
 TALLY="$(mktemp)"
-trap 'rm -f "$TALLY"' EXIT
 
 ok() { printf '  ok   %s\n' "$1"; echo ok >> "$TALLY"; }
 no() { printf '  FAIL %s\n    %s\n' "$1" "$2"; fail=$((fail + 1)); echo no >> "$TALLY"; }
@@ -113,7 +120,7 @@ echo "render helpers: the pool prefix follows Debian's lib rule"
 
     rm -rf "$ARCHIVE_DIR"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "purge scope"
 (
@@ -158,7 +165,7 @@ echo "purge scope"
     eq "a run that built nothing purges nothing at all" "" "$(purge_urls)"
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "news refuses to retire an archive it cannot read"
 (
@@ -186,7 +193,7 @@ echo "news refuses to retire an archive it cannot read"
     eq "no retirement events were written" "0" \
         "$(grep -c retired "$ARCHIVE_DIR/news/news.jsonl")"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "render refuses to replace pool listings with nothing"
 (
@@ -212,7 +219,7 @@ echo "render refuses to replace pool listings with nothing"
     eq "the failure names the cause" "1" \
         "$(grep -c 'Refusing to replace them with nothing' <<<"$out")"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the package inventory upserts the fleet and prunes only what left it"
 (
@@ -270,7 +277,7 @@ echo "the package inventory upserts the fleet and prunes only what left it"
     rm -f "$tsv"
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the plan tells an unreachable source apart from an untagged package"
 (
@@ -323,7 +330,7 @@ FAKE
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the news reader parses JSON and keeps its fields aligned"
 (
@@ -377,7 +384,7 @@ NEWS
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the pool mirror will not read a failed listing as an empty bucket"
 (
@@ -413,7 +420,7 @@ FAKE
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the pool mirror refuses the two ways it could lose data"
 (
@@ -460,7 +467,7 @@ FAKE
         ok "a short mirror must fail"
     fi
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # check-key-expiry: the daily watcher reads the PUBLISHED keyring, which is
 # binary, and fails rather than warns. Both differ from the ingest's path and
@@ -469,7 +476,6 @@ FAKE
 # never expires".
 echo "== check-key-expiry =="
 (
-    fail=0
     work="$(mktemp -d)"
     export GNUPGHOME="$work/gnupg"; mkdir -p "$GNUPGHOME"; chmod 700 "$GNUPGHOME"
 
@@ -508,7 +514,7 @@ echo "== check-key-expiry =="
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- keys/: the two published keyrings, and the line between them ------------
 #
@@ -530,7 +536,6 @@ echo "== check-key-expiry =="
 # made the published keyring a side effect of a secret nobody can read back.
 echo "== published keyrings =="
 (
-    fail=0
     work="$(mktemp -d)"
     # gpg creates a homedir on first use; keep it out of the runner's HOME.
     export GNUPGHOME="$work/gnupg"; mkdir -p "$GNUPGHOME"; chmod 700 "$GNUPGHOME"
@@ -615,7 +620,7 @@ echo "== published keyrings =="
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- the ingest hands the builder the source-signing key ----------------------
 #
@@ -629,7 +634,6 @@ echo "== published keyrings =="
 # build job below and is published by publish-buildinfo.sh in the same run.
 echo "== source signing wiring =="
 (
-    fail=0
     # Comments stripped: the step's own comment explains why the release key is
     # not passed, and naming it there would satisfy the second check below by
     # accident. Only the yaml keys count.
@@ -657,7 +661,7 @@ echo "== source signing wiring =="
     esac
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- check-archive-health.sh: the two parsers ---------------------------------
 #
@@ -809,7 +813,7 @@ PKG
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- verify_dsc: the last place two build legs can be caught disagreeing -----
 #
@@ -1106,7 +1110,7 @@ AWS
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- prune-source-tarballs: budget, order, and what must never go ------------
 #
@@ -1267,7 +1271,7 @@ LIB
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- ingest.sh plan(): what the archive decides to build ----------------------
 #
@@ -1387,7 +1391,7 @@ echo "ingest plan"
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- ingest.sh plan(): the per-suite work must stay per-suite -----------------
 #
@@ -1472,7 +1476,7 @@ SHIM
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- seed-aptly.sh: the manifest the recovery path rebuilds from --------------
 # This is the only recovery path there is -- R2 has no object versioning -- and
@@ -1525,7 +1529,7 @@ echo "rebuild verification"
        "$(LC_ALL=C comm -3 <(reference_set reader) <(rebuilt_set))"
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "seed manifest"
 (
@@ -1587,7 +1591,7 @@ echo "seed manifest"
     eq "an empty source archive yields no manifest" "" "$(build_manifest empty)"
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # --- compare-archives.sh: the parse that proved the R2 cutover ----------------
 echo "archive comparison"
@@ -1621,7 +1625,7 @@ echo "archive comparison"
        "$(index_triples trailing | grep -c ' pool/main/l/last/')"
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the clone retries a transient failure and cleans up after itself"
 (
@@ -1684,7 +1688,7 @@ FAKE
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "a failed purge names what is left stale rather than vanishing"
 (
@@ -1768,7 +1772,7 @@ IDX
 
     rm -rf "$work"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 # The self-traffic marker spans two languages: the Worker decides what to count
 # and the shell decides what to send. A rename on either side is silent -- the
@@ -1813,7 +1817,8 @@ EOF
 $(grep -rl 'ARCHIVE_SELF_UA' "$ROOT/scripts/" | sort)
 EOF
     eq "every script using the marker defines it or sources the library" "" "$missing"
-)
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
 
 echo "pool immutability"
 (
@@ -1886,7 +1891,7 @@ echo "pool immutability"
        "$(sha256sum "$work/root/public/$(awk '/^Filename: /{print $2; exit}' "$idx")" | cut -d" " -f1)"
 
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "no call site asks aptly to replace"
 (
@@ -1908,7 +1913,7 @@ echo "no call site asks aptly to replace"
        "$(grep -rn -- '-force-replace' "$ROOT/scripts" 2>/dev/null \
           | grep -vc '^[^:]*:[0-9]*:[[:space:]]*#')"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
 
 echo "the pinned-tool downloads retry a transient CDN failure"
 (
@@ -1942,7 +1947,51 @@ echo "the pinned-tool downloads retry a transient CDN failure"
     eq "the pin is still verified after the download" "1" \
        "$(grep -c 'sha256sum -c -' "$act")"
     exit $((fail > 0))
-) || fail=$((fail + 1))
+) || failed_groups=$((failed_groups + 1))
+
+echo "resolve-d1: the D1 id goes into wrangler.toml, or the step fails"
+(
+    # Byte-identical in pkghaus/stats. Driven against a stub npx and a copy of
+    # the real config, as the deploy and the ingest's inventory sync run it.
+    work="$(mktemp -d)"
+    mkdir -p "$work/bin"
+    resolve() { # <list-json|FAIL>; exit code in $rc, output in $work/out
+        cp "$ROOT/worker/wrangler.toml" "$work/wrangler.toml"
+        printf '%s' "$1" > "$work/list.json"
+        cat > "$work/bin/npx" <<STUB
+#!/bin/sh
+[ "\$*" = "wrangler d1 list --json" ] || { echo "unexpected: \$*" >&2; exit 9; }
+[ "\$(cat "$work/list.json")" = FAIL ] && { echo "Authentication error [code: 10000]" >&2; exit 1; }
+cat "$work/list.json"
+STUB
+        chmod +x "$work/bin/npx"
+        rc=0
+        ( cd "$work" && PATH="$work/bin:$PATH" "$ROOT/scripts/resolve-d1.sh" ) >"$work/out" 2>&1 || rc=$?
+    }
+    uuid=0b7e5c1a-3f2d-4e6b-9a8c-1d2e3f4a5b6c
+
+    eq "the config carries the placeholder the script replaces" 1 \
+       "$(grep -c '^database_id = "PLACEHOLDER_RESOLVED_IN_CI"$' "$ROOT/worker/wrangler.toml")"
+
+    resolve '[{"name":"pkghaus-stats-old","uuid":"x"},{"name":"pkghaus-stats","uuid":"'"$uuid"'"}]'
+    eq "the id of the database named exactly pkghaus-stats is substituted" \
+       "0 1" "$rc $(grep -c "^database_id = \"$uuid\"\$" "$work/wrangler.toml")"
+
+    resolve '[{"name":"other","uuid":"y"}]'
+    case "$rc $(cat "$work/out")" in
+        "1 "*"::error title=D1 database missing::"*) ok "a missing database fails the step and says so" ;;
+        *) no "a missing database fails the step and says so" "rc=$rc out: $(cat "$work/out")" ;;
+    esac
+
+    resolve FAIL
+    case "$rc $(cat "$work/out")" in
+        0*|*"D1 database missing"*)
+            no "a failing wrangler fails as itself, not as a missing database" "rc=$rc out: $(cat "$work/out")" ;;
+        *) ok "a failing wrangler fails as itself, not as a missing database" ;;
+    esac
+    rm -rf "$work"
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
 
 echo
 ran="$(wc -l < "$TALLY")"
@@ -1954,9 +2003,12 @@ if [ "$ran" -ne "$EXPECTED_ASSERTIONS" ]; then
     exit 1
 fi
 
-if [ "$fail" -eq 0 ]; then
+# The tally as well as the groups: a group that forgets its closing line still
+# records its failures there.
+failed_asserts="$(grep -c '^no$' "$TALLY" || true)"
+if [ "$failed_groups" -eq 0 ] && [ "$failed_asserts" -eq 0 ]; then
     echo "all $ran assertions passed"
 else
-    echo "$fail failing test group(s)"
+    echo "$failed_asserts failing assertion(s), $failed_groups failing test group(s)"
 fi
-exit $((fail > 0))
+exit $((failed_groups > 0 || failed_asserts > 0))

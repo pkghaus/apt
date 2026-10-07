@@ -59,8 +59,8 @@ bucket_name = "pkghaus-apt"
 [[d1_databases]]
 binding = "DB"
 database_name = "pkghaus-stats"
-# Resolved by CI at deploy time (see .github/workflows/deploy-worker.yml),
-# which fails if the database is absent rather than creating an empty one.
+# Resolved in CI by scripts/resolve-d1.sh, which fails if the database is
+# absent rather than creating an empty one.
 database_id = "PLACEHOLDER_RESOLVED_IN_CI"
 
 # Workers Logs. Every failure path here is caught so that serving survives it,
