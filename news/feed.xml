@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: tincan 0.3.4-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-10-updated-tincan-0.3.4-1</guid>
+<pubDate>Sat, 10 Oct 2026 12:50:39 +0000</pubDate>
+<description>Updated from 0.3.3-1. (tincan 0.3.4-1)</description>
+</item>
+<item>
 <title>updated: monolith 2.11.3-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-10-updated-monolith-2.11.3-1</guid>

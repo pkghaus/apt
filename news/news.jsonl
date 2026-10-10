@@ -117,3 +117,4 @@
 {"ts":"2026-10-06T18:31:37Z","type":"updated","title":"updated: monolith 2.11.2-1","detail":"Updated from 2.11.1-1.","pkgs":"monolith=2.11.2-1"}
 {"ts":"2026-10-07T23:14:08Z","type":"updated","title":"updated: bluetui 0.8.2-1","detail":"Updated from 0.8.1-1.","pkgs":"bluetui=0.8.2-1"}
 {"ts":"2026-10-10T12:41:04Z","type":"updated","title":"updated: monolith 2.11.3-1","detail":"Updated from 2.11.2-1.","pkgs":"monolith=2.11.3-1"}
+{"ts":"2026-10-10T12:50:39Z","type":"updated","title":"updated: tincan 0.3.4-1","detail":"Updated from 0.3.3-1.","pkgs":"tincan=0.3.4-1"}
