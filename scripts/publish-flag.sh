@@ -66,7 +66,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-curl -fsS --retry 30 --retry-delay 1 --retry-connrefused "$BASE/api/version" >/dev/null 2>&1 \
+# Waits for a local daemon to come up, so no failure can mean a moved URL.
+curl -fsS --retry 30 --retry-delay 1 --retry-connrefused --retry-all-errors \
+    "$BASE/api/version" >/dev/null 2>&1 \
     || { log "FATAL: aptly api did not start"; cat /tmp/aptly-api.log >&2; exit 1; }
 
 published_flag() {  # suite -> true/false/absent

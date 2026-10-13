@@ -42,6 +42,9 @@ set -euo pipefail
 # Without this, set -e stops at the edge of a command substitution.
 shopt -s inherit_errexit
 
+# Refused rather than ignored: a flag this script does not read must not delete.
+[ $# -eq 0 ] || { echo "usage: $0" >&2; exit 2; }
+
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 

@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=184
+EXPECTED_ASSERTIONS=186
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -1132,6 +1132,7 @@ BUILDINFO_PREFIX=buildinfos/buildinfo-pool
 flat() { printf '%s' "$1" | tr / '%'; }
 suite_contents() { cat "$STUB_DIR/contents.$1" 2>/dev/null || true; }
 aws_() {
+    printf '%s\n' "$*" >> "$STUB_DIR/aws.calls"
     case "$2" in
         cp) key="${3#s3://testbucket/}"
             # Modelled explicitly rather than with chmod: the suite runs as root
@@ -1184,6 +1185,14 @@ LIB
     printf 'croc\t1.0-1\tamd64\ncroc-extra\t2.0-1\tamd64\n' > "$work/contents.unstable"
     printf 'croc\t1.0-1~haus13+1\tamd64\n' > "$work/contents.trixie"
     : > "$work/contents.testing"
+
+    # --- an argument is refused before anything runs --------------------------
+    # Over budget, so a run that ignored the argument would delete.
+    BUCKET_BUDGET_BYTES=1 "$work/scripts/prune-source-tarballs.sh" --dry-run >/dev/null 2>&1 \
+        && rc=0 || rc=$?
+    eq "an argument is refused as a usage error" "2" "$rc"
+    eq "  and nothing is listed or deleted" "" \
+       "$(cat "$work/aws.calls" "$work/deleted" 2>/dev/null)"
 
     # --- the normal case: room to spare, so nothing goes ---------------------
     # Asserted on the message as well as the absence of deletions. Without the
