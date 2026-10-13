@@ -16,7 +16,6 @@ set -euo pipefail
 # called as x="$(f)" keeps running after a failure instead of aborting.
 shopt -s inherit_errexit
 
-ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
 BUILD_DIR="${BUILD_DIR:-build}"
 BASE_URL="${BASE_URL:-https://apt.pkg.haus}"
 

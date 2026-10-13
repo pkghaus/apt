@@ -54,8 +54,6 @@ if [ "${#SUITES_ARG[@]}" -eq 0 ]; then
     read -r -a SUITES_ARG <<< "${SUITES:-trixie testing unstable}"
 fi
 
-log() { printf '%s\n' "$*" >&2; }
-
 PORT="${APTLY_API_PORT:-8080}"
 BASE="http://127.0.0.1:$PORT"
 
@@ -68,11 +66,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-for _ in $(seq 1 60); do
-    curl -fsS "$BASE/api/version" >/dev/null 2>&1 && break
-    sleep 0.5
-done
-curl -fsS "$BASE/api/version" >/dev/null 2>&1 || { log "FATAL: aptly api did not start"; cat /tmp/aptly-api.log >&2; exit 1; }
+curl -fsS --retry 30 --retry-delay 1 --retry-connrefused "$BASE/api/version" >/dev/null 2>&1 \
+    || { log "FATAL: aptly api did not start"; cat /tmp/aptly-api.log >&2; exit 1; }
 
 published_flag() {  # suite -> true/false/absent
     curl -fsS "$BASE/api/publish" 2>/dev/null | python3 -c "
@@ -105,8 +100,7 @@ for p in json.load(sys.stdin):
 for suite in "${SUITES_ARG[@]}"; do
     before="$(published_flag "$suite")"
     if [ "$before" = absent ]; then
-        log "FATAL: $suite is not published to $PUBLISH_TARGET"
-        exit 1
+        die "$suite is not published to $PUBLISH_TARGET"
     fi
     if [ "$before" = "$WANT" ]; then
         log "$suite: already $STATE"
@@ -129,6 +123,6 @@ for suite in "${SUITES_ARG[@]}"; do
         sleep 1
     done
     got="$(published_flag "$suite")"
-    [ "$got" = "$WANT" ] || { log "FATAL: $suite still reports $FIELD=$got"; exit 1; }
+    [ "$got" = "$WANT" ] || die "$suite still reports $FIELD=$got"
     log "$suite: confirmed $got"
 done

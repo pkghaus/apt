@@ -124,9 +124,8 @@ echo "render helpers: the pool prefix follows Debian's lib rule"
 
 echo "purge scope"
 (
-    export BUILD_DIR ARCHIVE_DIR SUITES="trixie testing" ARCHES="amd64"
+    export BUILD_DIR SUITES="trixie testing" ARCHES="amd64"
     BUILD_DIR="$(mktemp -d)"
-    ARCHIVE_DIR="$(mktemp -d)"
     # shellcheck source=/dev/null
     . "$ROOT/scripts/purge-cache.sh"
     # Replaces the library's network read for the duration of this subshell.
@@ -1129,6 +1128,7 @@ AWS
     cat > "$work/scripts/aptly-lib.sh" <<'LIB'
 require_r2() { :; }
 R2_BUCKET=testbucket
+BUILDINFO_PREFIX=buildinfos/buildinfo-pool
 flat() { printf '%s' "$1" | tr / '%'; }
 suite_contents() { cat "$STUB_DIR/contents.$1" 2>/dev/null || true; }
 aws_() {
@@ -1756,8 +1756,8 @@ IDX
 
     # purge-cache.sh is the opposite policy on purpose: purging IS its job, so
     # it fails. What it must not do is fail without saying how far it got.
-    export BUILD_DIR="$work/build" ARCHIVE_DIR="$work/public"
-    mkdir -p "$BUILD_DIR" "$ARCHIVE_DIR"
+    export BUILD_DIR="$work/build"
+    mkdir -p "$BUILD_DIR"
     : > "$BUILD_DIR/croc_11.2.4-1~haus13+1_amd64.deb"
     pout="$(PATH="$work/bin:$PATH" CLOUDFLARE_PURGE_TOKEN=t CLOUDFLARE_ZONE_ID=z \
         SUITES="trixie" ARCHES="amd64" BASE_URL="https://apt.pkg.haus" \

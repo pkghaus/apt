@@ -2,7 +2,7 @@
 #
 # Delete source tarballs, oldest first, only when the bucket is near its budget.
 #
-#   prune-source-tarballs.sh [--dry-run]
+#   prune-source-tarballs.sh
 #
 # The archive keeps one version per package per suite -- prune_older() in
 # ingest.sh enforces it, because aptly keeps every version and the pool would
@@ -42,14 +42,10 @@ set -euo pipefail
 # Without this, set -e stops at the edge of a command substitution.
 shopt -s inherit_errexit
 
-DRY_RUN=0
-[ "${1:-}" = "--dry-run" ] && DRY_RUN=1
-
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 
 SUITES="${SUITES:-trixie testing unstable}"
-PREFIX="${BUILDINFO_PREFIX:-buildinfos/buildinfo-pool}"
 
 # 8 GiB of the free tier's 10, leaving room for the pool to grow and for the
 # gap between a publish and this step running.
@@ -88,7 +84,7 @@ for suite in $SUITES; do
         [ -n "$name" ] || continue
         live=$((live + 1))
 
-        key="$PREFIX/${name:0:1}/$name/${name}_${version}.dsc"
+        key="$BUILDINFO_PREFIX/${name:0:1}/$name/${name}_${version}.dsc"
 
         # A version published before source packages shipped has no .dsc, and
         # therefore no tarballs either. Recording the source as incomplete
@@ -96,7 +92,7 @@ for suite in $SUITES; do
         # nothing to keep" and "this version's tarballs are safe to delete" are
         # different claims and only the first one follows.
         if ! grep -qxF "$key" "$keys"; then
-            printf '%s\n' "$PREFIX/${name:0:1}/$name/" >> "$partial"
+            printf '%s\n' "$BUILDINFO_PREFIX/${name:0:1}/$name/" >> "$partial"
             continue
         fi
 
@@ -112,7 +108,7 @@ for suite in $SUITES; do
         # writes, recorded with the same key prefix the tarballs live under so
         # the comparison below is over whole keys.
         printf '%s\n' "$body" | checksums_sha256 \
-            | awk -v p="$PREFIX/${name:0:1}/$name/" '{print p $3}' >> "$keep"
+            | awk -v p="$BUILDINFO_PREFIX/${name:0:1}/$name/" '{print p $3}' >> "$keep"
     done < <(suite_contents "$suite")
 done
 
@@ -139,7 +135,7 @@ fi
 # half-finished publish leaves a .dsc with no tarballs rather than the reverse;
 # the $partial check should not fire in normal operation. It exists because the
 # reverse would be indistinguishable from "everything here is orphaned".
-awk -v p="$PREFIX/" '$4 ~ ("^" p) && $4 ~ /\.tar\.[a-z0-9]+$/ {print $1 "T" $2, $3, $4}' \
+awk -v p="$BUILDINFO_PREFIX/" '$4 ~ ("^" p) && $4 ~ /\.tar\.[a-z0-9]+$/ {print $1 "T" $2, $3, $4}' \
     "$stored" | sort > "$cand"
 
 over=$((total - BUCKET_BUDGET_BYTES))
@@ -157,18 +153,13 @@ while read -r _stamp size key; do
     # the key's own directory can match, and a looser match only keeps more.
     grep -qF "$(dirname "$key")/" "$partial" && continue
 
-    if [ "$DRY_RUN" = 1 ]; then
-        printf 'would delete %s\n' "$key" >&2
-    else
-        aws_ s3 rm "s3://$R2_BUCKET/$key" --only-show-errors
-    fi
+    aws_ s3 rm "s3://$R2_BUCKET/$key" --only-show-errors
     deleted=$((deleted + 1))
     freed=$((freed + size))
 done < "$cand"
 
-printf 'freed %s MB across %s tarball(s)%s\n' \
-    "$((freed / 1024 / 1024))" "$deleted" \
-    "$([ "$DRY_RUN" = 1 ] && echo ' (dry run)' || echo '')" >&2
+printf 'freed %s MB across %s tarball(s)\n' \
+    "$((freed / 1024 / 1024))" "$deleted" >&2
 
 # Everything left belongs to a published version. Growth has outrun the budget
 # rather than orphans accumulating, and only a bigger budget or a smaller fleet

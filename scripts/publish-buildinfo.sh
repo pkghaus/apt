@@ -61,10 +61,6 @@ shopt -s inherit_errexit
 
 SRC="${1:?usage: $0 <dir holding *.buildinfo>}"
 
-# Where buildinfos.pkg.haus serves from. Kept in one place because the prune
-# script and the worker both have to agree with it.
-PREFIX="${BUILDINFO_PREFIX:-buildinfos/buildinfo-pool}"
-
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 
@@ -268,7 +264,7 @@ for f in "${files[@]}" "${extras[@]}"; do
     # lib, so that case is deliberately not handled rather than guessed at.
     initial="${source:0:1}"
 
-    key="$PREFIX/$initial/$source/$name"
+    key="$BUILDINFO_PREFIX/$initial/$source/$name"
 
     _t="$(now_ms)"
     if orig_needs_purge "$f" "$key"; then
@@ -358,7 +354,7 @@ if [ "$upload_failed" -ne 0 ]; then
     exit 1
 fi
 
-printf 'published %s file(s) under %s/\n' "$published" "$PREFIX" >&2
+printf 'published %s file(s) under %s/\n' "$published" "$BUILDINFO_PREFIX" >&2
 printf '  %s KB uploaded in %s.%03ds; replaced-tarball checks %s.%03ds\n' \
     "$(( bytes_up / 1024 ))" \
     "$(( ms_upload / 1000 ))" "$(( ms_upload % 1000 ))" \
