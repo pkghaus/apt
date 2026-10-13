@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=186
+EXPECTED_ASSERTIONS=211
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -217,6 +217,190 @@ echo "render refuses to replace pool listings with nothing"
         "$(cat "$ARCHIVE_DIR/pool/main/z/zola/index.html" 2>/dev/null)"
     eq "the failure names the cause" "1" \
         "$(grep -c 'Refusing to replace them with nothing' <<<"$out")"
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
+
+echo "render drops listings the indices no longer describe, and only on a complete read"
+(
+    work="$(mktemp -d)"
+    export ARCHIVE_DIR="$work/public" SUITES="trixie unstable" ARCHES="amd64"
+    export BASE_URL="http://archive.invalid" WWW="$work/www"
+    unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
+    mkdir -p "$ARCHIVE_DIR/news" "$work/bin"
+    : > "$ARCHIVE_DIR/news/news.jsonl"
+
+    # The archive over HTTP, served from www/; a missing file fails as curl -f
+    # does. The path named in CUT is cut off after 20 bytes, as a dropped
+    # transfer is (curl exit 18).
+    cat > "$work/bin/curl" <<'FAKE'
+#!/bin/sh
+for a in "$@"; do url="$a"; done
+p="${url#*://*/}"
+if [ "$p" = "${CUT:-}" ]; then head -c 20 "$WWW/$p"; exit 18; fi
+cat "$WWW/$p" 2>/dev/null || exit 22
+FAKE
+    chmod +x "$work/bin/curl"
+    PATH="$work/bin:$PATH"
+
+    # Each suite's filenames carry its qualifier, as the real pool's do, so a
+    # listing shared by two suites has one row per suite.
+    publish() { # suite prefix/pkg...
+        local suite="$1" d="$WWW/dists/$1" q="" p
+        shift
+        case "$suite" in trixie) q='~haus13+1' ;; esac
+        mkdir -p "$d/main/binary-amd64"
+        for p in "$@"; do
+            printf 'Package: %s\nFilename: pool/main/%s/%s_1.0-1%s_amd64.deb\nSize: 900\n\n' \
+                "${p#*/}" "$p" "${p#*/}" "$q"
+        done | gzip -n > "$d/main/binary-amd64/Packages.gz"
+        printf 'Suite: %s\nSHA256:\n 00 %s main/binary-amd64/Packages.gz\n' \
+            "$suite" "$(wc -c < "$d/main/binary-amd64/Packages.gz")" > "$d/Release"
+        echo signed > "$d/InRelease"
+        echo sig > "$d/Release.gpg"
+    }
+    render() { "$ROOT/scripts/render-index.sh" 2>&1; }
+    libfoo="$ARCHIVE_DIR/pool/main/libf/libfoo/index.html"
+    croc="$ARCHIVE_DIR/pool/main/c/croc/index.html"
+    croc_rows() { grep -cE '<code>croc_1\.0-1(~haus13\+1)?_amd64\.deb</code>' "$croc" 2>/dev/null; }
+
+    publish trixie c/croc
+    publish unstable c/croc libf/libfoo
+    render >/dev/null
+    eq "a lib package gets its listing" "1" \
+        "$(grep -c 'libfoo_1.0-1_amd64.deb' "$libfoo" 2>/dev/null)"
+
+    # Published listings are committed and deployed, so one left behind is
+    # served for a package the archive no longer has.
+    publish unstable c/croc
+    render >/dev/null
+    eq "a package that left the archive loses its listing" "" \
+        "$(find "$ARCHIVE_DIR/pool/main/libf" 2>/dev/null | tr '\n' ' ')"
+    eq "  and a package still in it keeps its listing" "1" \
+        "$(grep -c 'croc_1.0-1_amd64.deb' "$croc" 2>/dev/null)"
+
+    # Partial reads. In each, the read that fails is the only one describing
+    # libfoo or unstable, so rendering from that manifest would delete or
+    # rewrite live listings. Both trees stay exactly as last published.
+    publish unstable c/croc libf/libfoo
+    render >/dev/null
+    rm "$WWW/dists/unstable/main/binary-amd64/Packages.gz"
+    out="$(render)"
+    eq "an unreadable index keeps the listings it describes" "1" \
+        "$(grep -c 'libfoo_1.0-1_amd64.deb' "$libfoo" 2>/dev/null)"
+    eq "  and leaves a listing it shares with another suite whole" "2" "$(croc_rows)"
+    eq "  and the log says the listings were left as published" "1" \
+        "$(grep -c 'listings left as last published' <<<"$out")"
+
+    # A download cut short decompresses to a shorter index, not an empty one.
+    { printf 'Package: croc\nFilename: pool/main/c/croc/croc_1.0-1_amd64.deb\nSize: 900\n\n' | gzip -n
+      printf 'Package: libfoo\nFilename: pool/main/libf/libfoo/libfoo_1.0-1_amd64.deb\nSize: 900\n' | gzip -n | head -c 15
+    } > "$WWW/dists/unstable/main/binary-amd64/Packages.gz"
+    render >/dev/null
+    eq "a truncated index counts as unread" "1" \
+        "$(grep -c 'libfoo_1.0-1_amd64.deb' "$libfoo" 2>/dev/null)"
+
+    publish unstable c/croc libf/libfoo
+    rm "$WWW/dists/unstable/Release"
+    render >/dev/null
+    eq "an unreadable Release keeps that suite's metadata listing" "1" \
+        "$(grep -c '>InRelease<' "$ARCHIVE_DIR/dists/unstable/index.html" 2>/dev/null)"
+    eq "  and dists/ still offers the suite" "1" \
+        "$(grep -c 'href="unstable/"' "$ARCHIVE_DIR/dists/index.html" 2>/dev/null)"
+
+    # A Release cut short still has bytes in it; only the fetch's own status
+    # says it is incomplete.
+    publish unstable c/croc libf/libfoo
+    render >/dev/null
+    out="$(CUT=dists/unstable/Release render)"
+    eq "a Release cut short counts as unread" "1" \
+        "$(grep -c 'listings left as last published' <<<"$out")"
+    eq "  and the index listings it names survive" "1" \
+        "$(grep -c '>Packages.gz<' "$ARCHIVE_DIR/dists/unstable/main/binary-amd64/index.html" 2>/dev/null)"
+
+    # Nothing readable at all is the empty-manifest guard's case, and it has
+    # to fire before anything is cleared.
+    rm -rf "$WWW/dists"
+    out="$(render)" && rc=0 || rc=$?
+    eq "an archive that reads as empty fails the render" "1" "$rc"
+    eq "  and every listing survives it" "1" \
+        "$(grep -c 'croc_1.0-1_amd64.deb' "$croc" 2>/dev/null)"
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
+
+echo "the pool purge purges what it could resolve, then fails on an unread index"
+(
+    work="$(mktemp -d)"
+    export BUILD_DIR="$work/build" SUITES="trixie unstable" ARCHES="amd64"
+    export WWW="$work/www" POSTED="$work/posted" READS="$work/reads"
+    unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
+    mkdir -p "$BUILD_DIR" "$work/bin"
+
+    # Records each purge POST body and each index read, and serves the reads
+    # from www/: a missing file fails as curl -f does, and the path in CUT stops
+    # after 20 bytes as a dropped transfer does (exit 18).
+    cat > "$work/bin/curl" <<'FAKE'
+#!/bin/sh
+case "$*" in *purge_cache*) cat >> "$POSTED"; echo '{"success":true}'; exit 0 ;; esac
+for a in "$@"; do url="$a"; done
+p="${url#*://*/}"
+echo "$p" >> "$READS"
+if [ "$p" = "${CUT:-}" ]; then head -c 20 "$WWW/$p"; exit 18; fi
+cat "$WWW/$p" 2>/dev/null || exit 22
+FAKE
+    chmod +x "$work/bin/curl"
+    PATH="$work/bin:$PATH"
+
+    for v in '1.0-1~haus13+1:trixie' '1.0-1:unstable'; do
+        mkdir -p "$WWW/dists/${v#*:}/main/binary-amd64"
+        printf 'Package: croc\nFilename: pool/main/c/croc/croc_%s_amd64.deb\n\n' "${v%:*}" \
+            | gzip -n > "$WWW/dists/${v#*:}/main/binary-amd64/Packages.gz"
+        : > "$BUILD_DIR/croc_${v%:*}_amd64.deb"
+    done
+    trixie_url="https://apt.pkg.haus/pool/main/c/croc/croc_1.0-1~haus13+1_amd64.deb"
+    unstable_url="https://apt.pkg.haus/pool/main/c/croc/croc_1.0-1_amd64.deb"
+    purge() {
+        rm -f "$POSTED"
+        out="$(CLOUDFLARE_PURGE_TOKEN=t CLOUDFLARE_ZONE_ID=z "$ROOT/scripts/purge-cache.sh" 2>&1)" \
+            && rc=0 || rc=$?
+        posted="$(jq -r '.files[]' "$POSTED" 2>/dev/null | LC_ALL=C sort | tr '\n' ' ')"
+    }
+
+    purge
+    eq "a clean run succeeds" "0" "$rc"
+    # Byte order, as the list is sorted: '_' sorts before '~'.
+    eq "  and purges every rebuilt deb in every suite" "$unstable_url $trixie_url " "$posted"
+
+    # The read that fails is the only one naming unstable's deb, so before
+    # this a run purged trixie alone, said "purged 1 URLs" and exited 0.
+    mv "$WWW/dists/unstable/main/binary-amd64/Packages.gz" "$work/unstable.gz"
+    purge
+    eq "an unreadable index fails the purge" "1" "$rc"
+    eq "  and the failure names exactly that suite/arch" "unstable/amd64" \
+        "$(grep '^FATAL' <<<"$out" | grep -oE '[a-z]+/amd64' | tr '\n' ' ' | sed 's/ $//')"
+    eq "  and the URLs it could resolve are still purged" "$trixie_url " "$posted"
+
+    mv "$work/unstable.gz" "$WWW/dists/unstable/main/binary-amd64/Packages.gz"
+    export CUT=dists/unstable/main/binary-amd64/Packages.gz
+    purge
+    eq "a truncated index fails the purge" "1" "$rc"
+    eq "  and the failure names exactly that suite/arch" "unstable/amd64" \
+        "$(grep '^FATAL' <<<"$out" | grep -oE '[a-z]+/amd64' | tr '\n' ' ' | sed 's/ $//')"
+    eq "  and the URLs it could resolve are still purged" "$trixie_url " "$posted"
+
+    # ingest.yml creates build/ only when it downloads debs, so a run that
+    # planned nothing reaches the purge with no build directory at all.
+    unset CUT
+    export BUILD_DIR="$work/never-created"
+    rm -f "$READS"
+    purge
+    eq "a missing build directory succeeds" "0" "$rc"
+    eq "  and says it purged nothing" "1" "$(grep -c '^purged 0 URLs$' <<<"$out")"
+    eq "  and posts nothing" "" "$posted"
+    eq "  and reads no index" "0" "$(cat "$READS" 2>/dev/null | wc -l)"
+
+    rm -rf "$work"
     exit $((fail > 0))
 ) || failed_groups=$((failed_groups + 1))
 

@@ -33,12 +33,13 @@ index_triples() {
     done | LC_ALL=C sort
 }
 
-# Tolerant for the same reason index_text is: the emptiness check below is the
-# diagnostic, not a pipeline dying mid-read.
+# Both readers are tolerant: the emptiness check and the comparison below are
+# the diagnostic, not a pipeline dying mid-read.
 source_index() {
     curl -fsSL --max-time 120 "$SOURCE_URL/dists/$1/main/binary-$2/Packages.gz" \
         | gunzip 2>/dev/null || true
 }
+r2_index() { index_text "$1" "$2" || true; }
 
 # Everything above is definitions, everything below runs. The guard lets the
 # tests source this file for index_triples -- the parse that decided the R2
@@ -53,7 +54,7 @@ require_r2
 before="$(mktemp)"; after="$(mktemp)"
 trap 'rm -f "$before" "$after"' EXIT
 index_triples source_index > "$before"
-index_triples index_text   > "$after"
+index_triples r2_index     > "$after"
 
 [ -s "$before" ] || { printf 'FATAL: %s published no packages to compare against\n' "$SOURCE_URL" >&2; exit 1; }
 

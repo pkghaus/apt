@@ -151,26 +151,26 @@ ARCHIVE_SELF_UA="curl pkghaus-ci"
 # whatever the run just added. Without credentials (a local preview) the CDN is
 # the only source there is.
 #
-# Prints nothing and succeeds when the index cannot be read. Under `set -e`
-# with pipefail a failing fetch inside a pipeline kills its caller where it
-# stands, with no diagnostic and no chance to react -- and "the index is
-# unreadable" is a thing callers must be able to react to, because for some of
-# them it is indistinguishable from "the archive is empty" and acting on that
-# deletes things. Deciding what empty means is the caller's job.
+# Prints whatever arrived and returns the fetch's status, because a read cut
+# short still has bytes and only the status says so. Each caller decides what a
+# failed read means: under `set -e` with pipefail it otherwise kills the caller
+# where it stands, and a caller that reads it as "the archive is empty" can
+# delete things. Callers that tolerate it say `|| true` where they call.
 archive_object() {
     local path="$1"
 
     if have_r2; then
-        aws_ s3 cp "s3://$R2_BUCKET/$path" - --only-show-errors 2>/dev/null || true
+        aws_ s3 cp "s3://$R2_BUCKET/$path" - --only-show-errors 2>/dev/null
     else
         curl -fsSL --max-time 60 -A "$ARCHIVE_SELF_UA" \
-            "${BASE_URL:-https://apt.pkg.haus}/$path" 2>/dev/null || true
+            "${BASE_URL:-https://apt.pkg.haus}/$path" 2>/dev/null
     fi
 }
 
-# A published binary index, decompressed.
+# A published binary index, decompressed. Under the callers' pipefail it fails
+# when either the fetch or gunzip does.
 index_text() {
-    archive_object "dists/$1/main/binary-$2/Packages.gz" | gunzip 2>/dev/null || true
+    archive_object "dists/$1/main/binary-$2/Packages.gz" | gunzip 2>/dev/null
 }
 
 # Publishing settings. PUBLISH_ARCHES is comma-separated because that is what
