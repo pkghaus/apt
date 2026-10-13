@@ -157,38 +157,23 @@ STYLE='<style>
   a:hover { text-decoration: underline; }
 </style>'
 
-# The mark. Above 48 px the primary cut (fine strokes, serrated tape);
-# at or below, the small cut (bold strokes, straight tape) per the brand's
-# size ladder.
-logo() {
-    local size="$1" width tape
-
-    if [ "$size" -gt 48 ]; then
-        width=2.4
-        tape='M15.658 14.829 L23.658 10.829 L47 22.5 L47 28.5 L45.7 27.2 L44.3 29.8 L43 28.5 L41.7 31.2 L40.3 29.8 L39 32.5 L39 26.5 Z'
-    else
-        width=4.5
-        tape='M14.484 14.242 L22.484 10.242 L47 22.5 L47 28.5 L39 32.5 L39 26.5 Z'
-    fi
-
-    cat <<EOF
-    <svg width="$size" height="$size" viewBox="0 0 64 64" role="img" aria-label="pkg.haus - a taped parcel with a haus stenciled on its face">
+# The mark in its primary cut (fine strokes, serrated tape). Every page shows
+# it at 80 px; the brand's size ladder switches to the small cut at 48 px.
+LOGO='    <svg width="80" height="80" viewBox="0 0 64 64" role="img" aria-label="pkg.haus - a taped parcel with a haus stenciled on its face">
       <path d="M32 8 L54 19 V45 L32 56 L10 45 V19 Z" fill="var(--paper)"/>
-      <g stroke="currentColor" stroke-width="$width" stroke-linejoin="round" stroke-linecap="round" fill="none">
+      <g stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" fill="none">
         <path d="M10 19 L32 30 L54 19"/>
         <path d="M32 30 V56"/>
         <path d="M32 8 L54 19 V45 L32 56 L10 45 V19 Z"/>
       </g>
-      <path d="$tape" fill="var(--accent)"/>
+      <path d="M15.658 14.829 L23.658 10.829 L47 22.5 L47 28.5 L45.7 27.2 L44.3 29.8 L43 28.5 L41.7 31.2 L40.3 29.8 L39 32.5 L39 26.5 Z" fill="var(--accent)"/>
       <path d="M21 20 L27 26 V33 H15 V26 Z" fill="currentColor" transform="matrix(1,0.5,0,1,0,0)"/>
-    </svg>
-EOF
-}
+    </svg>'
 
 page_open() {
-    local title="$1" heading="$2" logosize="$3" tagline="${4:-}"
-    local desc="${5:-Browsable listing of the pkg.haus APT archive.}"
-    local extra_head="${6:-}"
+    local title="$1" heading="$2" tagline="${3:-}"
+    local desc="${4:-Browsable listing of the pkg.haus APT archive.}"
+    local extra_head="${5:-}"
 
     if [ -n "$tagline" ]; then
         tagline='<p class="tagline">'"$tagline"'</p>'
@@ -213,7 +198,7 @@ $STYLE
 <body>
 <main>
   <header>
-$(logo "$logosize")
+$LOGO
     <h1>$heading</h1>
     $tagline
   </header>
@@ -394,7 +379,7 @@ render_synthetic_listings() {
         mkdir -p "$ARCHIVE_DIR/$d"
         rel="${d%/}"
         {
-            page_open "apt.pkg.haus/$rel/" "$(breadcrumb_for "$rel")" 80
+            page_open "apt.pkg.haus/$rel/" "$(breadcrumb_for "$rel")"
             synthetic_table "$manifest" "$d"
             page_close
         } > "$ARCHIVE_DIR/$d/index.html"
@@ -409,15 +394,9 @@ render_synthetic_listings() {
 # directories before files and is stripped on the way out.
 synthetic_table() {
     local manifest="$1" dir="$2"
-    cat <<EOF
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr><th>name</th><th class="size">size</th></tr>
-      </thead>
-      <tbody>
-      <tr><td><a href="../"><code>../</code></a></td><td class="size">-</td></tr>
-$(awk -F'\t' -v d="$dir" '
+    {
+        echo '      <tr><td><a href="../"><code>../</code></a></td><td class="size">-</td></tr>'
+        awk -F'\t' -v d="$dir" '
     function human(b,   u, i) {
         split("B K M G", u, " ")
         i = 1
@@ -437,7 +416,20 @@ $(awk -F'\t' -v d="$dir" '
 ' "$manifest" | LC_ALL=C sort -u | awk -F'\t' '
     $1 == 0 { printf "      <tr><td><a href=\"%s/\"><code>%s/</code></a></td><td class=\"size\">-</td></tr>\n", $2, $2 }
     $1 == 1 { printf "      <tr><td><a href=\"%s\"><code>%s</code></a></td><td class=\"size\">%s</td></tr>\n", $2, $2, $3 }
-')
+'
+    } | name_size_table
+}
+
+# The name/size table every listing shares, around the rows on stdin.
+name_size_table() {
+    cat <<EOF
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>name</th><th class="size">size</th></tr>
+      </thead>
+      <tbody>
+$(cat)
       </tbody>
     </table>
   </div>
@@ -474,26 +466,12 @@ listing_rows() {
     done
 }
 
-listing_table() {
-    local dir="$1" with_parent="$2"
-    cat <<EOF
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr><th>name</th><th class="size">size</th></tr>
-      </thead>
-      <tbody>
-$(listing_rows "$dir" "$with_parent")
-      </tbody>
-    </table>
-  </div>
-EOF
-}
+listing_table() { listing_rows "$1" "$2" | name_size_table; } # dir parent|noparent
 
 render_root() {
     {
         page_open "apt.pkg.haus" \
-            "$(wordmark)" 80 \
+            "$(wordmark)" \
             "The signed APT archive behind pkg.haus."
         listing_table "$ARCHIVE_DIR" noparent
         page_close
@@ -515,7 +493,7 @@ render_listings() {
             rel="${dir#"$ARCHIVE_DIR"/}"
             crumbs="$(breadcrumb_for "$rel")"
             {
-                page_open "apt.pkg.haus/$rel/" "$crumbs" 80
+                page_open "apt.pkg.haus/$rel/" "$crumbs"
                 listing_table "$dir" parent
                 page_close
             } > "$dir/index.html"
@@ -529,7 +507,7 @@ render_404() {
     # rather than repeating the archive's front page.
     {
         page_open "Not found - apt.pkg.haus" \
-            "$(wordmark)" 80 \
+            "$(wordmark)" \
             "404. This path is not in the archive."
         cat <<'EOF'
   <div class="tablewrap">
@@ -700,7 +678,7 @@ render_news() {
     local crumbs
     crumbs="$(wordmark)"'<span class="path"><span class="sep">/</span>news</span>'
     {
-        page_open "apt.pkg.haus/news/" "$crumbs" 80 \
+        page_open "apt.pkg.haus/news/" "$crumbs" \
             "Everything the archive has shipped, changed and retired, newest first." \
             "What the pkg.haus APT archive has shipped, changed and retired." \
             '<link rel="alternate" type="application/rss+xml" title="pkg.haus archive news" href="/news/feed.xml">'

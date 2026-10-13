@@ -89,22 +89,10 @@ release_record() { # release-file index-path -> "sha size"
 }
 
 # The smallest package in an index, as "size sha path". Smallest so the pool
-# assertion below stays cheap enough to run every few hours.
-smallest_package() { # packages-file -> "size sha path"
-    awk '
-        /^Size: /     { size = $2 }
-        /^SHA256: /   { sha  = $2 }
-        /^Filename: / { path = $2 }
-        /^$/ { if (size != "" && path != "") print size, sha, path; size = ""; sha = ""; path = "" }
-        END  { if (size != "" && path != "") print size, sha, path }
-    ' "$1" | sort -n | head -1
-}
-
-# The smallest package in an index that is BUILT for this architecture, i.e.
-# not Architecture: all. smallest_package above can only ever return the
-# keyring, so on its own it never touches an arch-specific pool object.
-smallest_arch_package() { # packages-file arch -> "size sha path"
-    awk -v suffix="_$2.deb" '
+# assertion below stays cheap enough to run every few hours. An optional
+# suffix keeps only pool paths ending in it.
+smallest_package() { # packages-file [suffix] -> "size sha path"
+    awk -v suffix="${2:-}" '
         /^Size: /     { size = $2 }
         /^SHA256: /   { sha  = $2 }
         /^Filename: / { path = $2 }
@@ -116,6 +104,11 @@ smallest_arch_package() { # packages-file arch -> "size sha path"
         END  { flush() }
     ' "$1" | sort -n | head -1
 }
+
+# The smallest package in an index that is BUILT for this architecture, i.e.
+# not Architecture: all. Unfiltered, smallest_package can only ever return the
+# keyring, so on its own it never touches an arch-specific pool object.
+smallest_arch_package() { smallest_package "$1" "_$2.deb"; } # packages-file arch
 
 # Long key ids of every SUBKEY in a keyring, one per line. --show-keys reads key
 # material without consulting or creating a keyring, which is the same property

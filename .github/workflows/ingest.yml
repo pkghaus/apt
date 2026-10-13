@@ -165,13 +165,6 @@ jobs:
               < plan.tsv > matrix.json
           echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
 
-      - name: Upload plan
-        uses: actions/upload-artifact@v7
-        with:
-          name: plan
-          path: plan.tsv
-          retention-days: 7
-
   build:
     name: build / ${{ matrix.pkg }} / ${{ matrix.suite }} / ${{ matrix.arch }}
     needs: plan
