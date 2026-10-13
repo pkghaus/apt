@@ -34,9 +34,18 @@ SEED_PUBLISH="${SEED_PUBLISH:-on}"
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 
+# Plain --retry does not retry a reset connection (curl 56), which is what fails
+# here. Every URL comes from the archive's own index, so a 404 is a real fault
+# and still fails, after the short budget.
+seed_curl() { curl -fsSL --retry 3 --retry-delay 2 --retry-all-errors "$@"; }
+
+# To a file, not a pipe: curl cannot retry once part of a body is on stdout.
 source_index() { # suite arch
-    curl -fsSL --max-time 120 \
-        "$SOURCE_URL/dists/$1/main/binary-$2/Packages.gz" | gunzip
+    local gz="$SEED_DIR/Packages-$1-$2.gz"
+    mkdir -p "$SEED_DIR"
+    seed_curl --max-time 120 -o "$gz" \
+        "$SOURCE_URL/dists/$1/main/binary-$2/Packages.gz"
+    gunzip -c "$gz"
 }
 
 # Every package in the source archive as "<suite> <pool-path> <sha256>".
@@ -85,7 +94,7 @@ while read -r _ rel sha; do
     [ -f "$dest" ] && continue
     # Marked as ours: a seed downloads every published .deb, and unmarked that
     # is the single largest block of "downloads" the archive has ever recorded.
-    curl -fsSL --max-time 300 -A "$ARCHIVE_SELF_UA" -o "$dest.part" "$SOURCE_URL/$rel"
+    seed_curl --max-time 300 -A "$ARCHIVE_SELF_UA" -o "$dest.part" "$SOURCE_URL/$rel"
     got="$(sha256sum "$dest.part" | cut -d' ' -f1)"
     if [ -n "$sha" ] && [ "$got" != "$sha" ]; then
         die "$rel: index says $sha, download is $got"

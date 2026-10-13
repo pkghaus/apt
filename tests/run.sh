@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=211
+EXPECTED_ASSERTIONS=215
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -1782,6 +1782,71 @@ echo "seed manifest"
     # must yield nothing rather than inventing a line.
     empty() { :; }
     eq "an empty source archive yields no manifest" "" "$(build_manifest empty)"
+
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
+
+# A real server, because the failure is curl's: a reset connection (exit 56) is
+# not one of plain --retry's transient errors, and no stub can show that.
+echo "seed fetch retries"
+(
+    # shellcheck source=scripts/seed-aptly.sh
+    . "$ROOT/scripts/seed-aptly.sh"
+
+    srv="$SCRATCH/srv"
+    mkdir -p "$srv/dists/trixie/main/binary-amd64"
+    head -c 100000 /dev/urandom > "$srv/blob.deb"
+    for i in 1 2 3; do printf 'Package: p%s\nVersion: 1\n\n' "$i"; done |
+        gzip > "$srv/dists/trixie/main/binary-amd64/Packages.gz"
+
+    # First request under /reset/ is dropped before any byte; under /partial/
+    # half the body is sent first. Every later request is served whole.
+    cat > "$SCRATCH/flaky.py" <<'EOF'
+import http.server, os, socket, struct, sys
+root, seen = sys.argv[1], set()
+class H(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        mode, _, rest = self.path.lstrip("/").partition("/")
+        path = os.path.join(root, rest)
+        if not os.path.isfile(path):
+            self.send_error(404); return
+        data = open(path, "rb").read()
+        if self.path not in seen and mode in ("reset", "partial"):
+            seen.add(self.path)
+            if mode == "partial":
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data[: len(data) // 2]); self.wfile.flush()
+            self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER,
+                                       struct.pack("ii", 1, 0))
+            self.connection.close(); return
+        self.send_response(200)
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers(); self.wfile.write(data)
+    def log_message(self, *a): pass
+s = http.server.ThreadingHTTPServer(("127.0.0.1", 0), H)
+open(sys.argv[2], "w").write(str(s.server_address[1])); s.serve_forever()
+EOF
+    python3 "$SCRATCH/flaky.py" "$srv" "$SCRATCH/port" & pid=$!
+    trap 'kill "$pid" 2>/dev/null' EXIT
+    for _ in $(seq 50); do [ -s "$SCRATCH/port" ] && break; sleep 0.1; done
+    base="http://127.0.0.1:$(cat "$SCRATCH/port")"
+
+    rc=0; seed_curl -o "$SCRATCH/a.deb" "$base/reset/blob.deb" 2>/dev/null || rc=$?
+    eq "a download reset before its first byte is retried" "0 same" \
+       "$rc $(cmp -s "$SCRATCH/a.deb" "$srv/blob.deb" && echo same || echo differs)"
+
+    rc=0; seed_curl -o "$SCRATCH/b.deb" "$base/partial/blob.deb" 2>/dev/null || rc=$?
+    eq "a download cut off mid-body is fetched again from the start" "0 same" \
+       "$rc $(cmp -s "$SCRATCH/b.deb" "$srv/blob.deb" && echo same || echo differs)"
+
+    eq "an index cut off mid-body is fetched again in full" "3" \
+       "$(SOURCE_URL="$base/partial" SEED_DIR="$SCRATCH/seed" \
+            source_index trixie amd64 2>/dev/null | grep -c '^Package:')"
+
+    rc=0; seed_curl -o "$SCRATCH/c.deb" "$base/plain/missing.deb" 2>/dev/null || rc=$?
+    eq "a file the index names but the pool lacks still fails" "22" "$rc"
 
     exit $((fail > 0))
 ) || failed_groups=$((failed_groups + 1))
