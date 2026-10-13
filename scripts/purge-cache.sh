@@ -40,8 +40,12 @@ ARCHES="${ARCHES:-amd64 arm64}"
 # Paths come from the indices rather than from the filename, so the pool
 # layout stays aptly's business: Filename is the archive-root-relative path,
 # e.g. pool/main/c/croc/croc_...deb.
+#
+# A failed or short read is recorded in unread_indices, not skipped, and what
+# did arrive is still used. Kept out of pipes so the record reaches the caller.
+unread_indices=()
 pool_paths() {
-    local suite arch built
+    local suite arch built idx found
     built="$(mktemp)"
     find "$BUILD_DIR" -maxdepth 1 -name '*.deb' -printf '%f\n' 2>/dev/null \
         | LC_ALL=C sort -u > "$built"
@@ -50,18 +54,21 @@ pool_paths() {
         return 0
     fi
 
+    idx="$(mktemp)"
+    found="$(mktemp)"
     for suite in $SUITES; do
         for arch in $ARCHES; do
-            { index_text "$suite" "$arch" || true; } \
-                | awk -v list="$built" '
-                    BEGIN { while ((getline l < list) > 0) want[l] = 1 }
-                    /^Filename: / {
-                        n = split($2, part, "/")
-                        if (part[n] in want) print $2
-                    }'
+            index_text "$suite" "$arch" > "$idx" || unread_indices+=("$suite/$arch")
+            awk -v list="$built" '
+                BEGIN { while ((getline l < list) > 0) want[l] = 1 }
+                /^Filename: / {
+                    n = split($2, part, "/")
+                    if (part[n] in want) print $2
+                }' "$idx" >> "$found"
         done
-    done | LC_ALL=C sort -u
-    rm -f "$built"
+    done
+    LC_ALL=C sort -u "$found"
+    rm -f "$built" "$idx" "$found"
 }
 
 
@@ -84,9 +91,13 @@ pool_paths() {
 # The second also answers a question Cloudflare's docs hedge on: purge-by-URL
 # does reach an entry a Worker created under its own cache key.
 purge_urls() {
-    pool_paths | while read -r rel; do
+    local paths rel
+    paths="$(mktemp)"
+    pool_paths > "$paths"
+    while read -r rel; do
         printf '%s/%s\n' "$BASE_URL" "$rel"
-    done
+    done < "$paths"
+    rm -f "$paths"
 }
 
 # Sourced rather than run: the tests exercise the URL selection above without
@@ -98,7 +109,11 @@ fi
 : "${CLOUDFLARE_PURGE_TOKEN:?token with Zone - Cache Purge - Edit on pkg.haus}"
 : "${CLOUDFLARE_ZONE_ID:?the pkg.haus zone id}"
 
-mapfile -t urls < <(purge_urls | LC_ALL=C sort -u)
+# Into a file from this shell, not through <(...), so unread_indices survives.
+urls_file="$(mktemp)"
+trap 'rm -f "$urls_file"' EXIT
+purge_urls > "$urls_file"
+mapfile -t urls < "$urls_file"
 
 # 30 URLs per call, so this is several requests and any one can fail. Failing
 # is right here (purging is the whole job), but the message has to say how far
@@ -116,3 +131,12 @@ for ((i = 0; i < ${#urls[@]}; i += 30)); do
 done
 
 echo "purged ${#urls[@]} URLs" >&2
+
+# After purging the rest: a purge is idempotent, and holding back the URLs that
+# did resolve would only leave more stale bytes at the edge.
+if [ "${#unread_indices[@]}" -gt 0 ]; then
+    printf 'FATAL: could not read the index for %s; a deb this run rebuilt there may still be cached\n' \
+        "${unread_indices[*]}" >&2
+    printf '  a re-run repeats the whole list from the start\n' >&2
+    exit 1
+fi

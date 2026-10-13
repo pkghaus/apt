@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=197
+EXPECTED_ASSERTIONS=205
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -325,6 +325,69 @@ FAKE
     eq "an archive that reads as empty fails the render" "1" "$rc"
     eq "  and every listing survives it" "1" \
         "$(grep -c 'croc_1.0-1_amd64.deb' "$croc" 2>/dev/null)"
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
+
+echo "the pool purge purges what it could resolve, then fails on an unread index"
+(
+    work="$(mktemp -d)"
+    export BUILD_DIR="$work/build" SUITES="trixie unstable" ARCHES="amd64"
+    export WWW="$work/www" POSTED="$work/posted"
+    unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
+    mkdir -p "$BUILD_DIR" "$work/bin"
+
+    # Records each purge POST body and serves index reads from www/: a missing
+    # file fails as curl -f does, and the path in CUT stops after 20 bytes as a
+    # dropped transfer does (exit 18).
+    cat > "$work/bin/curl" <<'FAKE'
+#!/bin/sh
+case "$*" in *purge_cache*) cat >> "$POSTED"; echo '{"success":true}'; exit 0 ;; esac
+for a in "$@"; do url="$a"; done
+p="${url#*://*/}"
+if [ "$p" = "${CUT:-}" ]; then head -c 20 "$WWW/$p"; exit 18; fi
+cat "$WWW/$p" 2>/dev/null || exit 22
+FAKE
+    chmod +x "$work/bin/curl"
+    PATH="$work/bin:$PATH"
+
+    for v in '1.0-1~haus13+1:trixie' '1.0-1:unstable'; do
+        mkdir -p "$WWW/dists/${v#*:}/main/binary-amd64"
+        printf 'Package: croc\nFilename: pool/main/c/croc/croc_%s_amd64.deb\n\n' "${v%:*}" \
+            | gzip -n > "$WWW/dists/${v#*:}/main/binary-amd64/Packages.gz"
+        : > "$BUILD_DIR/croc_${v%:*}_amd64.deb"
+    done
+    trixie_url="https://apt.pkg.haus/pool/main/c/croc/croc_1.0-1~haus13+1_amd64.deb"
+    unstable_url="https://apt.pkg.haus/pool/main/c/croc/croc_1.0-1_amd64.deb"
+    purge() {
+        rm -f "$POSTED"
+        out="$(CLOUDFLARE_PURGE_TOKEN=t CLOUDFLARE_ZONE_ID=z "$ROOT/scripts/purge-cache.sh" 2>&1)" \
+            && rc=0 || rc=$?
+        posted="$(jq -r '.files[]' "$POSTED" 2>/dev/null | LC_ALL=C sort | tr '\n' ' ')"
+    }
+
+    purge
+    eq "a clean run succeeds" "0" "$rc"
+    # Byte order, as the list is sorted: '_' sorts before '~'.
+    eq "  and purges every rebuilt deb in every suite" "$unstable_url $trixie_url " "$posted"
+
+    # The read that fails is the only one naming unstable's deb, so before
+    # this a run purged trixie alone, said "purged 1 URLs" and exited 0.
+    mv "$WWW/dists/unstable/main/binary-amd64/Packages.gz" "$work/unstable.gz"
+    purge
+    eq "an unreadable index fails the purge" "1" "$rc"
+    eq "  and the failure names exactly that suite/arch" "unstable/amd64" \
+        "$(grep '^FATAL' <<<"$out" | grep -oE '[a-z]+/amd64' | tr '\n' ' ' | sed 's/ $//')"
+    eq "  and the URLs it could resolve are still purged" "$trixie_url " "$posted"
+
+    mv "$work/unstable.gz" "$WWW/dists/unstable/main/binary-amd64/Packages.gz"
+    export CUT=dists/unstable/main/binary-amd64/Packages.gz
+    purge
+    eq "a truncated index fails the purge" "1" "$rc"
+    eq "  and the failure names exactly that suite/arch" "unstable/amd64" \
+        "$(grep '^FATAL' <<<"$out" | grep -oE '[a-z]+/amd64' | tr '\n' ' ' | sed 's/ $//')"
+    eq "  and the URLs it could resolve are still purged" "$trixie_url " "$posted"
 
     rm -rf "$work"
     exit $((fail > 0))
