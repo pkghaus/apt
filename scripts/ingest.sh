@@ -12,7 +12,6 @@
 # Subcommands, designed around the CI job split:
 #
 #   plan             what is missing, as TSV on stdout (runs anywhere)
-#   build <plan>     build this host's architecture's share of a plan
 #   include <dir>    include built packages into the archive and re-export
 #
 # Layout: conf/ lives on master. aptly's state (its leveldb and its
@@ -33,18 +32,10 @@ PACKAGES_FILE="${PACKAGES_FILE:-packages.txt}"
 # fixture repositories; anything git clone accepts works.
 GIT_BASE="${GIT_BASE:-https://github.com/}"
 IMAGE="${IMAGE:-ghcr.io/pkghaus/deb-builder}"
-ARCHIVE_DIR="${ARCHIVE_DIR:-public}"
 SUITES="${SUITES:-trixie testing unstable}"
 
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
-
-log() { printf '%s\n' "$*" >&2; }
-
-die() {
-    log "FATAL: $*"
-    exit 1
-}
 
 ensure_repo() {
     local repo
@@ -334,8 +325,6 @@ include() {
     local dir="${1:?usage: ingest.sh include <dir>}"
     local deb version suite included=0
     local -a touched=()
-
-    [ -d "$ARCHIVE_DIR" ] || mkdir -p "$ARCHIVE_DIR"
 
     require_r2
 

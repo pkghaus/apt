@@ -301,7 +301,8 @@ const SUITES = ["trixie", "testing", "unstable"];
 // /dists/trixie/InRelease                            -> heartbeat row
 //
 // The path arrives percent-decoded: apt requests pool files with '~' and
-// '+' encoded (%7e/%2b), the same spellings purge-cache.sh has to cover.
+// '+' encoded (%7e/%2b), and decoding folds them into the literal spelling,
+// the only one purge-cache.sh purges.
 // Charsets are the Debian-legal ones with length caps, and heartbeats
 // accept only the three real suites; the 200-status gate in fetch() is
 // the primary defense, these anchors are the belt to its braces.

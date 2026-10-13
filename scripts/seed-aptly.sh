@@ -34,8 +34,6 @@ SEED_PUBLISH="${SEED_PUBLISH:-on}"
 # shellcheck source=scripts/aptly-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/aptly-lib.sh"
 
-log() { printf '%s\n' "$*" >&2; }
-
 source_index() { # suite arch
     curl -fsSL --max-time 120 \
         "$SOURCE_URL/dists/$1/main/binary-$2/Packages.gz" | gunzip
@@ -74,7 +72,7 @@ manifest="$(mktemp)"
 trap 'rm -f "$manifest"' EXIT
 build_manifest source_index > "$manifest"
 
-[ -s "$manifest" ] || { log "FATAL: $SOURCE_URL published no packages"; exit 1; }
+[ -s "$manifest" ] || die "$SOURCE_URL published no packages"
 log "source archive: $(wc -l < "$manifest") suite/package pairs, $(cut -d' ' -f2 "$manifest" | sort -u | wc -l) distinct files"
 
 # Downloaded once per distinct file even when several suites share it, then
@@ -90,8 +88,7 @@ while read -r _ rel sha; do
     curl -fsSL --max-time 300 -A "$ARCHIVE_SELF_UA" -o "$dest.part" "$SOURCE_URL/$rel"
     got="$(sha256sum "$dest.part" | cut -d' ' -f1)"
     if [ -n "$sha" ] && [ "$got" != "$sha" ]; then
-        log "FATAL: $rel: index says $sha, download is $got"
-        exit 1
+        die "$rel: index says $sha, download is $got"
     fi
     mv "$dest.part" "$dest"
     log "fetched $(basename "$rel")"

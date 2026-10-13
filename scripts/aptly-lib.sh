@@ -27,7 +27,16 @@ APTLY_CONF="${APTLY_CONF:-$APTLY_ROOT/aptly.conf}"
 # The cache hitting is still what lets the pool be thrown away between runs.
 PUBLISH_TARGET="${PUBLISH_TARGET:-s3:r2:}"
 
+# Where build records live in the bucket, for the scripts that source this. The
+# buildinfos Worker hardcodes the same path.
+# shellcheck disable=SC2034
+BUILDINFO_PREFIX=buildinfos/buildinfo-pool
+
 _aptly_conf_written=0
+
+# Diagnostics go to stderr, so stdout stays free for a script's own output.
+log() { printf '%s\n' "$*" >&2; }
+die() { log "FATAL: $*"; exit 1; }
 
 have_r2() {
     [ -n "${R2_ACCESS_KEY_ID:-}" ] && [ -n "${R2_SECRET_ACCESS_KEY:-}" ] &&
@@ -111,14 +120,7 @@ suite_contents() {
     local repo
     repo="$(repo_of "$1")"
     aptly_ repo show "$repo" >/dev/null 2>&1 || return 0
-    # An empty query is not the same as no query: aptly rejects the empty
-    # string, so the argument is omitted rather than passed blank.
-    if [ -n "${2:-}" ]; then
-        set -- "$repo" "$2"
-    else
-        set -- "$repo"
-    fi
-    aptly_ repo search "$@" 2>/dev/null |
+    aptly_ repo search "$repo" 2>/dev/null |
         awk -F_ 'NF>=3 {print $1 "\t" $2 "\t" $3}' || true
 }
 

@@ -30,8 +30,6 @@ NEWS_DIR="$ARCHIVE_DIR/news"
 SEED="${SEED:-scripts/news-seed.jsonl}"
 NOTICES="${NOTICES:-scripts/news-notices.jsonl}"
 
-log() { printf '%s\n' "$*" >&2; }
-
 now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 mkdir -p "$NEWS_DIR"
 
@@ -83,8 +81,7 @@ if [ ! -f "$known" ]; then
 elif [ ! -s "$current" ] && [ -s "$known" ]; then
     # An unreadable or unfetched aptly state looks exactly like an emptied
     # archive, and the retirement pass below would then retire every package.
-    log "FATAL: aptly reports an empty archive but $known lists $(wc -l < "$known") packages"
-    exit 1
+    die "aptly reports an empty archive but $known lists $(wc -l < "$known") packages"
 else
     while IFS=$'\t' read -r pkg ver; do
         [ -n "$pkg" ] || continue
