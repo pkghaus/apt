@@ -52,7 +52,7 @@ pool_paths() {
 
     for suite in $SUITES; do
         for arch in $ARCHES; do
-            index_text "$suite" "$arch" \
+            { index_text "$suite" "$arch" || true; } \
                 | awk -v list="$built" '
                     BEGIN { while ((getline l < list) > 0) want[l] = 1 }
                     /^Filename: / {

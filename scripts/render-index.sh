@@ -288,6 +288,10 @@ breadcrumb_for() {
     printf '%s' "$(wordmark)"'<span class="path">'"$path_html"'</span>'
 }
 
+# Reads the manifest builders could not complete. Counted in this shell, so
+# the builders must not run inside $(...).
+manifest_gaps=0
+
 # The pool lives in R2, so there is nothing local to walk. Its shape is fully
 # described by the suite indices: every deb has a Filename and a Size. Emit
 # "<relative-path>\t<bytes>" for the union across suites and architectures, so
@@ -303,17 +307,22 @@ breadcrumb_for() {
 # plus a round trip, and fetched one at a time they were most of the render
 # step: 15 reads across both manifest builders against well under a second of
 # actual rendering. Fetched together instead, then read from disk in the same
-# order as before. A failed fetch still leaves an empty file and drops out
-# below, which is what the empty-manifest guard in the main body exists for.
+# order as before. A read that fails, even after some bytes arrived, leaves an
+# empty file, which counts as a gap and drops out below.
 dists_manifest() {
     local suite release path bytes d
     d="$(mktemp -d)"
     for suite in $SUITES; do
         for path in Release InRelease Release.gpg; do
-            { archive_object "dists/$suite/$path" > "$d/$suite.$path"; } || true &
+            { archive_object "dists/$suite/$path" > "$d/$suite.$path" || : > "$d/$suite.$path"; } &
         done
     done
     wait
+    for suite in $SUITES; do
+        for path in Release InRelease Release.gpg; do
+            [ -s "$d/$suite.$path" ] || manifest_gaps=$((manifest_gaps + 1))
+        done
+    done
 
     for suite in $SUITES; do
         # Still through a command substitution: ${#release} counts what that
@@ -351,11 +360,16 @@ pool_manifest() {
             {
                 index_text "$suite" "$arch" \
                     | awk '/^Filename: /{f=$2} /^Size: /{if(f!=""){print f "\t" $2; f=""}}' \
-                    > "$d/pool.$suite.$arch"
-            } || true &
+                    > "$d/pool.$suite.$arch" || : > "$d/pool.$suite.$arch"
+            } &
         done
     done
     wait
+    for suite in $SUITES; do
+        for arch in $ARCHES; do
+            [ -s "$d/pool.$suite.$arch" ] || manifest_gaps=$((manifest_gaps + 1))
+        done
+    done
     { cat "$d"/pool.* 2>/dev/null || true; } | LC_ALL=C sort -u
     rm -rf "$d"
 }
@@ -802,21 +816,16 @@ EOF
     news_feed "$news" > "$ARCHIVE_DIR/news/feed.xml"
 }
 
-# The suite indices and the .debs are served from R2 now. Whatever the reprepro
-# era left in the tree would still be served from Pages, still count against its
-# 1 GB limit, and still be found by apt -- an unsigned second copy of the
-# archive drifting away from the real one. Only the listing pages stay under
-# pool/.
-prune_moved() {
-    local d
-    # reprepro's own database was being served publicly; it is not ours to
-    # publish and nothing replaces it.
-    rm -rf "${ARCHIVE_DIR:?}/db"
-    for d in pool dists; do
-        [ -d "$ARCHIVE_DIR/$d" ] || continue
-        find "$ARCHIVE_DIR/$d" -type f ! -name index.html -delete
-        find "$ARCHIVE_DIR/$d" -type d -empty -delete
-    done
+# Both trees hold nothing but listings built from the manifest, so they are
+# rebuilt whole, which drops a directory the indices stopped describing. Not
+# after a failed read: a partial manifest would delete or rewrite live listings.
+refresh_synthetic_listings() {
+    if [ "$manifest_gaps" -gt 0 ]; then
+        echo "::warning::$manifest_gaps archive read(s) failed; pool/ and dists/ listings left as last published" >&2
+        return 0
+    fi
+    rm -rf "${ARCHIVE_DIR:?}/pool" "${ARCHIVE_DIR:?}/dists"
+    render_synthetic_listings "$1"
 }
 
 # Sourced rather than run: the tests reach the helpers above without rendering
@@ -828,11 +837,10 @@ if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
     return 0
 fi
 
-# Read the indices before anything is deleted. prune_moved clears the pool
-# tree that render_pool_listings then rebuilds from this, so an empty manifest
-# -- R2 unreachable, credentials missing, aws absent -- would replace every
-# listing with nothing, quietly, and the publish would ship it. The only
-# archive that legitimately has no pool is one that has never published.
+# Read the indices before anything is deleted. An empty manifest -- R2
+# unreachable, credentials missing, aws absent -- fails here rather than
+# publishing an archive with no pool; the only archive that legitimately has
+# none is one that has never published.
 manifest="$(mktemp)"
 trap 'rm -f "$manifest"' EXIT
 { pool_manifest; dists_manifest; } > "$manifest"
@@ -844,10 +852,9 @@ if [ ! -s "$manifest" ] &&
     exit 1
 fi
 
-prune_moved
 # Before render_root, so the two synthetic trees exist as directories and the
 # root listing offers them.
-render_synthetic_listings "$manifest"
+refresh_synthetic_listings "$manifest"
 render_favicon
 render_root
 render_listings

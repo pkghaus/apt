@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=184
+EXPECTED_ASSERTIONS=197
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -218,6 +218,115 @@ echo "render refuses to replace pool listings with nothing"
         "$(cat "$ARCHIVE_DIR/pool/main/z/zola/index.html" 2>/dev/null)"
     eq "the failure names the cause" "1" \
         "$(grep -c 'Refusing to replace them with nothing' <<<"$out")"
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
+
+echo "render drops listings the indices no longer describe, and only on a complete read"
+(
+    work="$(mktemp -d)"
+    export ARCHIVE_DIR="$work/public" SUITES="trixie unstable" ARCHES="amd64"
+    export BASE_URL="http://archive.invalid" WWW="$work/www"
+    unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
+    mkdir -p "$ARCHIVE_DIR/news" "$work/bin"
+    : > "$ARCHIVE_DIR/news/news.jsonl"
+
+    # The archive over HTTP, served from www/; a missing file fails as curl -f
+    # does. The path named in CUT is cut off after 20 bytes, as a dropped
+    # transfer is (curl exit 18).
+    cat > "$work/bin/curl" <<'FAKE'
+#!/bin/sh
+for a in "$@"; do url="$a"; done
+p="${url#*://*/}"
+if [ "$p" = "${CUT:-}" ]; then head -c 20 "$WWW/$p"; exit 18; fi
+cat "$WWW/$p" 2>/dev/null || exit 22
+FAKE
+    chmod +x "$work/bin/curl"
+    PATH="$work/bin:$PATH"
+
+    # Each suite's filenames carry its qualifier, as the real pool's do, so a
+    # listing shared by two suites has one row per suite.
+    publish() { # suite prefix/pkg...
+        local suite="$1" d="$WWW/dists/$1" q="" p
+        shift
+        case "$suite" in trixie) q='~haus13+1' ;; esac
+        mkdir -p "$d/main/binary-amd64"
+        for p in "$@"; do
+            printf 'Package: %s\nFilename: pool/main/%s/%s_1.0-1%s_amd64.deb\nSize: 900\n\n' \
+                "${p#*/}" "$p" "${p#*/}" "$q"
+        done | gzip -n > "$d/main/binary-amd64/Packages.gz"
+        printf 'Suite: %s\nSHA256:\n 00 %s main/binary-amd64/Packages.gz\n' \
+            "$suite" "$(wc -c < "$d/main/binary-amd64/Packages.gz")" > "$d/Release"
+        echo signed > "$d/InRelease"
+        echo sig > "$d/Release.gpg"
+    }
+    render() { "$ROOT/scripts/render-index.sh" 2>&1; }
+    libfoo="$ARCHIVE_DIR/pool/main/libf/libfoo/index.html"
+    croc="$ARCHIVE_DIR/pool/main/c/croc/index.html"
+    croc_rows() { grep -cE '<code>croc_1\.0-1(~haus13\+1)?_amd64\.deb</code>' "$croc" 2>/dev/null; }
+
+    publish trixie c/croc
+    publish unstable c/croc libf/libfoo
+    render >/dev/null
+    eq "a lib package gets its listing" "1" \
+        "$(grep -c 'libfoo_1.0-1_amd64.deb' "$libfoo" 2>/dev/null)"
+
+    # Published listings are committed and deployed, so one left behind is
+    # served for a package the archive no longer has.
+    publish unstable c/croc
+    render >/dev/null
+    eq "a package that left the archive loses its listing" "" \
+        "$(find "$ARCHIVE_DIR/pool/main/libf" 2>/dev/null | tr '\n' ' ')"
+    eq "  and a package still in it keeps its listing" "1" \
+        "$(grep -c 'croc_1.0-1_amd64.deb' "$croc" 2>/dev/null)"
+
+    # Partial reads. In each, the read that fails is the only one describing
+    # libfoo or unstable, so rendering from that manifest would delete or
+    # rewrite live listings. Both trees stay exactly as last published.
+    publish unstable c/croc libf/libfoo
+    render >/dev/null
+    rm "$WWW/dists/unstable/main/binary-amd64/Packages.gz"
+    out="$(render)"
+    eq "an unreadable index keeps the listings it describes" "1" \
+        "$(grep -c 'libfoo_1.0-1_amd64.deb' "$libfoo" 2>/dev/null)"
+    eq "  and leaves a listing it shares with another suite whole" "2" "$(croc_rows)"
+    eq "  and the log says the listings were left as published" "1" \
+        "$(grep -c 'listings left as last published' <<<"$out")"
+
+    # A download cut short decompresses to a shorter index, not an empty one.
+    { printf 'Package: croc\nFilename: pool/main/c/croc/croc_1.0-1_amd64.deb\nSize: 900\n\n' | gzip -n
+      printf 'Package: libfoo\nFilename: pool/main/libf/libfoo/libfoo_1.0-1_amd64.deb\nSize: 900\n' | gzip -n | head -c 15
+    } > "$WWW/dists/unstable/main/binary-amd64/Packages.gz"
+    render >/dev/null
+    eq "a truncated index counts as unread" "1" \
+        "$(grep -c 'libfoo_1.0-1_amd64.deb' "$libfoo" 2>/dev/null)"
+
+    publish unstable c/croc libf/libfoo
+    rm "$WWW/dists/unstable/Release"
+    render >/dev/null
+    eq "an unreadable Release keeps that suite's metadata listing" "1" \
+        "$(grep -c '>InRelease<' "$ARCHIVE_DIR/dists/unstable/index.html" 2>/dev/null)"
+    eq "  and dists/ still offers the suite" "1" \
+        "$(grep -c 'href="unstable/"' "$ARCHIVE_DIR/dists/index.html" 2>/dev/null)"
+
+    # A Release cut short still has bytes in it; only the fetch's own status
+    # says it is incomplete.
+    publish unstable c/croc libf/libfoo
+    render >/dev/null
+    out="$(CUT=dists/unstable/Release render)"
+    eq "a Release cut short counts as unread" "1" \
+        "$(grep -c 'listings left as last published' <<<"$out")"
+    eq "  and the index listings it names survive" "1" \
+        "$(grep -c '>Packages.gz<' "$ARCHIVE_DIR/dists/unstable/main/binary-amd64/index.html" 2>/dev/null)"
+
+    # Nothing readable at all is the empty-manifest guard's case, and it has
+    # to fire before anything is cleared.
+    rm -rf "$WWW/dists"
+    out="$(render)" && rc=0 || rc=$?
+    eq "an archive that reads as empty fails the render" "1" "$rc"
+    eq "  and every listing survives it" "1" \
+        "$(grep -c 'croc_1.0-1_amd64.deb' "$croc" 2>/dev/null)"
+
+    rm -rf "$work"
     exit $((fail > 0))
 ) || failed_groups=$((failed_groups + 1))
 
