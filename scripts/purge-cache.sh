@@ -46,8 +46,10 @@ ARCHES="${ARCHES:-amd64 arm64}"
 unread_indices=()
 pool_paths() {
     local suite arch built idx found
+    # Absent means nothing was built: ingest creates it only to download debs.
+    [ -d "$BUILD_DIR" ] || return 0
     built="$(mktemp)"
-    find "$BUILD_DIR" -maxdepth 1 -name '*.deb' -printf '%f\n' 2>/dev/null \
+    find "$BUILD_DIR" -maxdepth 1 -name '*.deb' -printf '%f\n' \
         | LC_ALL=C sort -u > "$built"
     if [ ! -s "$built" ]; then
         rm -f "$built"

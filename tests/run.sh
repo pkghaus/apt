@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=205
+EXPECTED_ASSERTIONS=209
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -334,18 +334,19 @@ echo "the pool purge purges what it could resolve, then fails on an unread index
 (
     work="$(mktemp -d)"
     export BUILD_DIR="$work/build" SUITES="trixie unstable" ARCHES="amd64"
-    export WWW="$work/www" POSTED="$work/posted"
+    export WWW="$work/www" POSTED="$work/posted" READS="$work/reads"
     unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
     mkdir -p "$BUILD_DIR" "$work/bin"
 
-    # Records each purge POST body and serves index reads from www/: a missing
-    # file fails as curl -f does, and the path in CUT stops after 20 bytes as a
-    # dropped transfer does (exit 18).
+    # Records each purge POST body and each index read, and serves the reads
+    # from www/: a missing file fails as curl -f does, and the path in CUT stops
+    # after 20 bytes as a dropped transfer does (exit 18).
     cat > "$work/bin/curl" <<'FAKE'
 #!/bin/sh
 case "$*" in *purge_cache*) cat >> "$POSTED"; echo '{"success":true}'; exit 0 ;; esac
 for a in "$@"; do url="$a"; done
 p="${url#*://*/}"
+echo "$p" >> "$READS"
 if [ "$p" = "${CUT:-}" ]; then head -c 20 "$WWW/$p"; exit 18; fi
 cat "$WWW/$p" 2>/dev/null || exit 22
 FAKE
@@ -388,6 +389,17 @@ FAKE
     eq "  and the failure names exactly that suite/arch" "unstable/amd64" \
         "$(grep '^FATAL' <<<"$out" | grep -oE '[a-z]+/amd64' | tr '\n' ' ' | sed 's/ $//')"
     eq "  and the URLs it could resolve are still purged" "$trixie_url " "$posted"
+
+    # ingest.yml creates build/ only when it downloads debs, so a run that
+    # planned nothing reaches the purge with no build directory at all.
+    unset CUT
+    export BUILD_DIR="$work/never-created"
+    rm -f "$READS"
+    purge
+    eq "a missing build directory succeeds" "0" "$rc"
+    eq "  and says it purged nothing" "1" "$(grep -c '^purged 0 URLs$' <<<"$out")"
+    eq "  and posts nothing" "" "$posted"
+    eq "  and reads no index" "0" "$(cat "$READS" 2>/dev/null | wc -l)"
 
     rm -rf "$work"
     exit $((fail > 0))

@@ -365,6 +365,7 @@ pool_manifest() {
         done
     done
     wait
+    # Empty counts too, unlike in purge-cache.sh: the keyring is in every index.
     for suite in $SUITES; do
         for arch in $ARCHES; do
             [ -s "$d/pool.$suite.$arch" ] || manifest_gaps=$((manifest_gaps + 1))
