@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: frp 0.71.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-14-updated-frp-0.71.1-1</guid>
+<pubDate>Wed, 14 Oct 2026 11:57:44 +0000</pubDate>
+<description>Updated from 0.71.0-2. (frp 0.71.1-1)</description>
+</item>
+<item>
 <title>updated: monolith 2.11.5-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-13-updated-monolith-2.11.5-1</guid>
