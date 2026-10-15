@@ -7,8 +7,8 @@
 #
 # Regenerated on every publish, never edited by hand -- like everything
 # served, these pages are produced by the ingest. APT clients never read
-# them: index.html is not referenced by any Release file. index.html and
-# favicon.svg hide themselves from the listings.
+# them: index.html is not referenced by any Release file. The site's own
+# files hide themselves from the listings (listing_rows).
 
 set -euo pipefail
 # Without this, set -e stops at the edge of a command substitution: a function
@@ -437,7 +437,8 @@ EOF
 }
 
 # One directory's rows: optional parent link, then directories, then files,
-# each sorted; index.html and favicon.svg hide themselves.
+# each sorted; the site's own files (index.html, favicon.svg, 404.html,
+# robots.txt) hide themselves.
 listing_rows() {
     local dir="$1" with_parent="$2" entry name size
 
@@ -459,7 +460,7 @@ listing_rows() {
     for entry in "$dir"/*; do
         [ -f "$entry" ] || continue
         name="$(basename "$entry")"
-        case "$name" in index.html|favicon.svg|404.html) continue ;; esac
+        case "$name" in index.html|favicon.svg|404.html|robots.txt) continue ;; esac
         size="$(stat -c %s "$entry" | numfmt --to=iec)"
         printf '      <tr><td><a href="%s"><code>%s</code></a></td><td class="size">%s</td></tr>\n' \
             "$name" "$name" "$size"
@@ -529,6 +530,15 @@ Contact: mailto:security@pkg.haus
 Expires: $(date -u -d '+1 year' +%Y-%m-%dT%H:%M:%S.000Z)
 Preferred-Languages: en
 Canonical: https://apt.pkg.haus/.well-known/security.txt
+EOF
+}
+
+render_robots_txt() {
+    # Every 200 on a pool .deb is a download on /stats, and crawlers walking
+    # the listings fetch every one. Only crawlers that honour robots.txt stop.
+    cat > "$ARCHIVE_DIR/robots.txt" <<'EOF'
+User-agent: *
+Disallow: /pool/
 EOF
 }
 
@@ -839,5 +849,6 @@ render_root
 render_listings
 render_404
 render_security_txt
+render_robots_txt
 render_news
 echo "rendered root + $(find "$ARCHIVE_DIR" -mindepth 2 -name index.html | wc -l) listings" >&2

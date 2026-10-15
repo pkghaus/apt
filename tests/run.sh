@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=215
+EXPECTED_ASSERTIONS=218
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -564,6 +564,35 @@ NEWS
     else
         ok "a line that is not JSON must fail the render"
     fi
+
+    rm -rf "$work"
+    exit $((fail > 0))
+) || failed_groups=$((failed_groups + 1))
+
+echo "robots.txt keeps crawlers out of pool/ and itself out of the root listing"
+(
+    work="$(mktemp -d)"
+    export ARCHIVE_DIR="$work/public" SUITES="trixie" ARCHES="amd64"
+    export BASE_URL="http://127.0.0.1:1"
+    unset R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET R2_ENDPOINT
+    mkdir -p "$ARCHIVE_DIR/news"
+    : > "$ARCHIVE_DIR/news/news.jsonl"
+    # A root file that must stay listed, so a root page listing nothing cannot
+    # pass the hiding check.
+    printf 'key' > "$ARCHIVE_DIR/pkghaus-archive-keyring.gpg"
+
+    # Twice: the tree persists between publishes, and the root is listed before
+    # robots.txt is written, so only the second render could list it.
+    "$ROOT/scripts/render-index.sh" >/dev/null 2>&1
+    "$ROOT/scripts/render-index.sh" >/dev/null 2>&1
+
+    eq "robots.txt disallows pool/ for every crawler" \
+        "$(printf 'User-agent: *\nDisallow: /pool/')" \
+        "$(cat "$ARCHIVE_DIR/robots.txt" 2>/dev/null)"
+    eq "the root listing does not offer robots.txt" "0" \
+        "$(grep -c 'robots\.txt' "$ARCHIVE_DIR/index.html" 2>/dev/null)"
+    eq "  while it still lists the root's real files" "1" \
+        "$(grep -c '<code>pkghaus-archive-keyring\.gpg</code>' "$ARCHIVE_DIR/index.html" 2>/dev/null)"
 
     rm -rf "$work"
     exit $((fail > 0))
