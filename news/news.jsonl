@@ -123,3 +123,4 @@
 {"ts":"2026-10-14T11:57:44Z","type":"updated","title":"updated: frp 0.71.1-1","detail":"Updated from 0.71.0-2.","pkgs":"frp=0.71.1-1"}
 {"ts":"2026-10-16T21:15:19Z","type":"updated","title":"updated: monolith 2.11.6-1","detail":"Updated from 2.11.5-1.","pkgs":"monolith=2.11.6-1"}
 {"ts":"2026-10-19T07:50:38Z","type":"updated","title":"updated: i3status-rust 0.36.2-1","detail":"Updated from 0.36.1-2.","pkgs":"i3status-rust=0.36.2-1"}
+{"ts":"2026-10-19T14:29:17Z","type":"updated","title":"updated: zig 0.17.0-1","detail":"Updated from 0.16.0-3.","pkgs":"zig=0.17.0-1"}

@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: zig 0.17.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-19-updated-zig-0.17.0-1</guid>
+<pubDate>Mon, 19 Oct 2026 14:29:17 +0000</pubDate>
+<description>Updated from 0.16.0-3. (zig 0.17.0-1)</description>
+</item>
+<item>
 <title>updated: i3status-rust 0.36.2-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-19-updated-i3status-rust-0.36.2-1</guid>
