@@ -6,7 +6,7 @@
     "test": "ls test/*.test.js >/dev/null && node --test test/*.test.js"
   },
   "devDependencies": {
-    "wrangler": "4.149.0"
+    "wrangler": "4.151.1"
   },
   "overrides": {
     "sharp": "^0.35.5"
