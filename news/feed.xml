@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: fx 40.0.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-22-updated-fx-40.0.1-1</guid>
+<pubDate>Thu, 22 Oct 2026 17:20:50 +0000</pubDate>
+<description>Updated from 40.0.0-1. (fx 40.0.1-1)</description>
+</item>
+<item>
 <title>updated: hl 0.36.5-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-21-updated-hl-0.36.5-1</guid>
