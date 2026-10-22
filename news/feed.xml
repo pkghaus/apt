@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: vale 3.25.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-22-updated-vale-3.25.1-1</guid>
+<pubDate>Thu, 22 Oct 2026 21:46:31 +0000</pubDate>
+<description>Updated from 3.24.0-1. (vale 3.25.1-1)</description>
+</item>
+<item>
 <title>updated: fx 40.0.1-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-22-updated-fx-40.0.1-1</guid>
