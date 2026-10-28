@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: emeraldian 0.10.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-28-updated-emeraldian-0.10.0-1</guid>
+<pubDate>Wed, 28 Oct 2026 06:18:37 +0000</pubDate>
+<description>Updated from 0.8.0-1. (emeraldian 0.10.0-1)</description>
+</item>
+<item>
 <title>updated: xplr 1.2.2-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-25-updated-xplr-1.2.2-1</guid>
