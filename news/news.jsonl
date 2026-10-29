@@ -135,3 +135,4 @@
 {"ts":"2026-10-28T06:18:37Z","type":"updated","title":"updated: emeraldian 0.10.0-1","detail":"Updated from 0.8.0-1.","pkgs":"emeraldian=0.10.0-1"}
 {"ts":"2026-10-28T13:05:39Z","type":"updated","title":"updated: tincan 0.4.0-1","detail":"Updated from 0.3.4-1.","pkgs":"tincan=0.4.0-1"}
 {"ts":"2026-10-28T22:43:34Z","type":"updated","title":"updated: gitu 0.44.0-1","detail":"Updated from 0.43.0-1.","pkgs":"gitu=0.44.0-1"}
+{"ts":"2026-10-29T07:20:53Z","type":"updated","title":"updated: act 0.2.92-1","detail":"Updated from 0.2.89-2.","pkgs":"act=0.2.92-1"}
