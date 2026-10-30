@@ -138,3 +138,4 @@
 {"ts":"2026-10-29T07:20:53Z","type":"updated","title":"updated: act 0.2.92-1","detail":"Updated from 0.2.89-2.","pkgs":"act=0.2.92-1"}
 {"ts":"2026-10-29T22:55:06Z","type":"updated","title":"updated: difftastic 0.72.0-1","detail":"Updated from 0.71.0-2.","pkgs":"difftastic=0.72.0-1"}
 {"ts":"2026-10-30T05:57:41Z","type":"updated","title":"updated: emeraldian 0.10.2-1","detail":"Updated from 0.10.0-1.","pkgs":"emeraldian=0.10.2-1"}
+{"ts":"2026-10-30T06:02:43Z","type":"updated","title":"updated: mandown 1.1-1","detail":"Updated from 1.0.5.2-2.","pkgs":"mandown=1.1-1"}
