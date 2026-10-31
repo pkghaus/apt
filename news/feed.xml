@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: vale 3.26.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-10-31-updated-vale-3.26.0-1</guid>
+<pubDate>Sat, 31 Oct 2026 21:47:40 +0000</pubDate>
+<description>Updated from 3.25.1-1. (vale 3.26.0-1)</description>
+</item>
+<item>
 <title>updated: act 0.2.94-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-31-updated-act-0.2.94-1</guid>

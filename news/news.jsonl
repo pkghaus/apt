@@ -142,3 +142,4 @@
 {"ts":"2026-10-30T06:32:06Z","type":"updated","title":"updated: monolith 2.11.7-1","detail":"Updated from 2.11.6-1.","pkgs":"monolith=2.11.7-1"}
 {"ts":"2026-10-30T22:25:46Z","type":"updated","title":"updated: croc 11.6.0-1","detail":"Updated from 11.5.5-1.","pkgs":"croc=11.6.0-1"}
 {"ts":"2026-10-31T21:41:51Z","type":"updated","title":"updated: act 0.2.94-1","detail":"Updated from 0.2.92-1.","pkgs":"act=0.2.94-1"}
+{"ts":"2026-10-31T21:47:40Z","type":"updated","title":"updated: vale 3.26.0-1","detail":"Updated from 3.25.1-1.","pkgs":"vale=3.26.0-1"}
