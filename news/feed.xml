@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: kudu 0.5.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-01-updated-kudu-0.5.0-1</guid>
+<pubDate>Sun, 01 Nov 2026 03:40:26 +0000</pubDate>
+<description>Updated from 0.4.2-1. (kudu 0.5.0-1)</description>
+</item>
+<item>
 <title>updated: vale 3.26.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-10-31-updated-vale-3.26.0-1</guid>
