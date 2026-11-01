@@ -7,6 +7,20 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: actionlint 1.7.12-4</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-01-updated-actionlint-1.7.12-4</guid>
+<pubDate>Sun, 01 Nov 2026 05:53:40 +0000</pubDate>
+<description>Updated from 1.7.12-3. (actionlint 1.7.12-4)</description>
+</item>
+<item>
+<title>updated: act 0.2.94-2</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-01-updated-act-0.2.94-2</guid>
+<pubDate>Sun, 01 Nov 2026 05:53:40 +0000</pubDate>
+<description>Updated from 0.2.94-1. (act 0.2.94-2)</description>
+</item>
+<item>
 <title>updated: kudu 0.5.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-01-updated-kudu-0.5.0-1</guid>
