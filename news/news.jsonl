@@ -168,3 +168,4 @@
 {"ts":"2026-11-01T06:34:40Z","type":"updated","title":"updated: xplr 1.2.2-2","detail":"Updated from 1.2.2-1.","pkgs":"xplr=1.2.2-2"}
 {"ts":"2026-11-01T22:09:57Z","type":"updated","title":"updated: croc 11.6.2-1","detail":"Updated from 11.6.0-2.","pkgs":"croc=11.6.2-1"}
 {"ts":"2026-11-01T22:17:06Z","type":"updated","title":"updated: kudu 0.6.0-1","detail":"Updated from 0.5.0-2.","pkgs":"kudu=0.6.0-1"}
+{"ts":"2026-11-02T15:56:26Z","type":"updated","title":"updated: croc 11.6.3-1","detail":"Updated from 11.6.2-1.","pkgs":"croc=11.6.3-1"}

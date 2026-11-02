@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.6.3-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-02-updated-croc-11.6.3-1</guid>
+<pubDate>Mon, 02 Nov 2026 15:56:26 +0000</pubDate>
+<description>Updated from 11.6.2-1. (croc 11.6.3-1)</description>
+</item>
+<item>
 <title>updated: kudu 0.6.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-01-updated-kudu-0.6.0-1</guid>
