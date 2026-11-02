@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: monolith 2.12.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-02-updated-monolith-2.12.0-1</guid>
+<pubDate>Mon, 02 Nov 2026 16:03:36 +0000</pubDate>
+<description>Updated from 2.11.7-1. (monolith 2.12.0-1)</description>
+</item>
+<item>
 <title>updated: croc 11.6.3-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-02-updated-croc-11.6.3-1</guid>
