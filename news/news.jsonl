@@ -171,3 +171,4 @@
 {"ts":"2026-11-02T15:56:26Z","type":"updated","title":"updated: croc 11.6.3-1","detail":"Updated from 11.6.2-1.","pkgs":"croc=11.6.3-1"}
 {"ts":"2026-11-02T16:03:36Z","type":"updated","title":"updated: monolith 2.12.0-1","detail":"Updated from 2.11.7-1.","pkgs":"monolith=2.12.0-1"}
 {"ts":"2026-11-03T02:20:35Z","type":"updated","title":"updated: zig 0.17.1-1","detail":"Updated from 0.17.0-1.","pkgs":"zig=0.17.1-1"}
+{"ts":"2026-11-03T14:17:47Z","type":"updated","title":"updated: act 0.2.95-1","detail":"Updated from 0.2.94-2.","pkgs":"act=0.2.95-1"}
