@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: zig 0.17.1-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-03-updated-zig-0.17.1-1</guid>
+<pubDate>Tue, 03 Nov 2026 02:20:35 +0000</pubDate>
+<description>Updated from 0.17.0-1. (zig 0.17.1-1)</description>
+</item>
+<item>
 <title>updated: monolith 2.12.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-02-updated-monolith-2.12.0-1</guid>
