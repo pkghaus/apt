@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: frp 0.72.0-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-05-updated-frp-0.72.0-1</guid>
+<pubDate>Thu, 05 Nov 2026 00:00:49 +0000</pubDate>
+<description>Updated from 0.71.1-2. (frp 0.72.0-1)</description>
+</item>
+<item>
 <title>updated: act 0.2.97-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-04-updated-act-0.2.97-1</guid>

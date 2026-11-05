@@ -174,3 +174,4 @@
 {"ts":"2026-11-03T14:17:47Z","type":"updated","title":"updated: act 0.2.95-1","detail":"Updated from 0.2.94-2.","pkgs":"act=0.2.95-1"}
 {"ts":"2026-11-04T08:00:01Z","type":"updated","title":"updated: act 0.2.96-1","detail":"Updated from 0.2.95-1.","pkgs":"act=0.2.96-1"}
 {"ts":"2026-11-04T23:55:20Z","type":"updated","title":"updated: act 0.2.97-1","detail":"Updated from 0.2.96-1.","pkgs":"act=0.2.97-1"}
+{"ts":"2026-11-05T00:00:49Z","type":"updated","title":"updated: frp 0.72.0-1","detail":"Updated from 0.71.1-2.","pkgs":"frp=0.72.0-1"}
