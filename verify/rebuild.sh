@@ -60,7 +60,14 @@ esac
 IMAGE="${VERIFY_IMAGE:-pkghaus-verify:$BASE}"
 echo "verifying $version against a $BASE image ($IMAGE)" >&2
 
-docker build --quiet --build-arg "BASE=$BASE" --tag "$IMAGE" "$(dirname "$0")" >/dev/null
+# Captured, and shown only when the build fails: --quiet would drop apt's own
+# E: lines there, leaving BuildKit's "exit code: 100" as the only record.
+if ! image_log="$(docker build --progress=plain --build-arg "BASE=$BASE" \
+        --tag "$IMAGE" "$(dirname "$0")" 2>&1)"; then
+    printf '%s\n' "$image_log" | tail -n 40 >&2
+    echo "FATAL: could not build the verifier image $IMAGE from debian:$BASE" >&2
+    exit 1
+fi
 
 out="$IN/rebuilt"
 mkdir -p "$out"
