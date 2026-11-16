@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>added: rustman 0.4.0~dev.52-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-16-added-rustman-0.4.0-dev.52-1</guid>
+<pubDate>Mon, 16 Nov 2026 16:50:38 +0000</pubDate>
+<description>Joins the archive in all three suites. (rustman 0.4.0~dev.52-1)</description>
+</item>
+<item>
 <title>updated: act 0.2.98-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-16-updated-act-0.2.98-1</guid>
