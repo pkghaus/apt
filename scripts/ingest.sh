@@ -147,14 +147,18 @@ ensure_packages_mirror() {
 # Matched by exact prefix rather than a glob or a regex: Debian source names
 # may contain "." and "+", which mean something else to grep, and passing the
 # name to `git tag --list` as a pattern would make its own metacharacters live.
+#
+# Sorted on the version a tag names, not the tag: git refuses '~' in a ref, so
+# packages spells it '_', which sort -V puts after '-' where '~' sorts first.
 newest_tag() {
     local pkg="$1"
     ensure_packages_mirror || return 1
 
     git -C "$MIRROR" tag \
-        | awk -v p="$pkg/" 'index($0, p) == 1' \
-        | sort -V \
-        | tail -1
+        | awk -v p="$pkg/" 'index($0, p) == 1 { v = $0; gsub(/_/, "~", v); print v " " $0 }' \
+        | sort -k1,1V \
+        | tail -1 \
+        | cut -d' ' -f2
 }
 
 # Package name and version, from the tagged debian/changelog's first line:

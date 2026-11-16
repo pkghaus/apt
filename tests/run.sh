@@ -33,7 +33,7 @@ failed_groups=0
 # The count goes through a file because a variable incremented in a subshell
 # never reaches this scope; traps reset in subshells, so the cleanup fires once.
 # Update the number deliberately: that edit is someone noticing it moved.
-EXPECTED_ASSERTIONS=218
+EXPECTED_ASSERTIONS=220
 # Every mktemp below, the scripts' own included, lands here and goes with the
 # suite, however a group exits.
 SCRATCH="$(mktemp -d)"
@@ -1539,6 +1539,11 @@ echo "ingest plan"
     git -C "$fleet" commit -q -m two
     git -C "$fleet" tag alpha/v1.2-1
     git -C "$fleet" tag zzz/v99.0-1
+    # A pre-release upstream: packages tags 0.4.0~dev.52-1 as v0.4.0_dev.52-1.
+    git -C "$fleet" tag pre/v0.3.15_dev.51-1
+    git -C "$fleet" tag pre/v0.4.0_dev.52-1
+    git -C "$fleet" tag post/v0.4.0_dev.52-1
+    git -C "$fleet" tag post/v0.4.0-1
 
     # Plain assignments, not a command prefix. `VAR=x . file` makes VAR a
     # temporary that is discarded when the source returns, taking the value
@@ -1567,6 +1572,10 @@ echo "ingest plan"
        "keyring/v2026.01.01" "$(newest_tag keyring)"
     eq "newest_tag is empty for a package that has never been tagged" \
        "" "$(newest_tag untagged)"
+    eq "newest_tag orders pre-release tags by their version" \
+       "pre/v0.4.0_dev.52-1" "$(newest_tag pre)"
+    eq "newest_tag ranks a release above the pre-release it follows" \
+       "post/v0.4.0-1" "$(newest_tag post)"
 
     eq "changelog_header reads the version at that tag, not at HEAD" \
        "alpha 1.0-1" "$(changelog_header alpha/v1.0-1 alpha)"
