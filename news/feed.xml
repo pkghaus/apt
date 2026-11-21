@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: croc 11.6.6-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-21-updated-croc-11.6.6-1</guid>
+<pubDate>Sat, 21 Nov 2026 19:21:37 +0000</pubDate>
+<description>Updated from 11.6.5-1. (croc 11.6.6-1)</description>
+</item>
+<item>
 <title>updated: superfile 1.6.1-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-20-updated-superfile-1.6.1-1</guid>
