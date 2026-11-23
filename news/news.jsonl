@@ -189,3 +189,4 @@
 {"ts":"2026-11-20T20:21:05Z","type":"updated","title":"updated: fx 40.0.2-1","detail":"Updated from 40.0.1-2.","pkgs":"fx=40.0.2-1"}
 {"ts":"2026-11-20T20:27:27Z","type":"updated","title":"updated: superfile 1.6.1-1","detail":"Updated from 1.6.0-3.","pkgs":"superfile=1.6.1-1"}
 {"ts":"2026-11-21T19:21:37Z","type":"updated","title":"updated: croc 11.6.6-1","detail":"Updated from 11.6.5-1.","pkgs":"croc=11.6.6-1"}
+{"ts":"2026-11-23T08:34:51Z","type":"updated","title":"updated: bluetui 0.8.3-1","detail":"Updated from 0.8.2-1.","pkgs":"bluetui=0.8.3-1"}
