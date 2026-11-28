@@ -7,6 +7,13 @@
 <description>Everything the pkg.haus APT archive has shipped, changed and retired.</description>
 <language>en</language>
 <item>
+<title>updated: act 0.2.99-1</title>
+<link>https://apt.pkg.haus/news/</link>
+<guid isPermaLink="false">2026-11-28-updated-act-0.2.99-1</guid>
+<pubDate>Sat, 28 Nov 2026 07:52:08 +0000</pubDate>
+<description>Updated from 0.2.98-1. (act 0.2.99-1)</description>
+</item>
+<item>
 <title>updated: d2 0.10.0-1</title>
 <link>https://apt.pkg.haus/news/</link>
 <guid isPermaLink="false">2026-11-27-updated-d2-0.10.0-1</guid>

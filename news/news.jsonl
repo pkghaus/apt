@@ -193,3 +193,4 @@
 {"ts":"2026-11-26T21:37:06Z","type":"updated","title":"updated: vale 3.29.0-1","detail":"Updated from 3.28.1-1.","pkgs":"vale=3.29.0-1"}
 {"ts":"2026-11-27T08:33:30Z","type":"updated","title":"updated: croc 11.6.7-1","detail":"Updated from 11.6.6-1.","pkgs":"croc=11.6.7-1"}
 {"ts":"2026-11-27T21:23:23Z","type":"updated","title":"updated: d2 0.10.0-1","detail":"Updated from 0.9.0-3.","pkgs":"d2=0.10.0-1"}
+{"ts":"2026-11-28T07:52:08Z","type":"updated","title":"updated: act 0.2.99-1","detail":"Updated from 0.2.98-1.","pkgs":"act=0.2.99-1"}
